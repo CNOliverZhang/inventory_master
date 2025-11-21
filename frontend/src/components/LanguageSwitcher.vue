@@ -1,63 +1,69 @@
 <template>
-  <el-dropdown trigger="click" @command="handleChangeLocale">
-    <el-button :icon="Coordinate" circle />
-    <template #dropdown>
-      <el-dropdown-menu>
-        <el-dropdown-item
-          v-for="locale in SUPPORT_LOCALES"
-          :key="locale.value"
-          :command="locale.value"
-          :disabled="currentLocale === locale.value"
-        >
-          <span class="locale-item">
-            <span class="flag">{{ locale.flag }}</span>
-            <span class="label">{{ locale.label }}</span>
-            <el-icon v-if="currentLocale === locale.value" class="check-icon">
-              <Check />
-            </el-icon>
-          </span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </template>
-  </el-dropdown>
+  <div class="relative">
+    <button
+      @click="showDropdown = !showDropdown"
+      class="px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base bg-white/20 backdrop-blur-sm border border-white/30 rounded-lg hover:bg-white/30 transition-all flex items-center gap-2"
+    >
+      <i class="pi pi-globe"></i>
+      <span class="font-medium hidden sm:inline">{{ currentLanguage }}</span>
+      <i :class="showDropdown ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-xs hidden sm:block"></i>
+    </button>
+    
+    <div
+      v-if="showDropdown"
+      class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50"
+    >
+      <button
+        v-for="lang in languages"
+        :key="lang.value"
+        @click="changeLanguage(lang.value)"
+        :class="[
+          'w-full px-4 py-2 text-sm text-left hover:bg-cyan-50 transition-colors',
+          currentLocale === lang.value ? 'bg-cyan-100 text-cyan-600 font-medium' : 'text-gray-700'
+        ]"
+      >
+        {{ lang.label }}
+      </button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useLocaleStore } from '@/stores/locale'
-import { SUPPORT_LOCALES } from '@/locales'
-import { Coordinate, Check } from '@element-plus/icons-vue'
 
-const { locale } = useI18n()
 const localeStore = useLocaleStore()
+const showDropdown = ref(false)
 
-const currentLocale = computed(() => locale.value)
+const languages = [
+  { value: 'zh-CN', label: '中文' },
+  { value: 'en-US', label: 'English' },
+]
 
-const handleChangeLocale = (localeValue: string) => {
-  locale.value = localeValue
-  localeStore.setLocale(localeValue)
+const currentLocale = computed(() => localeStore.locale)
+const currentLanguage = computed(() => {
+  const lang = languages.find(l => l.value === currentLocale.value)
+  return lang?.label || '中文'
+})
+
+const changeLanguage = (locale: string) => {
+  localeStore.setLocale(locale)
+  showDropdown.value = false
 }
+
+// 点击外部关闭下拉菜单
+const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  if (!target.closest('.relative')) {
+    showDropdown.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
-
-<style scoped lang="scss">
-.locale-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 120px;
-
-  .flag {
-    font-size: 18px;
-  }
-
-  .label {
-    flex: 1;
-  }
-
-  .check-icon {
-    color: #1976d2;
-    font-weight: bold;
-  }
-}
-</style>

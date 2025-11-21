@@ -1,0 +1,314 @@
+<template>
+  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-sky-50">
+    <!-- 顶部导航栏 -->
+    <header class="glass-card mx-2 sm:mx-4 mt-2 sm:mt-4 px-3 sm:px-6 py-3 sm:py-4 sticky top-2 sm:top-4 z-50">
+      <div class="flex items-center justify-between">
+        <!-- Logo和标题 -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-primary flex items-center justify-center">
+            <i class="pi pi-box text-white text-base sm:text-xl"></i>
+          </div>
+          <h1 class="text-lg sm:text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            {{ t('auth.appTitle') }}
+          </h1>
+        </div>
+
+        <!-- 右侧操作区 -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <LanguageSwitcher />
+          
+          <!-- 用户菜单 -->
+          <div class="relative" ref="userMenuRef">
+            <button
+              @click="toggleUserMenu"
+              class="flex items-center gap-1 sm:gap-3 px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl glass-card-hover"
+            >
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-primary flex items-center justify-center text-white font-semibold text-sm">
+                {{ userStore.user?.username.charAt(0).toUpperCase() }}
+              </div>
+              <span class="text-xs sm:text-sm font-medium text-gray-700 hidden sm:inline">{{ userStore.user?.username }}</span>
+              <i class="pi pi-chevron-down text-xs text-gray-500 hidden sm:block"></i>
+            </button>
+            
+            <!-- 下拉菜单 -->
+            <div
+              v-if="showUserMenu"
+              class="absolute right-0 mt-2 w-48 glass-card py-2 animate-fade-in"
+            >
+              <button
+                @click="handleLogout"
+                class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-white/20 flex items-center gap-2"
+              >
+                <i class="pi pi-sign-out"></i>
+                {{ t('nav.logout') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex flex-col lg:flex-row gap-4 mx-2 sm:mx-4 mt-2 sm:mt-4 pb-4">
+      <!-- 左侧边栏 -->
+      <aside class="w-full lg:w-64 glass-card p-4 sm:p-6 space-y-4 sm:space-y-6 lg:h-fit lg:sticky lg:top-24">
+        <!-- 分类导航 -->
+        <nav class="space-y-2">
+          <button
+            v-for="item in menuItems"
+            :key="item.type"
+            @click="handleTypeChange(item.type)"
+            class="w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-200 text-sm sm:text-base"
+            :class="materialStore.currentType === item.type 
+              ? 'bg-gradient-primary text-white shadow-glow' 
+              : 'text-gray-700 hover:bg-white/30'"
+          >
+            <div class="flex items-center gap-2 sm:gap-3">
+              <i :class="item.icon" class="text-base sm:text-lg"></i>
+              <span class="font-medium">{{ t(item.labelKey) }}</span>
+            </div>
+            <span class="px-1.5 sm:px-2 py-0.5 rounded-lg text-xs font-semibold"
+                  :class="materialStore.currentType === item.type ? 'bg-white/20' : 'bg-gray-200'">
+              {{ getTypeCount(item.type) }}
+            </span>
+          </button>
+        </nav>
+
+        <!-- 统计卡片 -->
+        <div class="space-y-3">
+          <h3 class="text-xs sm:text-sm font-semibold text-gray-600 mb-3">{{ t('statistics.title') }}</h3>
+          <div class="grid grid-cols-2 lg:grid-cols-2 gap-2 sm:gap-3">
+            <div class="glass-card p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+                {{ materialStore.statistics.total }}
+              </div>
+              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.total') }}</div>
+            </div>
+            <div class="glass-card p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-cyan-600">
+                {{ materialStore.statistics.studio }}
+              </div>
+              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.studio') }}</div>
+            </div>
+            <div class="glass-card p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-blue-600">
+                {{ materialStore.statistics.clothing }}
+              </div>
+              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.clothing') }}</div>
+            </div>
+            <div class="glass-card p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-sky-600">
+                {{ materialStore.statistics.misc }}
+              </div>
+              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.misc') }}</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 主内容区 -->
+      <main class="flex-1 space-y-4">
+        <!-- 搜索和操作栏 -->
+        <div class="glass-card px-3 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
+          <div class="flex-1 relative">
+            <i class="pi pi-search absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input
+              v-model="materialStore.searchKeyword"
+              type="text"
+              :placeholder="t('material.searchPlaceholder')"
+              class="w-full pl-9 sm:pl-12 pr-4 py-2 sm:py-3 text-sm sm:text-base bg-white/50 border border-white/30 rounded-xl 
+                     focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent
+                     backdrop-blur-sm transition-all"
+            />
+          </div>
+          
+          <div class="flex gap-2">
+            <button @click="handleAdd" class="btn-gradient flex-1 sm:flex-initial flex items-center justify-center gap-2 whitespace-nowrap text-sm sm:text-base px-3 sm:px-6">
+              <i class="pi pi-plus"></i>
+              <span class="hidden sm:inline">{{ t('material.addMaterial') }}</span>
+              <span class="sm:hidden">{{ t('common.add') }}</span>
+            </button>
+
+            <button @click="showCategoryManage = true" class="btn-glass flex-1 sm:flex-initial flex items-center justify-center gap-2 whitespace-nowrap text-sm sm:text-base px-3 sm:px-6">
+              <i class="pi pi-list"></i>
+              <span class="hidden sm:inline">{{ t('nav.categories') }}</span>
+              <span class="sm:hidden">{{ t('category.title') }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 物资网格 -->
+        <div v-if="materialStore.loading" class="glass-card p-8 sm:p-12 text-center">
+          <i class="pi pi-spin pi-spinner text-3xl sm:text-4xl text-cyan-500"></i>
+          <p class="mt-4 text-sm sm:text-base text-gray-600">{{ t('common.loading') }}</p>
+        </div>
+        
+        <div v-else-if="materialStore.filteredMaterials.length === 0" class="glass-card p-8 sm:p-12 text-center">
+          <i class="pi pi-inbox text-5xl sm:text-6xl text-gray-300"></i>
+          <p class="mt-4 text-sm sm:text-base text-gray-600">{{ t('material.noData') }}</p>
+        </div>
+
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4">
+          <MaterialCard
+            v-for="material in materialStore.filteredMaterials"
+            :key="material.id"
+            :material="material"
+            @edit="handleEdit"
+            @delete="handleDelete"
+          />
+        </div>
+      </main>
+    </div>
+
+    <!-- 添加/编辑物资对话框 -->
+    <MaterialDialog
+      v-model="dialogVisible"
+      :material="currentEditMaterial"
+      @success="handleDialogSuccess"
+    />
+
+    <!-- 分类管理对话框 -->
+    <CategoryManageDialog
+      v-model="showCategoryManage"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { useMaterialStore } from '@/stores/material'
+import { useUserStore } from '@/stores/user'
+import { MaterialType } from '@/types/material'
+import type { Material } from '@/types/material'
+import { ElMessageBox } from 'element-plus'
+import MaterialCard from '@/components/MaterialCard.vue'
+import MaterialDialog from '@/components/MaterialDialog.vue'
+import CategoryManageDialog from '@/components/CategoryManageDialog.vue'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+
+const router = useRouter()
+const materialStore = useMaterialStore()
+const userStore = useUserStore()
+const { t } = useI18n()
+
+// 菜单项配置
+const menuItems = [
+  { type: '', labelKey: 'nav.allMaterials', icon: 'pi pi-th-large' },
+  { type: MaterialType.STUDIO, labelKey: 'nav.studioMaterials', icon: 'pi pi-briefcase' },
+  { type: MaterialType.CLOTHING, labelKey: 'nav.clothing', icon: 'pi pi-shopping-bag' },
+  { type: MaterialType.MISC, labelKey: 'nav.misc', icon: 'pi pi-box' },
+]
+
+// 状态
+const dialogVisible = ref(false)
+const currentEditMaterial = ref<Material | null>(null)
+const showUserMenu = ref(false)
+const showCategoryManage = ref(false)
+const userMenuRef = ref<HTMLElement>()
+
+// 获取类型数量
+const getTypeCount = (type: string) => {
+  if (type === '') return materialStore.statistics.total
+  if (type === MaterialType.STUDIO) return materialStore.statistics.studio
+  if (type === MaterialType.CLOTHING) return materialStore.statistics.clothing
+  if (type === MaterialType.MISC) return materialStore.statistics.misc
+  return 0
+}
+
+// 切换类型
+const handleTypeChange = (type: MaterialType | '') => {
+  materialStore.setCurrentType(type)
+}
+
+// 添加物资
+const handleAdd = () => {
+  currentEditMaterial.value = null
+  dialogVisible.value = true
+}
+
+// 编辑物资
+const handleEdit = (material: Material) => {
+  currentEditMaterial.value = material
+  dialogVisible.value = true
+}
+
+// 删除物资
+const handleDelete = async (material: Material) => {
+  try {
+    await ElMessageBox.confirm(
+      t('material.deleteConfirm', { name: material.name }),
+      t('common.warning'),
+      {
+        confirmButtonText: t('common.confirm'),
+        cancelButtonText: t('common.cancel'),
+        type: 'warning',
+      }
+    )
+    await materialStore.deleteMaterial(material.id)
+  } catch (error) {
+    // 用户取消删除
+  }
+}
+
+// 对话框成功回调
+const handleDialogSuccess = () => {
+  dialogVisible.value = false
+  currentEditMaterial.value = null
+}
+
+// 切换用户菜单
+const toggleUserMenu = () => {
+  showUserMenu.value = !showUserMenu.value
+}
+
+// 退出登录
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm(t('auth.logoutConfirm'), t('common.warning'), {
+      confirmButtonText: t('common.confirm'),
+      cancelButtonText: t('common.cancel'),
+      type: 'warning',
+    })
+    userStore.logout()
+    router.push('/login')
+  } catch (error) {
+    // 用户取消
+  }
+}
+
+// 点击外部关闭用户菜单
+const handleClickOutside = (event: MouseEvent) => {
+  if (userMenuRef.value && !userMenuRef.value.contains(event.target as Node)) {
+    showUserMenu.value = false
+  }
+}
+
+// 初始化
+onMounted(async () => {
+  await materialStore.fetchMaterials()
+  await materialStore.fetchStatistics()
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
+</script>
+
+<style scoped>
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

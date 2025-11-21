@@ -14,6 +14,7 @@ export default {
     info: '信息',
     yes: '是',
     no: '否',
+    optional: '可选',
   },
   
   nav: {
@@ -21,6 +22,7 @@ export default {
     studioMaterials: '工作室物料',
     clothing: '衣物',
     misc: '杂物',
+    categories: '分类管理',
     logout: '退出登录',
   },
 
@@ -69,6 +71,7 @@ export default {
     // 字段
     name: '物资名称',
     type: '物资类型',
+    category: '细分类别',
     location: '存放位置',
     photo: '照片',
     quantity: '数量',
@@ -84,6 +87,7 @@ export default {
     // 占位符
     enterName: '请输入物资名称',
     selectType: '请选择物资类型',
+    selectCategory: '请选择细分类别（可选）',
     enterLocation: '请输入存放位置',
     searchPlaceholder: '搜索物资名称...',
     
@@ -106,6 +110,41 @@ export default {
     // 状态
     noData: '暂无物资数据',
     notFound: '物资不存在或无权访问',
+    noCategory: '无分类',
+  },
+
+  category: {
+    // 字段
+    name: '类别名称',
+    type: '所属类型',
+    materialCount: '物资数量',
+    title: '类别',
+    
+    // 操作
+    addCategory: '添加类别',
+    editCategory: '编辑类别',
+    deleteCategory: '删除类别',
+    manage: '分类管理',
+    
+    // 占位符
+    enterName: '请输入类别名称',
+    selectType: '请选择所属类型',
+    
+    // 验证
+    nameRequired: '请输入类别名称',
+    typeRequired: '请选择所属类型',
+    duplicateName: '该类型下已存在同名类别',
+    
+    // 响应消息
+    createSuccess: '类别创建成功',
+    updateSuccess: '类别更新成功',
+    deleteSuccess: '类别删除成功',
+    deleteConfirm: '确定要删除类别"{name}"吗？',
+    deleteWarning: '无法删除：还有 {count} 个物资使用该类别',
+    
+    // 状态
+    noData: '暂无分类',
+    notFound: '类别不存在',
   },
 
   statistics: {

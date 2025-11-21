@@ -14,6 +14,7 @@ interface MaterialAttributes {
   userId: number;              // 所属用户ID
   name: string;
   type: MaterialType;
+  categoryId?: number;         // 细分类别ID（可选）
   location: string;
   photoUrl?: string;
   quantity?: number;           // 杂物和工作室物料的数量
@@ -24,7 +25,7 @@ interface MaterialAttributes {
 }
 
 // 创建物资时的可选属性
-interface MaterialCreationAttributes extends Optional<MaterialAttributes, 'id' | 'photoUrl' | 'quantity' | 'inUseQuantity' | 'stockQuantity'> {}
+interface MaterialCreationAttributes extends Optional<MaterialAttributes, 'id' | 'categoryId' | 'photoUrl' | 'quantity' | 'inUseQuantity' | 'stockQuantity'> {}
 
 // 导出接口供外部使用
 export type { MaterialAttributes, MaterialCreationAttributes };
@@ -35,6 +36,7 @@ class Material extends Model<MaterialAttributes, MaterialCreationAttributes> imp
   public userId!: number;
   public name!: string;
   public type!: MaterialType;
+  public categoryId?: number;
   public location!: string;
   public photoUrl?: string;
   public quantity?: number;
@@ -71,6 +73,17 @@ Material.init(
     type: {
       type: DataTypes.ENUM(...Object.values(MaterialType)),
       allowNull: false,
+    },
+    categoryId: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: true,
+      comment: '细分类别ID',
+      references: {
+        model: 'categories',
+        key: 'id',
+      },
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
     },
     location: {
       type: DataTypes.STRING(255),

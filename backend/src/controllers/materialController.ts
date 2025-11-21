@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Material } from '../models';
+import { Material, Category } from '../models';
 import { MaterialType } from '../models/Material';
 import { uploadFile, deleteFile, getKeyFromUrl } from '../services/cosService';
 import { Op } from 'sequelize';
@@ -34,6 +34,13 @@ export const getAllMaterials = async (req: Request, res: Response) => {
     
     const materials = await Material.findAll({
       where: whereClause,
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          attributes: ['id', 'name', 'type'],
+        },
+      ],
       order: [['createdAt', 'DESC']],
     });
     
@@ -105,7 +112,7 @@ export const createMaterial = async (req: Request, res: Response) => {
       });
     }
 
-    const { name, type, location, quantity, inUseQuantity, stockQuantity } = req.body;
+    const { name, type, categoryId, location, quantity, inUseQuantity, stockQuantity } = req.body;
     
     // 验证必填字段
     if (!name || !type || !location) {
@@ -136,6 +143,7 @@ export const createMaterial = async (req: Request, res: Response) => {
       userId: req.user.userId, // 关联当前用户
       name,
       type,
+      categoryId: categoryId || null,
       location,
       photoUrl,
     };
@@ -178,7 +186,7 @@ export const updateMaterial = async (req: Request, res: Response) => {
     }
 
     const { id } = req.params;
-    const { name, location, quantity, inUseQuantity, stockQuantity } = req.body;
+    const { name, categoryId, location, quantity, inUseQuantity, stockQuantity } = req.body;
     
     const material = await Material.findOne({
       where: {
@@ -216,6 +224,7 @@ export const updateMaterial = async (req: Request, res: Response) => {
     // 更新物资
     const updateData: any = {
       name: name || material.name,
+      categoryId: categoryId !== undefined ? categoryId : material.categoryId,
       location: location || material.location,
       photoUrl,
     };

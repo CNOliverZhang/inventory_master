@@ -4,12 +4,13 @@ import dotenv from 'dotenv';
 import sequelize from './config/database';
 import authRoutes from './routes/authRoutes';
 import materialRoutes from './routes/materialRoutes';
+import categoryRoutes from './routes/categoryRoutes';
 import './models'; // 导入模型以建立关联
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9702;
 
 // 中间件
 app.use(cors());
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 // 路由
 app.use('/api/auth', authRoutes);
 app.use('/api', materialRoutes);
+app.use('/api', categoryRoutes);
 
 // 健康检查
 app.get('/health', (req, res) => {

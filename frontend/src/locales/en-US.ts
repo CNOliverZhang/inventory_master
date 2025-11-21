@@ -7,13 +7,18 @@ export default {
     edit: 'Edit',
     add: 'Add',
     search: 'Search',
+    submit: 'Submit',
+    reset: 'Reset',
+    back: 'Back',
+    close: 'Close',
+    yes: 'Yes',
+    no: 'No',
+    optional: 'Optional',
     loading: 'Loading...',
     success: 'Success',
     error: 'Error',
     warning: 'Warning',
     info: 'Info',
-    yes: 'Yes',
-    no: 'No',
   },
   
   nav: {
@@ -21,6 +26,7 @@ export default {
     studioMaterials: 'Studio Materials',
     clothing: 'Clothing',
     misc: 'Miscellaneous',
+    categories: 'Categories',
     logout: 'Logout',
   },
 
@@ -69,6 +75,7 @@ export default {
     // Fields
     name: 'Material Name',
     type: 'Material Type',
+    category: 'Category',
     location: 'Storage Location',
     photo: 'Photo',
     quantity: 'Quantity',
@@ -84,6 +91,7 @@ export default {
     // Placeholders
     enterName: 'Enter material name',
     selectType: 'Select material type',
+    selectCategory: 'Select category (optional)',
     enterLocation: 'Enter storage location',
     searchPlaceholder: 'Search materials...',
     
@@ -106,6 +114,41 @@ export default {
     // Status
     noData: 'No materials found',
     notFound: 'Material not found or access denied',
+    noCategory: 'No category',
+  },
+
+  category: {
+    // Fields
+    name: 'Category Name',
+    type: 'Type',
+    materialCount: 'Materials',
+    title: 'Category',
+    
+    // Actions
+    addCategory: 'Add Category',
+    editCategory: 'Edit Category',
+    deleteCategory: 'Delete Category',
+    manage: 'Manage Categories',
+    
+    // Placeholders
+    enterName: 'Enter category name',
+    selectType: 'Select type',
+    
+    // Validation
+    nameRequired: 'Category name is required',
+    typeRequired: 'Type is required',
+    duplicateName: 'Category name already exists for this type',
+    
+    // Response messages
+    createSuccess: 'Category created successfully',
+    updateSuccess: 'Category updated successfully',
+    deleteSuccess: 'Category deleted successfully',
+    deleteConfirm: 'Delete category "{name}"?',
+    deleteWarning: 'Cannot delete: {count} materials using this category',
+    
+    // Status
+    noData: 'No categories',
+    notFound: 'Category not found',
   },
 
   statistics: {

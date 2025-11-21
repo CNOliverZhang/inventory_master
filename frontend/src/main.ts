@@ -1,9 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
-import 'element-plus/theme-chalk/dark/css-vars.css'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import PrimeVue from 'primevue/config'
 import router from './router'
 import i18n from './locales'
 import App from './App.vue'
@@ -11,13 +8,11 @@ import './style.css'
 import { useUserStore } from './stores/user'
 import { useLocaleStore } from './stores/locale'
 
+// PrimeVue样式
+import 'primeicons/primeicons.css'
+
 const app = createApp(App)
 const pinia = createPinia()
-
-// 注册所有图标
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
 
 app.use(pinia)
 app.use(i18n)
@@ -33,8 +28,10 @@ localeStore.setLocale(savedLocale)
 i18n.global.locale.value = savedLocale as any
 
 app.use(router)
-app.use(ElementPlus, {
-  locale: localeStore.elementLocale,
+
+// 使用 PrimeVue（unstyled 模式，完全自定义）
+app.use(PrimeVue, {
+  unstyled: true,
 })
 
 app.mount('#app')
