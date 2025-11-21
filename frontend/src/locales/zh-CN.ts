@@ -35,7 +35,7 @@ export default {
     confirmPassword: '确认密码',
     welcomeBack: '欢迎回来',
     createAccount: '创建新账户',
-    appTitle: '物资管理系统',
+    appTitle: '洋芋田收纳大师',
     loginBtn: '登录',
     registerBtn: '注册',
     

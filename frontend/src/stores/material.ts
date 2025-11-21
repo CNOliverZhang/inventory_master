@@ -23,6 +23,7 @@ export const useMaterialStore = defineStore('material', () => {
   })
   const loading = ref(false)
   const currentType = ref<MaterialType | ''>('')
+  const currentCategoryId = ref<number | null>(null)
   const searchKeyword = ref('')
 
   // 计算属性：过滤后的物资列表
@@ -32,6 +33,11 @@ export const useMaterialStore = defineStore('material', () => {
     // 按类型筛选
     if (currentType.value) {
       result = result.filter((m) => m.type === currentType.value)
+    }
+
+    // 按细分类别筛选
+    if (currentCategoryId.value !== null) {
+      result = result.filter((m) => m.categoryId === currentCategoryId.value)
     }
 
     // 按关键词搜索
@@ -134,6 +140,13 @@ export const useMaterialStore = defineStore('material', () => {
   // 设置当前类型筛选
   const setCurrentType = (type: MaterialType | '') => {
     currentType.value = type
+    // 切换类型时清空类别筛选
+    currentCategoryId.value = null
+  }
+
+  // 设置当前类别筛选
+  const setCurrentCategoryId = (categoryId: number | null) => {
+    currentCategoryId.value = categoryId
   }
 
   // 设置搜索关键词
@@ -148,6 +161,7 @@ export const useMaterialStore = defineStore('material', () => {
     statistics,
     loading,
     currentType,
+    currentCategoryId,
     searchKeyword,
     filteredMaterials,
     // 方法
@@ -158,6 +172,7 @@ export const useMaterialStore = defineStore('material', () => {
     deleteMaterial,
     fetchStatistics,
     setCurrentType,
+    setCurrentCategoryId,
     setSearchKeyword,
   }
 })

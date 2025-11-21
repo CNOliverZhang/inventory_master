@@ -39,7 +39,7 @@ export default {
     confirmPassword: 'Confirm Password',
     welcomeBack: 'Welcome Back',
     createAccount: 'Create New Account',
-    appTitle: 'Material Management System',
+    appTitle: 'Potatofield Inventory Master',
     loginBtn: 'Login',
     registerBtn: 'Register',
     

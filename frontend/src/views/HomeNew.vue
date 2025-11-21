@@ -73,6 +73,33 @@
           </button>
         </nav>
 
+        <!-- 细分类别筛选 -->
+        <div v-if="materialStore.currentType && currentTypeCategories.length > 0" class="space-y-2">
+          <h3 class="text-xs sm:text-sm font-semibold text-gray-600 px-2">{{ t('category.title') }}</h3>
+          <div class="max-h-48 overflow-y-auto space-y-1">
+            <button
+              @click="handleCategoryChange(null)"
+              class="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors text-sm"
+              :class="materialStore.currentCategoryId === null 
+                ? 'bg-cyan-100 text-cyan-700 font-medium' 
+                : 'text-gray-600 hover:bg-gray-100'"
+            >
+              <span>{{ t('nav.allMaterials') }}</span>
+            </button>
+            <button
+              v-for="category in currentTypeCategories"
+              :key="category.id"
+              @click="handleCategoryChange(category.id)"
+              class="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors text-sm"
+              :class="materialStore.currentCategoryId === category.id 
+                ? 'bg-cyan-100 text-cyan-700 font-medium' 
+                : 'text-gray-600 hover:bg-gray-100'"
+            >
+              <span>{{ category.name }}</span>
+            </button>
+          </div>
+        </div>
+
         <!-- 统计卡片 -->
         <div class="space-y-3">
           <h3 class="text-xs sm:text-sm font-semibold text-gray-600 mb-3">{{ t('statistics.title') }}</h3>
@@ -173,10 +200,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useMaterialStore } from '@/stores/material'
+import { useCategoryStore } from '@/stores/category'
 import { useUserStore } from '@/stores/user'
 import { MaterialType } from '@/types/material'
 import type { Material } from '@/types/material'
@@ -188,6 +216,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 const router = useRouter()
 const materialStore = useMaterialStore()
+const categoryStore = useCategoryStore()
 const userStore = useUserStore()
 const { t } = useI18n()
 
@@ -219,6 +248,24 @@ const getTypeCount = (type: string) => {
 const handleTypeChange = (type: MaterialType | '') => {
   materialStore.setCurrentType(type)
 }
+
+// 切换类别筛选
+const handleCategoryChange = (categoryId: number | null) => {
+  materialStore.setCurrentCategoryId(categoryId)
+}
+
+// 当前类型的类别列表
+const currentTypeCategories = computed(() => {
+  if (!materialStore.currentType) return []
+  return categoryStore.categories.filter(c => c.type === materialStore.currentType)
+})
+
+// 监听类型变化，加载对应的类别
+watch(() => materialStore.currentType, async (newType) => {
+  if (newType) {
+    await categoryStore.fetchCategoriesByType(newType)
+  }
+})
 
 // 添加物资
 const handleAdd = () => {
