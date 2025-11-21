@@ -2,14 +2,14 @@
   <!-- 遮罩层 -->
   <div
     v-if="visible"
-    class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4"
+    class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4"
     @click.self="handleClose"
   >
     <!-- 对话框 -->
     <div class="glass-card w-full max-w-2xl max-h-[90vh] overflow-y-auto">
       <!-- 头部 -->
-      <div class="sticky top-0 bg-white/80 backdrop-blur-md px-4 sm:px-6 py-3 sm:py-4 border-b border-white/50 flex items-center justify-between">
-        <h2 class="text-lg sm:text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+      <div class="sticky top-0 bg-white px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 flex items-center justify-between">
+        <h2 class="text-lg sm:text-xl font-bold text-gray-800">
           {{ isEdit ? t('material.editMaterial') : t('material.addMaterial') }}
         </h2>
         <button @click="handleClose" class="text-gray-500 hover:text-gray-700">
@@ -30,7 +30,7 @@
             type="text"
             required
             :placeholder="t('material.enterName')"
-            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
           />
           <p v-if="errors.name" class="text-xs text-red-500">{{ errors.name }}</p>
         </div>
@@ -45,7 +45,7 @@
             v-model="formData.type"
             :disabled="isEdit"
             required
-            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <option value="" disabled>{{ t('material.selectType') }}</option>
             <option
@@ -67,7 +67,7 @@
           </label>
           <select
             v-model="formData.categoryId"
-            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
           >
             <option :value="undefined">{{ t('material.selectCategory') }}</option>
             <option
@@ -91,7 +91,7 @@
             type="text"
             required
             :placeholder="t('material.enterLocation')"
-            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+            class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
           />
           <p v-if="errors.location" class="text-xs text-red-500">{{ errors.location }}</p>
         </div>
@@ -102,7 +102,7 @@
             {{ t('material.photo') }}
           </label>
           <div
-            class="relative w-full h-40 sm:h-48 border-2 border-dashed border-cyan-300 rounded-xl overflow-hidden cursor-pointer hover:border-cyan-500 transition-all bg-white/30"
+            class="relative w-full h-40 sm:h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden cursor-pointer hover:border-cyan-500 transition-colors bg-gray-50"
             @click="triggerFileInput"
             @dragover.prevent
             @drop.prevent="handleDrop"
@@ -117,14 +117,14 @@
               <div class="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2 sm:gap-3">
                 <button
                   @click.stop="triggerFileInput"
-                  class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-all"
+                  class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-white/90 text-gray-800 rounded-lg hover:bg-white transition-all"
                 >
                   <i class="pi pi-pencil mr-1"></i>
                   {{ t('material.changePhoto') }}
                 </button>
                 <button
                   @click.stop="handleRemovePhoto"
-                  class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-red-500/80 backdrop-blur-sm text-white rounded-lg hover:bg-red-600/80 transition-all"
+                  class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all"
                 >
                   <i class="pi pi-trash mr-1"></i>
                   {{ t('material.removePhoto') }}
@@ -159,7 +159,7 @@
                 type="number"
                 min="0"
                 step="1"
-                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
               />
             </div>
             <div class="space-y-2">
@@ -171,7 +171,7 @@
                 type="number"
                 min="0"
                 step="1"
-                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
               />
             </div>
           </div>
@@ -188,17 +188,17 @@
               type="number"
               min="0"
               step="1"
-              class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+              class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
             />
           </div>
         </template>
       </div>
 
       <!-- 底部按钮 -->
-      <div class="sticky bottom-0 bg-white/80 backdrop-blur-md px-4 sm:px-6 py-3 sm:py-4 border-t border-white/50 flex justify-end gap-2 sm:gap-3">
+      <div class="sticky bottom-0 bg-white px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 flex justify-end gap-2 sm:gap-3">
         <button
           @click="handleClose"
-          class="px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-medium transition-all"
+          class="px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors"
         >
           {{ t('common.cancel') }}
         </button>
@@ -306,30 +306,46 @@ const resetForm = () => {
   errors.name = ''
   errors.type = ''
   errors.location = ''
+  
+  // 清除 file input
+  if (fileInputRef.value) {
+    fileInputRef.value.value = ''
+  }
 }
 
-// 监听 material 变化，填充表单
+// 监听对话框打开和 material 变化，填充表单
 watch(
-  () => props.material,
-  async (material) => {
-    if (material) {
+  [() => props.modelValue, () => props.material],
+  async ([isVisible, material]) => {
+    if (isVisible && material) {
+      // 编辑模式：填充表单数据
       formData.name = material.name
       formData.type = material.type
       formData.categoryId = material.categoryId
       formData.location = material.location
-      formData.quantity = material.quantity
-      formData.inUseQuantity = material.inUseQuantity
-      formData.stockQuantity = material.stockQuantity
+      formData.quantity = material.quantity || 0
+      formData.inUseQuantity = material.inUseQuantity || 0
+      formData.stockQuantity = material.stockQuantity || 0
       photoPreview.value = ''
       photoFile.value = undefined
       
       // 加载该类型的类别
       await categoryStore.fetchCategoriesByType(material.type)
-    } else {
+    } else if (isVisible && !material) {
+      // 新建模式：重置表单
       resetForm()
+      // 加载默认类型的类别
+      await categoryStore.fetchCategoriesByType(MaterialType.STUDIO)
+    } else if (!isVisible) {
+      // 对话框关闭后延迟重置，避免视觉闪烁
+      setTimeout(() => {
+        if (!props.modelValue) {
+          resetForm()
+        }
+      }, 300)
     }
   },
-  { immediate: true }
+  { immediate: false }
 )
 
 // 触发文件选择
@@ -428,6 +444,6 @@ const handleSubmit = async () => {
 // 关闭对话框
 const handleClose = () => {
   visible.value = false
-  resetForm()
+  // 不在这里重置表单，让 watch 处理
 }
 </script>

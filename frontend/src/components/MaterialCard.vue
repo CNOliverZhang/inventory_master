@@ -1,7 +1,7 @@
 <template>
   <div class="glass-card-hover p-3 sm:p-4 flex flex-col h-full">
     <!-- 图片区域 -->
-    <div class="relative w-full h-36 sm:h-44 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-xl overflow-hidden mb-3">
+    <div class="relative w-full h-36 sm:h-44 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden mb-3">
       <img
         v-if="material.photoUrl"
         :src="material.photoUrl"
@@ -9,12 +9,12 @@
         class="w-full h-full object-cover"
       />
       <div v-else class="w-full h-full flex items-center justify-center">
-        <i :class="getTypeIcon(material.type)" class="text-5xl sm:text-6xl text-cyan-400"></i>
+        <i :class="getTypeIcon(material.type)" class="text-5xl sm:text-6xl text-gray-400"></i>
       </div>
       
       <!-- 类型标签 -->
       <div class="absolute top-2 left-2">
-        <span :class="getTypeTagClass(material.type)" class="px-2 sm:px-3 py-1 rounded-lg text-xs font-medium backdrop-blur-sm">
+        <span :class="getTypeTagClass(material.type)" class="px-2 sm:px-3 py-1 rounded-md text-xs font-medium">
           {{ t(`material.${material.type}`) }}
         </span>
       </div>
@@ -120,9 +120,9 @@ const getTypeIcon = (type: MaterialType) => {
 // 获取类型标签样式
 const getTypeTagClass = (type: MaterialType) => {
   const classes = {
-    [MaterialType.STUDIO]: 'bg-blue-500/80 text-white',
-    [MaterialType.CLOTHING]: 'bg-green-500/80 text-white',
-    [MaterialType.MISC]: 'bg-orange-500/80 text-white',
+    [MaterialType.STUDIO]: 'bg-blue-500 text-white',
+    [MaterialType.CLOTHING]: 'bg-green-500 text-white',
+    [MaterialType.MISC]: 'bg-orange-500 text-white',
   }
   return classes[type]
 }

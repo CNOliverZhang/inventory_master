@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import en from 'element-plus/es/locale/lang/en'
+import i18n from '@/locales'
 
 // Element Plus 语言包映射
 const elementLocaleMap: Record<string, any> = {
@@ -20,11 +20,15 @@ export const useLocaleStore = defineStore('locale', () => {
     elementLocale.value = elementLocaleMap[locale] || zhCn
     localStorage.setItem('locale', locale)
     
+    // 更新 i18n 的 locale
+    i18n.global.locale.value = locale as any
+    
     // 更新 HTML lang 属性
     document.documentElement.lang = locale
   }
 
   return {
+    locale: currentLocale,
     currentLocale,
     elementLocale,
     setLocale,

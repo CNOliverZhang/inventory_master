@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 relative">
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 relative">
     <!-- 语言切换器 -->
     <div class="absolute top-3 right-3 sm:top-5 sm:right-5 z-10">
       <LanguageSwitcher />
@@ -10,11 +10,11 @@
       <!-- 头部 -->
       <div class="text-center space-y-2 sm:space-y-3">
         <div class="flex justify-center">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-primary rounded-2xl flex items-center justify-center shadow-glow">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-md">
             <i class="pi pi-box text-2xl sm:text-3xl text-white"></i>
           </div>
         </div>
-        <h1 class="text-2xl sm:text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+        <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
           {{ t('auth.appTitle') }}
         </h1>
         <p class="text-gray-600 text-xs sm:text-sm">
@@ -23,13 +23,13 @@
       </div>
 
       <!-- 标签切换 -->
-      <div class="flex gap-2 p-1 bg-white/30 rounded-xl">
+      <div class="flex gap-2 p-1 bg-gray-100 rounded-lg">
         <button
           @click="activeTab = 'login'"
           :class="[
-            'flex-1 py-2 sm:py-2.5 text-sm sm:text-base rounded-lg font-medium transition-all duration-200',
+            'flex-1 py-2 sm:py-2.5 text-sm sm:text-base rounded-md font-medium transition-all duration-200',
             activeTab === 'login'
-              ? 'bg-white text-cyan-600 shadow-md'
+              ? 'bg-white text-cyan-600 shadow-sm'
               : 'text-gray-600 hover:text-cyan-600'
           ]"
         >
@@ -38,9 +38,9 @@
         <button
           @click="activeTab = 'register'"
           :class="[
-            'flex-1 py-2 sm:py-2.5 text-sm sm:text-base rounded-lg font-medium transition-all duration-200',
+            'flex-1 py-2 sm:py-2.5 text-sm sm:text-base rounded-md font-medium transition-all duration-200',
             activeTab === 'register'
-              ? 'bg-white text-cyan-600 shadow-md'
+              ? 'bg-white text-cyan-600 shadow-sm'
               : 'text-gray-600 hover:text-cyan-600'
           ]"
         >
@@ -74,7 +74,7 @@
               :type="showLoginPassword ? 'text' : 'password'"
               required
               :placeholder="t('auth.enterPassword')"
-              class="w-full pl-10 pr-12 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+              class="w-full pl-10 pr-12 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
             />
             <button
               type="button"
@@ -138,7 +138,7 @@
               :type="showRegPassword ? 'text' : 'password'"
               required
               :placeholder="t('auth.enterPassword')"
-              class="w-full pl-10 pr-12 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+              class="w-full pl-10 pr-12 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
             />
             <button
               type="button"
@@ -160,7 +160,7 @@
               :type="showConfirmPassword ? 'text' : 'password'"
               required
               :placeholder="t('auth.reEnterPassword')"
-              class="w-full pl-10 pr-12 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+              class="w-full pl-10 pr-12 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
             />
             <button
               type="button"

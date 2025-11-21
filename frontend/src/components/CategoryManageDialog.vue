@@ -1,18 +1,18 @@
 <template>
   <div
     v-if="visible"
-    class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/40 backdrop-blur-sm animate-fade-in"
+    class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50"
     @click.self="handleClose"
   >
-    <div class="w-full max-w-4xl glass-card p-4 sm:p-6 animate-slide-up max-h-[90vh] overflow-hidden flex flex-col">
+    <div class="w-full max-w-4xl glass-card p-4 sm:p-6 max-h-[90vh] overflow-hidden flex flex-col">
       <!-- 头部 -->
       <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h2 class="text-xl sm:text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+        <h2 class="text-xl sm:text-2xl font-bold text-gray-800">
           {{ t('category.manage') }}
         </h2>
         <button
           @click="handleClose"
-          class="w-8 h-8 rounded-lg hover:bg-white/20 flex items-center justify-center transition-colors"
+          class="w-8 h-8 rounded-lg hover:bg-gray-100 flex items-center justify-center transition-colors"
         >
           <i class="pi pi-times text-gray-600"></i>
         </button>
@@ -24,24 +24,24 @@
           v-for="type in materialTypes"
           :key="type.value"
           @click="categoryStore.setCurrentType(type.value)"
-          class="px-3 sm:px-4 py-2 text-sm sm:text-base rounded-xl transition-all font-medium whitespace-nowrap"
+          class="px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg transition-colors font-medium whitespace-nowrap"
           :class="categoryStore.currentType === type.value
-            ? 'bg-gradient-primary text-white shadow-glow'
-            : 'bg-white/30 text-gray-700 hover:bg-white/40'"
+            ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
         >
           {{ t(`material.${type.value}`) }}
         </button>
       </div>
 
       <!-- 添加类别表单 -->
-      <div class="glass-card p-3 sm:p-4 mb-4">
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4 mb-4">
         <div class="flex gap-2 sm:gap-3">
           <input
             v-model="newCategoryName"
             type="text"
             :placeholder="t('category.enterName')"
-            class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base bg-white/50 border border-white/30 rounded-xl
-                   focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent"
+            class="flex-1 px-3 sm:px-4 py-2 text-sm sm:text-base bg-white border border-gray-300 rounded-lg
+                   focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent"
             @keypress.enter="handleAddCategory"
           />
           <button
@@ -267,18 +267,5 @@ const handleClose = () => {
 </script>
 
 <style scoped>
-.animate-slide-up {
-  animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* 移除动画，提升性能 */
 </style>

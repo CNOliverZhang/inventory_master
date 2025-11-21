@@ -1,14 +1,14 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-sky-50">
+  <div class="min-h-screen bg-gray-50">
     <!-- 顶部导航栏 -->
-    <header class="glass-card mx-2 sm:mx-4 mt-2 sm:mt-4 px-3 sm:px-6 py-3 sm:py-4 sticky top-2 sm:top-4 z-50">
+    <header class="glass-card mx-2 sm:mx-4 mt-2 sm:mt-4 px-3 sm:px-6 py-3 sm:py-4 sticky top-2 sm:top-4 z-50 shadow-sm">
       <div class="flex items-center justify-between">
         <!-- Logo和标题 -->
         <div class="flex items-center gap-2 sm:gap-3">
-          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-primary flex items-center justify-center">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
             <i class="pi pi-box text-white text-base sm:text-xl"></i>
           </div>
-          <h1 class="text-lg sm:text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+          <h1 class="text-lg sm:text-2xl font-bold text-gray-800">
             {{ t('auth.appTitle') }}
           </h1>
         </div>
@@ -21,9 +21,9 @@
           <div class="relative" ref="userMenuRef">
             <button
               @click="toggleUserMenu"
-              class="flex items-center gap-1 sm:gap-3 px-2 sm:px-4 py-1.5 sm:py-2 rounded-xl glass-card-hover"
+              class="flex items-center gap-1 sm:gap-3 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-primary flex items-center justify-center text-white font-semibold text-sm">
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-semibold text-sm">
                 {{ userStore.user?.username.charAt(0).toUpperCase() }}
               </div>
               <span class="text-xs sm:text-sm font-medium text-gray-700 hidden sm:inline">{{ userStore.user?.username }}</span>
@@ -33,11 +33,11 @@
             <!-- 下拉菜单 -->
             <div
               v-if="showUserMenu"
-              class="absolute right-0 mt-2 w-48 glass-card py-2 animate-fade-in"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2"
             >
               <button
                 @click="handleLogout"
-                class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-white/20 flex items-center gap-2"
+                class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
               >
                 <i class="pi pi-sign-out"></i>
                 {{ t('nav.logout') }}
@@ -57,16 +57,16 @@
             v-for="item in menuItems"
             :key="item.type"
             @click="handleTypeChange(item.type)"
-            class="w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 rounded-xl transition-all duration-200 text-sm sm:text-base"
+            class="w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-colors text-sm sm:text-base"
             :class="materialStore.currentType === item.type 
-              ? 'bg-gradient-primary text-white shadow-glow' 
-              : 'text-gray-700 hover:bg-white/30'"
+              ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' 
+              : 'text-gray-700 hover:bg-gray-100'"
           >
             <div class="flex items-center gap-2 sm:gap-3">
               <i :class="item.icon" class="text-base sm:text-lg"></i>
               <span class="font-medium">{{ t(item.labelKey) }}</span>
             </div>
-            <span class="px-1.5 sm:px-2 py-0.5 rounded-lg text-xs font-semibold"
+            <span class="px-1.5 sm:px-2 py-0.5 rounded-md text-xs font-semibold"
                   :class="materialStore.currentType === item.type ? 'bg-white/20' : 'bg-gray-200'">
               {{ getTypeCount(item.type) }}
             </span>
@@ -77,26 +77,26 @@
         <div class="space-y-3">
           <h3 class="text-xs sm:text-sm font-semibold text-gray-600 mb-3">{{ t('statistics.title') }}</h3>
           <div class="grid grid-cols-2 lg:grid-cols-2 gap-2 sm:gap-3">
-            <div class="glass-card p-2 sm:p-3 text-center">
-              <div class="text-xl sm:text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
+            <div class="bg-gradient-to-br from-cyan-50 to-cyan-100 border border-cyan-200 rounded-lg p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-cyan-700">
                 {{ materialStore.statistics.total }}
               </div>
               <div class="text-xs text-gray-600 mt-1">{{ t('statistics.total') }}</div>
             </div>
-            <div class="glass-card p-2 sm:p-3 text-center">
-              <div class="text-xl sm:text-2xl font-bold text-cyan-600">
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-blue-700">
                 {{ materialStore.statistics.studio }}
               </div>
               <div class="text-xs text-gray-600 mt-1">{{ t('statistics.studio') }}</div>
             </div>
-            <div class="glass-card p-2 sm:p-3 text-center">
-              <div class="text-xl sm:text-2xl font-bold text-blue-600">
+            <div class="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-green-700">
                 {{ materialStore.statistics.clothing }}
               </div>
               <div class="text-xs text-gray-600 mt-1">{{ t('statistics.clothing') }}</div>
             </div>
-            <div class="glass-card p-2 sm:p-3 text-center">
-              <div class="text-xl sm:text-2xl font-bold text-sky-600">
+            <div class="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-lg p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-orange-700">
                 {{ materialStore.statistics.misc }}
               </div>
               <div class="text-xs text-gray-600 mt-1">{{ t('statistics.misc') }}</div>
@@ -115,9 +115,8 @@
               v-model="materialStore.searchKeyword"
               type="text"
               :placeholder="t('material.searchPlaceholder')"
-              class="w-full pl-9 sm:pl-12 pr-4 py-2 sm:py-3 text-sm sm:text-base bg-white/50 border border-white/30 rounded-xl 
-                     focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent
-                     backdrop-blur-sm transition-all"
+              class="w-full pl-9 sm:pl-12 pr-4 py-2 sm:py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-lg 
+                     focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
             />
           </div>
           
@@ -297,18 +296,5 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.animate-fade-in {
-  animation: fadeIn 0.2s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* 移除动画，提升性能 */
 </style>

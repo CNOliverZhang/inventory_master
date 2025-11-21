@@ -7,39 +7,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        // 玻璃态渐变主题色 - 青蓝色系
         primary: {
-          50: '#e0f7fa',
-          100: '#b2ebf2',
-          200: '#80deea',
-          300: '#4dd0e1',
-          400: '#26c6da',
-          500: '#00bcd4',
-          600: '#00acc1',
-          700: '#0097a7',
-          800: '#00838f',
-          900: '#006064',
-        },
-        gradient: {
-          start: '#0cb9c1',
-          middle: '#00a8e8',
-          end: '#00aeff',
+          50: '#ecfeff',
+          100: '#cffafe',
+          200: '#a5f3fc',
+          300: '#67e8f9',
+          400: '#22d3ee',
+          500: '#06b6d4',
+          600: '#0891b2',
+          700: '#0e7490',
+          800: '#155e75',
+          900: '#164e63',
         },
       },
       backgroundImage: {
-        'gradient-primary': 'linear-gradient(135deg, #0cb9c1 0%, #00aeff 100%)',
-        'gradient-secondary': 'linear-gradient(135deg, #00d4ff 0%, #0098ff 100%)',
-        'gradient-cyan': 'linear-gradient(135deg, #0cb9c1 0%, #00a8e8 50%, #00aeff 100%)',
-        'glass': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
-      },
-      backdropBlur: {
-        xs: '2px',
-      },
-      boxShadow: {
-        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
-        'glass-lg': '0 12px 48px 0 rgba(31, 38, 135, 0.45)',
-        'glow': '0 0 20px rgba(0, 188, 212, 0.4)',
-        'glow-lg': '0 0 30px rgba(0, 188, 212, 0.5)',
+        'gradient-primary': 'linear-gradient(to right, #06b6d4, #3b82f6)',
+        'gradient-secondary': 'linear-gradient(to right, #22d3ee, #3b82f6)',
       },
     },
   },
