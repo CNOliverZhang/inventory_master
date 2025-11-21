@@ -66,10 +66,10 @@
             <span class="text-gray-400 text-xs ml-1">({{ t('common.optional') }})</span>
           </label>
           <select
-            v-model="formData.categoryId"
+            v-model.number="formData.categoryId"
             class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
           >
-            <option :value="undefined">{{ t('material.selectCategory') }}</option>
+            <option :value="null">{{ t('material.selectCategory') }}</option>
             <option
               v-for="category in availableCategories"
               :key="category.id"
@@ -259,7 +259,7 @@ const photoFile = ref<File>()
 const formData = reactive<MaterialForm>({
   name: '',
   type: MaterialType.STUDIO,
-  categoryId: undefined,
+  categoryId: null,
   location: '',
   quantity: 0,
   inUseQuantity: 0,
@@ -286,7 +286,7 @@ watch(() => formData.type, async (newType) => {
     if (formData.categoryId) {
       const category = categoryStore.categories.find(c => c.id === formData.categoryId)
       if (!category || category.type !== newType) {
-        formData.categoryId = undefined
+        formData.categoryId = null
       }
     }
   }
@@ -298,7 +298,7 @@ const resetForm = () => {
   photoFile.value = undefined
   formData.name = ''
   formData.type = MaterialType.STUDIO
-  formData.categoryId = undefined
+  formData.categoryId = null
   formData.location = ''
   formData.quantity = 0
   formData.inUseQuantity = 0

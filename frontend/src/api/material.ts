@@ -34,6 +34,11 @@ export const createMaterialApi = (data: MaterialForm): Promise<ApiResponse<Mater
   formData.append('type', data.type)
   formData.append('location', data.location)
   
+  // 添加细分类别ID
+  if (data.categoryId !== undefined) {
+    formData.append('categoryId', String(data.categoryId))
+  }
+  
   if (data.photo) {
     formData.append('photo', data.photo)
   }
@@ -69,6 +74,11 @@ export const updateMaterialApi = (
   if (data.name) formData.append('name', data.name)
   if (data.location) formData.append('location', data.location)
   if (data.photo) formData.append('photo', data.photo)
+  
+  // 添加细分类别ID（允许设置为空）
+  if (data.categoryId !== undefined) {
+    formData.append('categoryId', String(data.categoryId))
+  }
   
   if (data.quantity !== undefined) {
     formData.append('quantity', String(data.quantity))

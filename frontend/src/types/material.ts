@@ -36,7 +36,7 @@ export interface Material {
 export interface MaterialForm {
   name: string
   type: MaterialType
-  categoryId?: number
+  categoryId?: number | null
   location: string
   photo?: File
   quantity?: number
