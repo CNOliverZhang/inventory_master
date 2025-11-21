@@ -45,6 +45,18 @@ export const useCategoryStore = defineStore('category', () => {
     }
   }
 
+  // 根据类型获取类别（异步版本，用于确保数据已加载）
+  const fetchCategoriesByType = async (type: MaterialType) => {
+    // 检查是否已有该类型的类别数据
+    const existingCategories = categories.value.filter(cat => cat.type === type)
+    if (existingCategories.length > 0) {
+      // 数据已存在，不需要重新获取
+      return
+    }
+    // 数据不存在，获取该类型的类别
+    await fetchCategories(type)
+  }
+
   // 获取类别统计
   const fetchCategoryStats = async () => {
     try {
@@ -116,6 +128,7 @@ export const useCategoryStore = defineStore('category', () => {
     filteredCategories,
     getCategoriesByType,
     fetchCategories,
+    fetchCategoriesByType,
     fetchCategoryStats,
     createCategory,
     updateCategory,
