@@ -1,7 +1,5 @@
 import COS from 'cos-nodejs-sdk-v5';
 import dotenv from 'dotenv';
-import { v4 as uuidv4 } from 'uuid';
-import path from 'path';
 
 dotenv.config();
 
@@ -22,34 +20,38 @@ export interface UploadResult {
 /**
  * 上传文件到腾讯云 COS
  * @param fileBuffer 文件缓冲区
- * @param originalName 原始文件名
+ * @param filename 文件名（包含扩展名）
+ * @param contentType 内容类型（可选）
  * @returns 上传结果，包含 URL 和 Key
  */
 export const uploadFile = async (
   fileBuffer: Buffer,
-  originalName: string
+  filename: string,
+  contentType?: string
 ): Promise<UploadResult> => {
   return new Promise((resolve, reject) => {
-    const ext = path.extname(originalName);
-    const filename = `${uuidv4()}${ext}`;
     const key = `materials/${filename}`;
 
-    cos.putObject(
-      {
-        Bucket,
-        Region,
-        Key: key,
-        Body: fileBuffer,
-      },
-      (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          const url = `https://${Bucket}.cos.${Region}.myqcloud.com/${key}`;
-          resolve({ url, key });
-        }
+    const uploadOptions: any = {
+      Bucket,
+      Region,
+      Key: key,
+      Body: fileBuffer,
+    };
+
+    // 如果提供了 contentType，则设置
+    if (contentType) {
+      uploadOptions.ContentType = contentType;
+    }
+
+    cos.putObject(uploadOptions, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        const url = `https://${Bucket}.cos.${Region}.myqcloud.com/${key}`;
+        resolve({ url, key });
       }
-    );
+    });
   });
 };
 
@@ -65,7 +67,7 @@ export const deleteFile = async (key: string): Promise<void> => {
         Region,
         Key: key,
       },
-      (err, data) => {
+      (err) => {
         if (err) {
           reject(err);
         } else {

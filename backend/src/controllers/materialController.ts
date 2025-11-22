@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Material, Category } from '../models';
 import { MaterialType } from '../models/Material';
 import { uploadFile, deleteFile, getKeyFromUrl } from '../services/cosService';
+import { processImage, isValidImage } from '../services/imageService';
 import { Op } from 'sequelize';
 
 /**
@@ -134,7 +135,29 @@ export const createMaterial = async (req: Request, res: Response) => {
     
     // 处理照片上传
     if (req.file) {
-      const uploadResult = await uploadFile(req.file.buffer, req.file.originalname);
+      // 验证是否为有效图片
+      const isValid = await isValidImage(req.file.buffer);
+      if (!isValid) {
+        return res.status(400).json({
+          success: false,
+          message: '上传的文件不是有效的图片格式',
+        });
+      }
+
+      // 处理图片：压缩、转换为 WebP、重命名
+      const processedImage = await processImage(req.file.buffer, {
+        maxWidth: 1920,
+        maxHeight: 1920,
+        quality: 80,
+        prefix: 'material',
+      });
+
+      // 上传到 COS
+      const uploadResult = await uploadFile(
+        processedImage.buffer,
+        processedImage.filename,
+        'image/webp'
+      );
       photoUrl = uploadResult.url;
     }
     
@@ -206,6 +229,15 @@ export const updateMaterial = async (req: Request, res: Response) => {
     
     // 处理新照片上传
     if (req.file) {
+      // 验证是否为有效图片
+      const isValid = await isValidImage(req.file.buffer);
+      if (!isValid) {
+        return res.status(400).json({
+          success: false,
+          message: '上传的文件不是有效的图片格式',
+        });
+      }
+
       // 删除旧照片
       if (material.photoUrl) {
         try {
@@ -216,8 +248,20 @@ export const updateMaterial = async (req: Request, res: Response) => {
         }
       }
       
-      // 上传新照片
-      const uploadResult = await uploadFile(req.file.buffer, req.file.originalname);
+      // 处理图片：压缩、转换为 WebP、重命名
+      const processedImage = await processImage(req.file.buffer, {
+        maxWidth: 1920,
+        maxHeight: 1920,
+        quality: 80,
+        prefix: 'material',
+      });
+
+      // 上传新照片到 COS
+      const uploadResult = await uploadFile(
+        processedImage.buffer,
+        processedImage.filename,
+        'image/webp'
+      );
       photoUrl = uploadResult.url;
     }
     
