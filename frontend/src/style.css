@@ -74,64 +74,64 @@ body {
   }
 }
 
-/* 深色模式全局样式 - 使用 CSS 变量和直接样式而非 @apply */
+/* 深色模式全局样式 - 使用更具体的选择器提高优先级 */
 .dark .text-gray-800 {
-  color: #f3f4f6 !important; /* gray-100 */
+  color: #f3f4f6; /* gray-100 */
 }
 
 .dark .text-gray-700 {
-  color: #e5e7eb !important; /* gray-200 */
+  color: #e5e7eb; /* gray-200 */
 }
 
 .dark .text-gray-600 {
-  color: #d1d5db !important; /* gray-300 */
+  color: #d1d5db; /* gray-300 */
 }
 
 .dark .text-gray-500 {
-  color: #9ca3af !important; /* gray-400 */
+  color: #9ca3af; /* gray-400 */
 }
 
 /* 背景颜色 */
 .dark .bg-gray-50 {
-  background-color: #111827 !important; /* gray-900 */
+  background-color: #111827; /* gray-900 */
 }
 
 .dark .bg-gray-100 {
-  background-color: #1f2937 !important; /* gray-800 */
+  background-color: #1f2937; /* gray-800 */
 }
 
 .dark .bg-gray-200 {
-  background-color: #374151 !important; /* gray-700 */
+  background-color: #374151; /* gray-700 */
 }
 
 .dark .bg-white {
-  background-color: #1f2937 !important; /* gray-800 */
+  background-color: #1f2937; /* gray-800 */
 }
 
 /* 悬停背景 */
 .dark .hover\:bg-gray-50:hover {
-  background-color: #1f2937 !important; /* gray-800 */
+  background-color: #1f2937; /* gray-800 */
 }
 
 .dark .hover\:bg-gray-100:hover {
-  background-color: #374151 !important; /* gray-700 */
+  background-color: #374151; /* gray-700 */
 }
 
 .dark .hover\:bg-gray-200:hover {
-  background-color: #4b5563 !important; /* gray-600 */
+  background-color: #4b5563; /* gray-600 */
 }
 
 .dark .hover\:bg-gray-300:hover {
-  background-color: #4b5563 !important; /* gray-600 */
+  background-color: #4b5563; /* gray-600 */
 }
 
 /* 边框颜色 */
 .dark .border-gray-200 {
-  border-color: #374151 !important; /* gray-700 */
+  border-color: #374151; /* gray-700 */
 }
 
 .dark .border-gray-300 {
-  border-color: #4b5563 !important; /* gray-600 */
+  border-color: #4b5563; /* gray-600 */
 }
 
 /* 渐变背景 */
@@ -145,16 +145,16 @@ body {
   --tw-gradient-to: #374151;
 }
 
-/* 输入框深色模式 */
+/* 输入框深色模式 - 使用更高优先级的选择器 */
 .dark input[type="text"],
 .dark input[type="email"],
 .dark input[type="password"],
 .dark input[type="number"],
 .dark textarea,
 .dark select {
-  background-color: #374151 !important; /* gray-700 */
-  border-color: #4b5563 !important; /* gray-600 */
-  color: #f3f4f6 !important; /* gray-100 */
+  background-color: #374151; /* gray-700 */
+  border-color: #4b5563; /* gray-600 */
+  color: #f3f4f6; /* gray-100 */
 }
 
 .dark input[type="text"]::placeholder,
@@ -162,7 +162,7 @@ body {
 .dark input[type="password"]::placeholder,
 .dark input[type="number"]::placeholder,
 .dark textarea::placeholder {
-  color: #9ca3af !important; /* gray-400 */
+  color: #9ca3af; /* gray-400 */
 }
 
 .dark input[type="text"]:focus,
@@ -171,22 +171,16 @@ body {
 .dark input[type="number"]:focus,
 .dark textarea:focus,
 .dark select:focus {
-  border-color: #22d3ee !important; /* cyan-400 */
-  --tw-ring-color: rgba(34, 211, 238, 0.5) !important;
+  border-color: #22d3ee; /* cyan-400 */
+  --tw-ring-color: rgba(34, 211, 238, 0.5);
 }
 
 .dark input:disabled,
 .dark select:disabled,
 .dark textarea:disabled {
-  background-color: #1f2937 !important; /* gray-800 */
-  color: #6b7280 !important; /* gray-500 */
+  background-color: #1f2937; /* gray-800 */
+  color: #6b7280; /* gray-500 */
   cursor: not-allowed;
-}
-
-/* 下拉菜单深色模式 */
-.dark .bg-white.border.rounded-lg.shadow-lg {
-  background-color: #1f2937 !important; /* gray-800 */
-  border-color: #374151 !important; /* gray-700 */
 }
 
 /* select 选项深色模式 */
