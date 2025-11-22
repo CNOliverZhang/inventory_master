@@ -167,4 +167,30 @@ export default {
     notFound: 'Resource not found',
     requestFailed: 'Request failed',
   },
+
+  settings: {
+    title: 'Settings',
+    theme: {
+      title: 'Theme Color',
+      changed: 'Theme changed',
+    },
+    account: {
+      title: 'Account Settings',
+      username: 'Username',
+      email: 'Email',
+      password: 'Password',
+      changeEmail: 'Change Email',
+      changePassword: 'Change Password',
+      oldPassword: 'Old Password',
+      newPassword: 'New Password',
+      confirmPassword: 'Confirm Password',
+      newEmail: 'New Email',
+      fillAllFields: 'Please fill all fields',
+      passwordMismatch: 'Passwords do not match',
+      passwordTooShort: 'Password must be at least 6 characters',
+      invalidEmail: 'Please enter a valid email',
+      passwordChanged: 'Password changed successfully',
+      emailChanged: 'Email changed successfully',
+    },
+  },
 }

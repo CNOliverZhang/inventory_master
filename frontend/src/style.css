@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* 默认主题色 - 海洋蓝 */
+  --color-primary-from: #06b6d4;
+  --color-primary-to: #3b82f6;
+  --color-secondary-from: #0891b2;
+  --color-secondary-to: #2563eb;
+  --color-accent-from: #0e7490;
+  --color-accent-to: #1d4ed8;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -33,15 +43,27 @@ body {
   }
   
   .btn-gradient {
-    @apply bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium 
-           px-6 py-2.5 rounded-lg transition-colors duration-200 
-           hover:from-cyan-600 hover:to-blue-600;
+    background: linear-gradient(to right, var(--color-primary-from), var(--color-primary-to));
+    @apply text-white font-medium px-6 py-2.5 rounded-lg transition-all duration-200;
+  }
+  
+  .btn-gradient:hover {
+    background: linear-gradient(to right, var(--color-secondary-from), var(--color-secondary-to));
+    @apply shadow-lg;
   }
   
   .btn-glass {
     @apply bg-white border border-gray-300 text-gray-700 
            px-6 py-2.5 rounded-lg transition-colors duration-200 
            hover:bg-gray-50 hover:border-gray-400;
+  }
+  
+  .gradient-primary {
+    background: linear-gradient(to right, var(--color-primary-from), var(--color-primary-to));
+  }
+  
+  .gradient-secondary {
+    background: linear-gradient(to right, var(--color-secondary-from), var(--color-secondary-to));
   }
 }
 

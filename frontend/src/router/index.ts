@@ -9,12 +9,18 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/Login.vue'),
     meta: { requiresAuth: false },
   },
-    {
-      path: '/',
-      name: 'Home',
-      component: () => import('@/views/Home.vue'),
-      meta: { requiresAuth: true },
-    },
+  {
+    path: '/',
+    name: 'Home',
+    component: () => import('@/views/Home.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('@/views/Settings.vue'),
+    meta: { requiresAuth: true },
+  },
 ]
 
 const router = createRouter({
@@ -23,7 +29,7 @@ const router = createRouter({
 })
 
 // 路由守卫：检查用户认证状态
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()
   
   // 初始化认证状态

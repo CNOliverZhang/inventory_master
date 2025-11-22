@@ -163,4 +163,30 @@ export default {
     notFound: '资源不存在',
     requestFailed: '请求失败',
   },
+
+  settings: {
+    title: '个人设置',
+    theme: {
+      title: '主题颜色',
+      changed: '主题已切换',
+    },
+    account: {
+      title: '账户设置',
+      username: '用户名',
+      email: '邮箱',
+      password: '密码',
+      changeEmail: '修改邮箱',
+      changePassword: '修改密码',
+      oldPassword: '原密码',
+      newPassword: '新密码',
+      confirmPassword: '确认密码',
+      newEmail: '新邮箱',
+      fillAllFields: '请填写所有字段',
+      passwordMismatch: '两次输入的密码不一致',
+      passwordTooShort: '密码长度至少为 6 位',
+      invalidEmail: '请输入正确的邮箱格式',
+      passwordChanged: '密码修改成功',
+      emailChanged: '邮箱修改成功',
+    },
+  },
 }

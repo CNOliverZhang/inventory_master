@@ -7,6 +7,7 @@ import App from './App.vue'
 import './style.css'
 import { useUserStore } from './stores/user'
 import { useLocaleStore } from './stores/locale'
+import { useThemeStore } from './stores/theme'
 
 // PrimeVue样式
 import 'primeicons/primeicons.css'
@@ -26,6 +27,10 @@ const localeStore = useLocaleStore()
 const savedLocale = localStorage.getItem('locale') || 'zh-CN'
 localeStore.setLocale(savedLocale)
 i18n.global.locale.value = savedLocale as any
+
+// 初始化主题
+const themeStore = useThemeStore()
+themeStore.initTheme()
 
 app.use(router)
 

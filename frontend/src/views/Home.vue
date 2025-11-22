@@ -5,7 +5,7 @@
       <div class="flex items-center justify-between">
         <!-- Logo和标题 -->
         <div class="flex items-center gap-2 sm:gap-3">
-          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg gradient-primary flex items-center justify-center">
             <i class="pi pi-box text-white text-base sm:text-xl"></i>
           </div>
           <h1 class="text-lg sm:text-2xl font-bold text-gray-800">
@@ -23,7 +23,7 @@
               @click="toggleUserMenu"
               class="flex items-center gap-1 sm:gap-3 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
-              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-semibold text-sm">
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full gradient-primary flex items-center justify-center text-white font-semibold text-sm">
                 {{ userStore.user?.username.charAt(0).toUpperCase() }}
               </div>
               <span class="text-xs sm:text-sm font-medium text-gray-700 hidden sm:inline">{{ userStore.user?.username }}</span>
@@ -35,6 +35,13 @@
               v-if="showUserMenu"
               class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2"
             >
+              <button
+                @click="handleSettings"
+                class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+              >
+                <i class="pi pi-cog"></i>
+                {{ t('settings.title') }}
+              </button>
               <button
                 @click="handleLogout"
                 class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
@@ -59,7 +66,7 @@
             @click="handleTypeChange(item.type)"
             class="w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-colors text-sm sm:text-base"
             :class="materialStore.currentType === item.type 
-              ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' 
+              ? 'gradient-primary text-white' 
               : 'text-gray-700 hover:bg-gray-100'"
           >
             <div class="flex items-center gap-2 sm:gap-3">
@@ -327,6 +334,12 @@ const handleDialogSuccess = () => {
 // 切换用户菜单
 const toggleUserMenu = () => {
   showUserMenu.value = !showUserMenu.value
+}
+
+// 进入设置页面
+const handleSettings = () => {
+  showUserMenu.value = false
+  router.push('/settings')
 }
 
 // 退出登录

@@ -10,7 +10,7 @@
       <!-- 头部 -->
       <div class="text-center space-y-2 sm:space-y-3">
         <div class="flex justify-center">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-md">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 gradient-primary rounded-xl flex items-center justify-center shadow-md">
             <i class="pi pi-box text-2xl sm:text-3xl text-white"></i>
           </div>
         </div>
