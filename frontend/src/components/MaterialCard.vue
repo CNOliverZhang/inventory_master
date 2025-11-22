@@ -73,13 +73,16 @@
               class="btn-gradient h-[30px] sm:h-[36px] px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
             >
               <i class="pi pi-bolt"></i>
-              <i :class="showQuickActions ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-xs"></i>
+              <i :class="showQuickActions && menuPosition === 'top' ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-xs"></i>
             </button>
             
             <!-- 快捷操作下拉菜单 -->
             <div
               v-if="showQuickActions"
-              class="absolute bottom-full left-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 whitespace-nowrap"
+              :class="[
+                'absolute left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 whitespace-nowrap',
+                menuPosition === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
+              ]"
             >
               <button
                 @click="handleQuickAction('restock')"
@@ -213,6 +216,7 @@ const toast = useToast()
 // 快捷操作状态
 const showQuickActions = ref(false)
 const quickActionsRef = ref<HTMLElement | null>(null)
+const menuPosition = ref<'top' | 'bottom'>('bottom') // 默认在下方
 
 // 补充库存对话框状态
 const showRestockDialog = ref(false)
@@ -259,8 +263,34 @@ const getTypeIcon = (type: MaterialType) => {
   return icons[type]
 }
 
+// 检测菜单应该显示在上方还是下方
+const detectMenuPosition = () => {
+  if (!quickActionsRef.value) return
+  
+  const rect = quickActionsRef.value.getBoundingClientRect()
+  const windowHeight = window.innerHeight
+  
+  // 菜单的预估高度（4个选项，每个约40px）
+  const menuHeight = 180
+  
+  // 检查下方空间是否足够
+  const spaceBelow = windowHeight - rect.bottom
+  
+  if (spaceBelow < menuHeight && rect.top > menuHeight) {
+    // 下方空间不足，但上方空间充足
+    menuPosition.value = 'top'
+  } else {
+    // 默认在下方
+    menuPosition.value = 'bottom'
+  }
+}
+
 // 切换快捷操作菜单
 const toggleQuickActions = () => {
+  if (!showQuickActions.value) {
+    // 打开菜单前检测位置
+    detectMenuPosition()
+  }
   showQuickActions.value = !showQuickActions.value
 }
 
