@@ -102,7 +102,7 @@
             {{ t('material.photo') }}
           </label>
           <div
-            class="relative w-full h-40 sm:h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden cursor-pointer hover:border-cyan-500 transition-colors bg-gray-50"
+            class="upload-area relative w-full h-40 sm:h-48 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden cursor-pointer transition-colors bg-gray-50"
             @click="triggerFileInput"
             @dragover.prevent
             @drop.prevent="handleDrop"
@@ -451,5 +451,9 @@ const handleClose = () => {
 <style scoped>
 .upload-icon {
   color: var(--color-primary-to);
+}
+
+.upload-area:hover {
+  border-color: var(--color-primary-to);
 }
 </style>

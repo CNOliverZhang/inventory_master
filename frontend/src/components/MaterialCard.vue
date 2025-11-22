@@ -47,18 +47,18 @@
         <template v-if="material.type === MaterialType.STUDIO">
           <div class="flex justify-between items-center text-xs sm:text-sm">
             <span class="text-gray-600">{{ t('material.inUseQuantity') }}</span>
-            <span class="font-semibold text-cyan-600">{{ material.inUseQuantity || 0 }}</span>
+            <span class="quantity-value font-semibold">{{ material.inUseQuantity || 0 }}</span>
           </div>
           <div class="flex justify-between items-center text-xs sm:text-sm">
             <span class="text-gray-600">{{ t('material.stockQuantity') }}</span>
-            <span class="font-semibold text-blue-600">{{ material.stockQuantity || 0 }}</span>
+            <span class="quantity-value font-semibold">{{ material.stockQuantity || 0 }}</span>
           </div>
         </template>
         <!-- 杂物：单数量 -->
         <template v-else-if="material.type === MaterialType.MISC">
           <div class="flex justify-between items-center text-xs sm:text-sm">
             <span class="text-gray-600">{{ t('material.quantity') }}</span>
-            <span class="font-semibold text-cyan-600">{{ material.quantity || 0 }}</span>
+            <span class="quantity-value font-semibold">{{ material.quantity || 0 }}</span>
           </div>
         </template>
       </div>
@@ -137,6 +137,10 @@ const handleDelete = () => {
 }
 
 .location-icon {
+  color: var(--color-primary-to);
+}
+
+.quantity-value {
   color: var(--color-primary-to);
 }
 </style>
