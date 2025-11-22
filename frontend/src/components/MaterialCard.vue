@@ -74,7 +74,7 @@
         </button>
         <button
           @click="handleDelete"
-          class="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
+          class="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
         >
           <i class="pi pi-trash"></i>
           <span class="hidden sm:inline">{{ t('common.delete') }}</span>

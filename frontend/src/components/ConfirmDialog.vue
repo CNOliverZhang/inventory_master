@@ -96,9 +96,9 @@ const iconClass = computed(() => {
 
 const confirmButtonClass = computed(() => {
   const classes = {
-    warning: 'bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white hover:shadow-lg',
-    danger: 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white hover:shadow-lg',
-    info: 'bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white hover:shadow-lg'
+    warning: 'bg-orange-500 hover:bg-orange-600 text-white hover:shadow-lg',
+    danger: 'bg-red-600 hover:bg-red-700 text-white hover:shadow-lg',
+    info: 'btn-gradient hover:shadow-lg'
   }
   return classes[props.type]
 })
