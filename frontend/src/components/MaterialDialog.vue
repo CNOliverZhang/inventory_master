@@ -6,9 +6,9 @@
     @click.self="handleClose"
   >
     <!-- 对话框 -->
-    <div class="glass-card w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-      <!-- 头部 -->
-      <div class="sticky top-0 bg-white px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 flex items-center justify-between">
+    <div class="glass-card w-full max-w-2xl max-h-[90vh] flex flex-col">
+      <!-- 头部 - 固定 -->
+      <div class="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 flex items-center justify-between">
         <h2 class="text-lg sm:text-xl font-bold text-gray-800">
           {{ isEdit ? t('material.editMaterial') : t('material.addMaterial') }}
         </h2>
@@ -17,8 +17,8 @@
         </button>
       </div>
 
-      <!-- 表单内容 -->
-      <div class="p-4 sm:p-6 space-y-3 sm:space-y-4">
+      <!-- 表单内容 - 可滚动 -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3 sm:space-y-4">
         <!-- 物资名称 -->
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700 flex items-center gap-1">
@@ -194,8 +194,8 @@
         </template>
       </div>
 
-      <!-- 底部按钮 -->
-      <div class="sticky bottom-0 bg-white px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 flex justify-end gap-2 sm:gap-3">
+      <!-- 底部按钮 - 固定 -->
+      <div class="flex-shrink-0 px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 flex justify-end gap-2 sm:gap-3">
         <button
           @click="handleClose"
           class="px-4 sm:px-6 py-2 sm:py-2.5 text-sm sm:text-base bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors"

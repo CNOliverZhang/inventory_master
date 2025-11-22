@@ -129,6 +129,28 @@
         </div>
       </div>
     </div>
+
+    <!-- 删除确认对话框 -->
+    <ConfirmDialog
+      v-model="showDeleteConfirm"
+      :title="t('common.warning')"
+      :message="t('category.deleteConfirm', { name: categoryToDelete?.name || '' })"
+      :confirm-text="t('common.confirm')"
+      :cancel-text="t('common.cancel')"
+      type="danger"
+      @confirm="confirmDelete"
+    />
+
+    <!-- 删除警告对话框（仅提示，无需确认） -->
+    <ConfirmDialog
+      v-model="showDeleteWarning"
+      :title="t('common.warning')"
+      :message="deleteWarningMessage"
+      :confirm-text="t('common.confirm')"
+      cancel-text=""
+      type="warning"
+      @confirm="() => {}"
+    />
   </div>
 </template>
 
@@ -138,7 +160,7 @@ import { useI18n } from 'vue-i18n'
 import { useCategoryStore } from '@/stores/category'
 import { MaterialType } from '@/types/material'
 import type { Category } from '@/types/category'
-import { ElMessageBox } from 'element-plus'
+import ConfirmDialog from './ConfirmDialog.vue'
 
 interface Props {
   modelValue: boolean
@@ -166,6 +188,10 @@ const visible = computed({
 const newCategoryName = ref('')
 const editingId = ref<number | null>(null)
 const editingName = ref('')
+const showDeleteConfirm = ref(false)
+const categoryToDelete = ref<Category | null>(null)
+const showDeleteWarning = ref(false)
+const deleteWarningMessage = ref('')
 
 // 获取类别统计
 const getCategoryStats = (categoryId: number) => {
@@ -229,33 +255,23 @@ const handleSaveEdit = async (id: number) => {
 }
 
 // 删除类别
-const handleDelete = async (category: Category) => {
+const handleDelete = (category: Category) => {
   const stats = getCategoryStats(category.id)
   if (stats > 0) {
-    ElMessageBox.alert(
-      t('category.deleteWarning', { count: stats }),
-      t('common.warning'),
-      {
-        confirmButtonText: t('common.confirm'),
-        type: 'warning',
-      }
-    )
+    deleteWarningMessage.value = t('category.deleteWarning', { count: stats })
+    showDeleteWarning.value = true
     return
   }
 
-  try {
-    await ElMessageBox.confirm(
-      t('category.deleteConfirm', { name: category.name }),
-      t('common.warning'),
-      {
-        confirmButtonText: t('common.confirm'),
-        cancelButtonText: t('common.cancel'),
-        type: 'warning',
-      }
-    )
-    await categoryStore.deleteCategory(category.id)
-  } catch (error) {
-    // 用户取消
+  categoryToDelete.value = category
+  showDeleteConfirm.value = true
+}
+
+// 确认删除
+const confirmDelete = async () => {
+  if (categoryToDelete.value) {
+    await categoryStore.deleteCategory(categoryToDelete.value.id)
+    categoryToDelete.value = null
   }
 }
 

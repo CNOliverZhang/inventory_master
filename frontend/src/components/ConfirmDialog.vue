@@ -31,6 +31,7 @@
           <!-- 按钮 -->
           <div class="flex gap-3 pt-2">
             <button
+              v-if="cancelText"
               @click="handleCancel"
               class="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-all"
             >
@@ -38,8 +39,8 @@
             </button>
             <button
               @click="handleConfirm"
-              class="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium transition-all"
-              :class="confirmButtonClass"
+              class="px-4 py-2.5 rounded-lg text-sm font-medium transition-all"
+              :class="[confirmButtonClass, cancelText ? 'flex-1' : 'w-full']"
             >
               {{ confirmText }}
             </button>
