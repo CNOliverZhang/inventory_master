@@ -192,6 +192,13 @@ export default {
       title: 'Theme Color',
       changed: 'Theme changed',
     },
+    darkMode: {
+      title: 'Dark Mode',
+      light: 'Always Light',
+      dark: 'Always Dark',
+      system: 'Follow System',
+      changed: 'Dark mode updated',
+    },
     account: {
       title: 'Account Settings',
       username: 'Username',

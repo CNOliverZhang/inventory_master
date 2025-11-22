@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, watch } from 'vue'
-import { THEME_PRESETS, type ThemeConfig } from '@/types/theme'
+import { THEME_PRESETS, type ThemeConfig, type DarkModeOption } from '@/types/theme'
 
 export const useThemeStore = defineStore('theme', () => {
   // 当前主题 ID
@@ -8,9 +8,16 @@ export const useThemeStore = defineStore('theme', () => {
   
   // 当前主题配置
   const currentTheme = ref<ThemeConfig>(THEME_PRESETS[0])
+  
+  // 深色模式设置
+  const darkMode = ref<DarkModeOption>('light')
+  
+  // 当前是否为深色模式（计算后的实际状态）
+  const isDark = ref(false)
 
   // 初始化：从 localStorage 恢复主题
   const initTheme = () => {
+    // 恢复主题色
     const savedThemeId = localStorage.getItem('themeId')
     if (savedThemeId) {
       const theme = THEME_PRESETS.find(t => t.id === savedThemeId)
@@ -22,6 +29,29 @@ export const useThemeStore = defineStore('theme', () => {
     } else {
       // 默认主题
       applyTheme(THEME_PRESETS[0])
+    }
+    
+    // 恢复深色模式设置
+    const savedDarkMode = localStorage.getItem('darkMode') as DarkModeOption
+    if (savedDarkMode && ['light', 'dark', 'system'].includes(savedDarkMode)) {
+      darkMode.value = savedDarkMode
+    }
+    
+    // 应用深色模式
+    applyDarkMode()
+    
+    // 监听系统主题变化
+    if (window.matchMedia) {
+      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+      mediaQuery.addEventListener('change', handleSystemThemeChange)
+    }
+  }
+  
+  // 处理系统主题变化
+  const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+    if (darkMode.value === 'system') {
+      isDark.value = e.matches
+      updateDarkClass()
     }
   }
 
@@ -51,6 +81,28 @@ export const useThemeStore = defineStore('theme', () => {
     
     root.style.setProperty('--color-primary-rgb', toRgb(theme.primary.to))
   }
+  
+  // 应用深色模式
+  const applyDarkMode = () => {
+    if (darkMode.value === 'dark') {
+      isDark.value = true
+    } else if (darkMode.value === 'light') {
+      isDark.value = false
+    } else {
+      // system
+      isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+    updateDarkClass()
+  }
+  
+  // 更新DOM的dark类
+  const updateDarkClass = () => {
+    if (isDark.value) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }
 
   // 设置主题
   const setTheme = (themeId: string) => {
@@ -61,6 +113,13 @@ export const useThemeStore = defineStore('theme', () => {
       localStorage.setItem('themeId', themeId)
       applyTheme(theme)
     }
+  }
+  
+  // 设置深色模式
+  const setDarkMode = (mode: DarkModeOption) => {
+    darkMode.value = mode
+    localStorage.setItem('darkMode', mode)
+    applyDarkMode()
   }
 
   // 监听主题变化
@@ -74,8 +133,11 @@ export const useThemeStore = defineStore('theme', () => {
   return {
     currentThemeId,
     currentTheme,
+    darkMode,
+    isDark,
     themes: THEME_PRESETS,
     initTheme,
     setTheme,
+    setDarkMode,
   }
 })

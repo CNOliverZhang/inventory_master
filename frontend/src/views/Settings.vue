@@ -76,6 +76,73 @@
         </div>
       </section>
 
+      <!-- 深色模式设置 -->
+      <section class="glass-card p-4 sm:p-6">
+        <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="pi pi-moon"></i>
+          {{ t('settings.darkMode.title') }}
+        </h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button
+            @click="handleDarkModeChange('light')"
+            class="relative p-4 rounded-lg border-2 transition-all duration-200 hover:scale-105"
+            :class="themeStore.darkMode === 'light' 
+              ? 'border-cyan-500 bg-cyan-50' 
+              : 'border-gray-200 bg-white hover:border-gray-300'"
+          >
+            <div class="flex flex-col items-center gap-2">
+              <i class="pi pi-sun text-3xl text-amber-500"></i>
+              <span class="text-sm font-medium text-gray-700">
+                {{ t('settings.darkMode.light') }}
+              </span>
+              <i 
+                v-if="themeStore.darkMode === 'light'"
+                class="pi pi-check text-cyan-500 absolute top-2 right-2"
+              ></i>
+            </div>
+          </button>
+          
+          <button
+            @click="handleDarkModeChange('dark')"
+            class="relative p-4 rounded-lg border-2 transition-all duration-200 hover:scale-105"
+            :class="themeStore.darkMode === 'dark' 
+              ? 'border-cyan-500 bg-cyan-50' 
+              : 'border-gray-200 bg-white hover:border-gray-300'"
+          >
+            <div class="flex flex-col items-center gap-2">
+              <i class="pi pi-moon text-3xl text-indigo-600"></i>
+              <span class="text-sm font-medium text-gray-700">
+                {{ t('settings.darkMode.dark') }}
+              </span>
+              <i 
+                v-if="themeStore.darkMode === 'dark'"
+                class="pi pi-check text-cyan-500 absolute top-2 right-2"
+              ></i>
+            </div>
+          </button>
+          
+          <button
+            @click="handleDarkModeChange('system')"
+            class="relative p-4 rounded-lg border-2 transition-all duration-200 hover:scale-105"
+            :class="themeStore.darkMode === 'system' 
+              ? 'border-cyan-500 bg-cyan-50' 
+              : 'border-gray-200 bg-white hover:border-gray-300'"
+          >
+            <div class="flex flex-col items-center gap-2">
+              <i class="pi pi-desktop text-3xl text-gray-600"></i>
+              <span class="text-sm font-medium text-gray-700">
+                {{ t('settings.darkMode.system') }}
+              </span>
+              <i 
+                v-if="themeStore.darkMode === 'system'"
+                class="pi pi-check text-cyan-500 absolute top-2 right-2"
+              ></i>
+            </div>
+          </button>
+        </div>
+      </section>
+
       <!-- 账户设置 -->
       <section class="glass-card p-4 sm:p-6">
         <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
@@ -249,6 +316,7 @@ import { useUserStore } from '@/stores/user'
 import { useLocaleStore } from '@/stores/locale'
 import { updatePasswordApi, updateEmailApi } from '@/api/settings'
 import type { UpdatePasswordForm, UpdateEmailForm } from '@/types/settings'
+import type { DarkModeOption } from '@/types/theme'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import { ElMessage } from 'element-plus'
 
@@ -282,6 +350,12 @@ const emailForm = reactive<UpdateEmailForm>({
 const handleThemeChange = (themeId: string) => {
   themeStore.setTheme(themeId)
   ElMessage.success(t('settings.theme.changed'))
+}
+
+// 切换深色模式
+const handleDarkModeChange = (mode: DarkModeOption) => {
+  themeStore.setDarkMode(mode)
+  ElMessage.success(t('settings.darkMode.changed'))
 }
 
 // 修改密码

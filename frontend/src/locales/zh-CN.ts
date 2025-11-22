@@ -188,6 +188,13 @@ export default {
       title: '主题颜色',
       changed: '主题已切换',
     },
+    darkMode: {
+      title: '深色模式',
+      light: '保持浅色',
+      dark: '保持深色',
+      system: '跟随系统',
+      changed: '深色模式已更新',
+    },
     account: {
       title: '账户设置',
       username: '用户名',

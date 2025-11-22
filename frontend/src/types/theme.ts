@@ -1,3 +1,6 @@
+// 深色模式选项
+export type DarkModeOption = 'light' | 'dark' | 'system'
+
 // 主题配置
 export interface ThemeConfig {
   id: string
@@ -88,4 +91,5 @@ export const THEME_PRESETS: ThemeConfig[] = [
 // 用户设置
 export interface UserSettings {
   themeId: string
+  darkMode: DarkModeOption
 }
