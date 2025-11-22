@@ -162,18 +162,6 @@
                 class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
               />
             </div>
-            <div class="space-y-2">
-              <label class="text-sm font-medium text-gray-700">
-                {{ t('material.stockQuantity') }}
-              </label>
-              <input
-                v-model.number="formData.stockQuantity"
-                type="number"
-                min="0"
-                step="1"
-                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
-              />
-            </div>
           </div>
         </template>
 
@@ -263,7 +251,6 @@ const formData = reactive<MaterialForm>({
   location: '',
   quantity: 0,
   inUseQuantity: 0,
-  stockQuantity: 0,
 })
 
 const errors = reactive({
@@ -302,7 +289,6 @@ const resetForm = () => {
   formData.location = ''
   formData.quantity = 0
   formData.inUseQuantity = 0
-  formData.stockQuantity = 0
   errors.name = ''
   errors.type = ''
   errors.location = ''
@@ -325,7 +311,6 @@ watch(
       formData.location = material.location
       formData.quantity = material.quantity || 0
       formData.inUseQuantity = material.inUseQuantity || 0
-      formData.stockQuantity = material.stockQuantity || 0
       photoPreview.value = ''
       photoFile.value = undefined
       

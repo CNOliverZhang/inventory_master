@@ -8,6 +8,10 @@ import {
   updateMaterial,
   deleteMaterial,
   getStatistics,
+  restockMaterial,
+  takeOutMaterial,
+  discardMaterial,
+  replaceMaterial,
 } from '../controllers/materialController';
 
 const router = express.Router();
@@ -38,5 +42,11 @@ router.get('/materials/:id', getMaterialById);
 router.post('/materials', upload.single('photo'), createMaterial);
 router.put('/materials/:id', upload.single('photo'), updateMaterial);
 router.delete('/materials/:id', deleteMaterial);
+
+// 快捷操作路由
+router.post('/materials/:id/restock', restockMaterial);     // 补充库存
+router.post('/materials/:id/take-out', takeOutMaterial);    // 领用
+router.post('/materials/:id/discard', discardMaterial);     // 报废
+router.post('/materials/:id/replace', replaceMaterial);     // 替换
 
 export default router;

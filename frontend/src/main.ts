@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import PrimeVue from 'primevue/config'
+import ToastService from 'primevue/toastservice'
 import router from './router'
 import i18n from './locales'
 import App from './App.vue'
@@ -38,5 +39,8 @@ app.use(router)
 app.use(PrimeVue, {
   unstyled: true,
 })
+
+// 使用 Toast 服务
+app.use(ToastService)
 
 app.mount('#app')

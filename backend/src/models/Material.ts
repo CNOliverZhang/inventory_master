@@ -3,9 +3,9 @@ import sequelize from '../config/database';
 
 // 物资类型枚举
 export enum MaterialType {
-  STUDIO = 'studio',      // 工作室物料
+  STUDIO = 'studio',      // 杂物（原工作室物料）
   CLOTHING = 'clothing',  // 衣物
-  MISC = 'misc'          // 杂物
+  MISC = 'misc'          // 收藏品（原杂物）
 }
 
 // 物资属性接口
@@ -17,15 +17,15 @@ interface MaterialAttributes {
   categoryId?: number;         // 细分类别ID（可选）
   location: string;
   photoUrl?: string;
-  quantity?: number;           // 杂物和工作室物料的数量
-  inUseQuantity?: number;      // 工作室物料专用：在用数量
-  stockQuantity?: number;      // 工作室物料专用：全新库存数量
+  quantity?: number;           // 总数量（杂物使用）
+  inUseQuantity?: number;      // 在用数量（杂物使用）
+  description?: string;        // 详细信息（收藏品使用）
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 // 创建物资时的可选属性
-interface MaterialCreationAttributes extends Optional<MaterialAttributes, 'id' | 'categoryId' | 'photoUrl' | 'quantity' | 'inUseQuantity' | 'stockQuantity'> {}
+interface MaterialCreationAttributes extends Optional<MaterialAttributes, 'id' | 'categoryId' | 'photoUrl' | 'quantity' | 'inUseQuantity' | 'description'> {}
 
 // 导出接口供外部使用
 export type { MaterialAttributes, MaterialCreationAttributes };
@@ -41,7 +41,7 @@ class Material extends Model<MaterialAttributes, MaterialCreationAttributes> imp
   public photoUrl?: string;
   public quantity?: number;
   public inUseQuantity?: number;
-  public stockQuantity?: number;
+  public description?: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -96,17 +96,17 @@ Material.init(
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      comment: '数量（杂物和工作室物料使用）',
+      comment: '总数量（杂物使用）',
     },
     inUseQuantity: {
       type: DataTypes.INTEGER,
       allowNull: true,
-      comment: '在用数量（仅工作室物料使用）',
+      comment: '在用数量（杂物使用）',
     },
-    stockQuantity: {
-      type: DataTypes.INTEGER,
+    description: {
+      type: DataTypes.TEXT,
       allowNull: true,
-      comment: '全新库存数量（仅工作室物料使用）',
+      comment: '详细信息（收藏品使用）',
     },
   },
   {

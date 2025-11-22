@@ -19,13 +19,14 @@ export default {
     error: 'Error',
     warning: 'Warning',
     info: 'Info',
+    operationFailed: 'Operation failed',
   },
   
   nav: {
     allMaterials: 'All Materials',
-    studioMaterials: 'Studio Materials',
+    studioMaterials: 'Miscellaneous',
     clothing: 'Clothing',
-    misc: 'Miscellaneous',
+    misc: 'Collections',
     categories: 'Categories',
     logout: 'Logout',
   },
@@ -68,9 +69,9 @@ export default {
 
   material: {
     // Types
-    studio: 'Studio Materials',
+    studio: 'Miscellaneous',
     clothing: 'Clothing',
-    misc: 'Miscellaneous',
+    misc: 'Collections',
     
     // Fields
     name: 'Material Name',
@@ -78,15 +79,27 @@ export default {
     category: 'Category',
     location: 'Storage Location',
     photo: 'Photo',
-    quantity: 'Quantity',
+    quantity: 'Total Quantity',
     inUseQuantity: 'In Use',
     stockQuantity: 'Stock',
+    description: 'Description',
     
     // Actions
     addMaterial: 'Add Material',
     editMaterial: 'Edit Material',
     deleteMaterial: 'Delete Material',
     viewDetail: 'View Details',
+    quickActions: 'Quick Actions',
+    
+    // Quick Actions
+    restock: 'Restock',
+    'take-out': 'Take Out',
+    discard: 'Discard',
+    replace: 'Replace',
+    restockAmount: 'Amount',
+    enterAmount: 'Enter amount',
+    restockPrompt: 'Enter restock amount',
+    invalidAmount: 'Please enter a valid amount',
     
     // Placeholders
     enterName: 'Enter material name',
@@ -94,6 +107,7 @@ export default {
     selectCategory: 'Select category (optional)',
     enterLocation: 'Enter storage location',
     searchPlaceholder: 'Search materials...',
+    enterDescription: 'Enter description (optional)',
     
     // Upload
     uploadPhoto: 'Click or drag to upload photo',
@@ -110,6 +124,10 @@ export default {
     updateSuccess: 'Material updated successfully',
     deleteSuccess: 'Material deleted successfully',
     deleteConfirm: 'Are you sure you want to delete "{name}"?',
+    restockSuccess: 'Restocked successfully',
+    'take-outSuccess': 'Taken out successfully',
+    discardSuccess: 'Discarded successfully',
+    replaceSuccess: 'Replaced successfully',
     
     // Status
     noData: 'No materials found',
@@ -154,9 +172,9 @@ export default {
   statistics: {
     title: 'Statistics',
     total: 'Total',
-    studio: 'Studio',
+    studio: 'Misc',
     clothing: 'Clothing',
-    misc: 'Misc',
+    misc: 'Collections',
   },
 
   error: {

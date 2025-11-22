@@ -1,5 +1,5 @@
 import request from './axios'
-import type { Material, MaterialForm, Statistics } from '@/types/material'
+import type { Material, MaterialForm, Statistics, QuickActionType } from '@/types/material'
 
 // API 响应格式
 interface ApiResponse<T = any> {
@@ -51,10 +51,6 @@ export const createMaterialApi = (data: MaterialForm): Promise<ApiResponse<Mater
     formData.append('inUseQuantity', String(data.inUseQuantity))
   }
   
-  if (data.stockQuantity !== undefined) {
-    formData.append('stockQuantity', String(data.stockQuantity))
-  }
-  
   return request.post('/materials', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -88,10 +84,6 @@ export const updateMaterialApi = (
     formData.append('inUseQuantity', String(data.inUseQuantity))
   }
   
-  if (data.stockQuantity !== undefined) {
-    formData.append('stockQuantity', String(data.stockQuantity))
-  }
-  
   return request.put(`/materials/${id}`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -111,4 +103,15 @@ export const deleteMaterialApi = (id: number): Promise<ApiResponse> => {
  */
 export const getStatisticsApi = (): Promise<ApiResponse<Statistics>> => {
   return request.get('/materials/statistics')
+}
+
+/**
+ * 执行快捷操作
+ */
+export const performQuickAction = (
+  id: number,
+  action: QuickActionType,
+  amount: number = 1
+): Promise<ApiResponse<Material>> => {
+  return request.post(`/materials/${id}/${action}`, { amount })
 }

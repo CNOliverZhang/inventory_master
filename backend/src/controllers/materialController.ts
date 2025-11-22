@@ -113,7 +113,7 @@ export const createMaterial = async (req: Request, res: Response) => {
       });
     }
 
-    const { name, type, categoryId, location, quantity, inUseQuantity, stockQuantity } = req.body;
+    const { name, type, categoryId, location, quantity, inUseQuantity, description } = req.body;
     
     // 验证必填字段
     if (!name || !type || !location) {
@@ -173,10 +173,10 @@ export const createMaterial = async (req: Request, res: Response) => {
     
     // 根据类型设置数量字段
     if (type === MaterialType.STUDIO) {
-      materialData.inUseQuantity = inUseQuantity || 0;
-      materialData.stockQuantity = stockQuantity || 0;
-    } else if (type === MaterialType.MISC) {
       materialData.quantity = quantity || 0;
+      materialData.inUseQuantity = inUseQuantity || 0;
+    } else if (type === MaterialType.MISC) {
+      materialData.description = description || '';
     }
     
     const material = await Material.create(materialData);
@@ -209,7 +209,7 @@ export const updateMaterial = async (req: Request, res: Response) => {
     }
 
     const { id } = req.params;
-    const { name, categoryId, location, quantity, inUseQuantity, stockQuantity } = req.body;
+    const { name, categoryId, location, quantity, inUseQuantity, description } = req.body;
     
     const material = await Material.findOne({
       where: {
@@ -275,10 +275,10 @@ export const updateMaterial = async (req: Request, res: Response) => {
     
     // 根据类型更新数量字段
     if (material.type === MaterialType.STUDIO) {
-      if (inUseQuantity !== undefined) updateData.inUseQuantity = inUseQuantity;
-      if (stockQuantity !== undefined) updateData.stockQuantity = stockQuantity;
-    } else if (material.type === MaterialType.MISC) {
       if (quantity !== undefined) updateData.quantity = quantity;
+      if (inUseQuantity !== undefined) updateData.inUseQuantity = inUseQuantity;
+    } else if (material.type === MaterialType.MISC) {
+      if (description !== undefined) updateData.description = description;
     }
     
     await material.update(updateData);
@@ -382,6 +382,245 @@ export const getStatistics = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: '获取统计数据失败',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+/**
+ * 补充库存 - 增加总数量
+ */
+export const restockMaterial = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: '未认证',
+      });
+    }
+
+    const { id } = req.params;
+    const { amount } = req.body;
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: '补充数量必须大于0',
+      });
+    }
+
+    const material = await Material.findOne({
+      where: {
+        id,
+        userId: req.user.userId,
+        type: MaterialType.STUDIO, // 只有杂物支持此操作
+      },
+    });
+
+    if (!material) {
+      return res.status(404).json({
+        success: false,
+        message: '物资不存在、类型不正确或无权访问',
+      });
+    }
+
+    const newQuantity = (material.quantity || 0) + amount;
+    await material.update({ quantity: newQuantity });
+
+    res.json({
+      success: true,
+      data: material,
+      message: `已补充 ${amount} 件，当前总量：${newQuantity}`,
+    });
+  } catch (error) {
+    console.error('Error restocking material:', error);
+    res.status(500).json({
+      success: false,
+      message: '补充库存失败',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+/**
+ * 领用 - 在用数量+1
+ */
+export const takeOutMaterial = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: '未认证',
+      });
+    }
+
+    const { id } = req.params;
+
+    const material = await Material.findOne({
+      where: {
+        id,
+        userId: req.user.userId,
+        type: MaterialType.STUDIO,
+      },
+    });
+
+    if (!material) {
+      return res.status(404).json({
+        success: false,
+        message: '物资不存在、类型不正确或无权访问',
+      });
+    }
+
+    const currentInUse = material.inUseQuantity || 0;
+    const currentTotal = material.quantity || 0;
+
+    if (currentInUse >= currentTotal) {
+      return res.status(400).json({
+        success: false,
+        message: '库存不足，无法领用',
+      });
+    }
+
+    const newInUse = currentInUse + 1;
+    await material.update({ inUseQuantity: newInUse });
+
+    res.json({
+      success: true,
+      data: material,
+      message: `已领用1件，在用：${newInUse}/${currentTotal}`,
+    });
+  } catch (error) {
+    console.error('Error taking out material:', error);
+    res.status(500).json({
+      success: false,
+      message: '领用失败',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+/**
+ * 报废 - 在用数量-1，总量-1
+ */
+export const discardMaterial = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: '未认证',
+      });
+    }
+
+    const { id } = req.params;
+
+    const material = await Material.findOne({
+      where: {
+        id,
+        userId: req.user.userId,
+        type: MaterialType.STUDIO,
+      },
+    });
+
+    if (!material) {
+      return res.status(404).json({
+        success: false,
+        message: '物资不存在、类型不正确或无权访问',
+      });
+    }
+
+    const currentInUse = material.inUseQuantity || 0;
+    const currentTotal = material.quantity || 0;
+
+    if (currentInUse <= 0 || currentTotal <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: '无可报废的物资',
+      });
+    }
+
+    const newInUse = currentInUse - 1;
+    const newTotal = currentTotal - 1;
+    await material.update({ 
+      inUseQuantity: newInUse,
+      quantity: newTotal,
+    });
+
+    res.json({
+      success: true,
+      data: material,
+      message: `已报废1件，在用：${newInUse}/${newTotal}`,
+    });
+  } catch (error) {
+    console.error('Error discarding material:', error);
+    res.status(500).json({
+      success: false,
+      message: '报废失败',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+/**
+ * 替换 - 总量-1，在用数量不变
+ */
+export const replaceMaterial = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: '未认证',
+      });
+    }
+
+    const { id } = req.params;
+
+    const material = await Material.findOne({
+      where: {
+        id,
+        userId: req.user.userId,
+        type: MaterialType.STUDIO,
+      },
+    });
+
+    if (!material) {
+      return res.status(404).json({
+        success: false,
+        message: '物资不存在、类型不正确或无权访问',
+      });
+    }
+
+    const currentInUse = material.inUseQuantity || 0;
+    const currentTotal = material.quantity || 0;
+
+    if (currentInUse <= 0 || currentTotal <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: '无可替换的物资',
+      });
+    }
+
+    // 检查是否有库存可以替换
+    const stockQuantity = currentTotal - currentInUse;
+    if (stockQuantity <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: '库存不足，无法替换',
+      });
+    }
+
+    const newTotal = currentTotal - 1;
+    await material.update({ quantity: newTotal });
+
+    res.json({
+      success: true,
+      data: material,
+      message: `已替换1件，在用：${currentInUse}/${newTotal}`,
+    });
+  } catch (error) {
+    console.error('Error replacing material:', error);
+    res.status(500).json({
+      success: false,
+      message: '替换失败',
       error: error instanceof Error ? error.message : 'Unknown error',
     });
   }

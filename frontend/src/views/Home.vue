@@ -234,6 +234,7 @@
             :material="material"
             @edit="handleEdit"
             @delete="handleDelete"
+            @refresh="loadData"
           />
         </div>
       </main>
@@ -416,10 +417,15 @@ const handleClickOutside = (event: MouseEvent) => {
   }
 }
 
-// 初始化
-onMounted(async () => {
+// 刷新数据
+const loadData = async () => {
   await materialStore.fetchMaterials()
   await materialStore.fetchStatistics()
+}
+
+// 初始化
+onMounted(async () => {
+  await loadData()
   document.addEventListener('click', handleClickOutside)
 })
 

@@ -15,13 +15,14 @@ export default {
     yes: '是',
     no: '否',
     optional: '可选',
+    operationFailed: '操作失败',
   },
   
   nav: {
     allMaterials: '全部物资',
-    studioMaterials: '工作室物料',
+    studioMaterials: '杂物',
     clothing: '衣物',
-    misc: '杂物',
+    misc: '收藏品',
     categories: '分类管理',
     logout: '退出登录',
   },
@@ -64,9 +65,9 @@ export default {
 
   material: {
     // 类型
-    studio: '工作室物料',
+    studio: '杂物',
     clothing: '衣物',
-    misc: '杂物',
+    misc: '收藏品',
     
     // 字段
     name: '物资名称',
@@ -74,15 +75,27 @@ export default {
     category: '细分类别',
     location: '存放位置',
     photo: '照片',
-    quantity: '数量',
+    quantity: '总数量',
     inUseQuantity: '在用数量',
     stockQuantity: '库存数量',
+    description: '详细信息',
     
     // 操作
     addMaterial: '添加物资',
     editMaterial: '编辑物资',
     deleteMaterial: '删除物资',
     viewDetail: '查看详情',
+    quickActions: '快捷操作',
+    
+    // 快捷操作
+    restock: '补充库存',
+    'take-out': '领用',
+    discard: '报废',
+    replace: '替换',
+    restockAmount: '补充数量',
+    enterAmount: '请输入补充数量',
+    restockPrompt: '请输入补充数量',
+    invalidAmount: '请输入有效的数量',
     
     // 占位符
     enterName: '请输入物资名称',
@@ -90,6 +103,7 @@ export default {
     selectCategory: '请选择细分类别（可选）',
     enterLocation: '请输入存放位置',
     searchPlaceholder: '搜索物资名称...',
+    enterDescription: '请输入详细信息（可选）',
     
     // 上传
     uploadPhoto: '点击或拖拽上传照片',
@@ -106,6 +120,10 @@ export default {
     updateSuccess: '物资更新成功',
     deleteSuccess: '物资删除成功',
     deleteConfirm: '确定要删除物资"{name}"吗？',
+    restockSuccess: '补充库存成功',
+    'take-outSuccess': '领用成功',
+    discardSuccess: '报废成功',
+    replaceSuccess: '替换成功',
     
     // 状态
     noData: '暂无物资数据',
@@ -150,9 +168,9 @@ export default {
   statistics: {
     title: '统计概览',
     total: '总物资',
-    studio: '工作室',
+    studio: '杂物',
     clothing: '衣物',
-    misc: '杂物',
+    misc: '收藏品',
   },
 
   error: {
