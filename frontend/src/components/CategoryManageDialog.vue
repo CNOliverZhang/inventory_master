@@ -26,7 +26,7 @@
           @click="categoryStore.setCurrentType(type.value)"
           class="px-3 sm:px-4 py-2 text-sm sm:text-base rounded-lg transition-colors font-medium whitespace-nowrap"
           :class="categoryStore.currentType === type.value
-            ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
+            ? 'gradient-primary text-white'
             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
         >
           {{ t(`material.${type.value}`) }}
@@ -81,7 +81,7 @@
           class="glass-card-hover p-3 sm:p-4 flex items-center justify-between group"
         >
           <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
-            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-secondary flex items-center justify-center flex-shrink-0">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl gradient-secondary flex items-center justify-center flex-shrink-0">
               <i class="pi pi-tag text-white text-sm sm:text-base"></i>
             </div>
             <div class="flex-1 min-w-0">
@@ -108,7 +108,8 @@
             <button
               v-if="editingId !== category.id"
               @click="handleStartEdit(category)"
-              class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg hover:bg-white/30 flex items-center justify-center text-blue-600"
+              class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg hover:bg-white/30 flex items-center justify-center"
+              :style="{ color: 'var(--color-primary-to)' }"
             >
               <i class="pi pi-pencil text-sm"></i>
             </button>

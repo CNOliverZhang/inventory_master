@@ -40,6 +40,16 @@ export const useThemeStore = defineStore('theme', () => {
     // 设置强调色渐变
     root.style.setProperty('--color-accent-from', theme.accent.from)
     root.style.setProperty('--color-accent-to', theme.accent.to)
+    
+    // 提取RGB值用于透明度背景
+    const toRgb = (hex: string) => {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+      return result
+        ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+        : '0, 0, 0'
+    }
+    
+    root.style.setProperty('--color-primary-rgb', toRgb(theme.primary.to))
   }
 
   // 设置主题

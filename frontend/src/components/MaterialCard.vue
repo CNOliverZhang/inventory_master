@@ -14,7 +14,7 @@
       
       <!-- 类型标签 -->
       <div class="absolute top-2 left-2">
-        <span :class="getTypeTagClass(material.type)" class="px-2 sm:px-3 py-1 rounded-md text-xs font-medium">
+        <span class="type-tag px-2 sm:px-3 py-1 rounded-md text-xs font-medium text-white">
           {{ t(`material.${material.type}`) }}
         </span>
       </div>
@@ -29,7 +29,7 @@
 
       <!-- 类别标签 -->
       <div v-if="material.category" class="mb-2">
-        <span class="inline-flex items-center gap-1 px-2 py-1 bg-cyan-100 text-cyan-700 rounded-md text-xs">
+        <span class="category-tag inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs">
           <i class="pi pi-tag"></i>
           {{ material.category.name }}
         </span>
@@ -37,7 +37,7 @@
 
       <!-- 位置信息 -->
       <div class="flex items-center gap-1.5 text-xs sm:text-sm text-gray-600 mb-3">
-        <i class="pi pi-map-marker text-cyan-500"></i>
+        <i class="pi pi-map-marker location-icon"></i>
         <span class="truncate">{{ material.location }}</span>
       </div>
 
@@ -67,7 +67,7 @@
       <div class="mt-auto flex gap-2">
         <button
           @click="handleEdit"
-          class="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
+          class="btn-gradient flex-1 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
         >
           <i class="pi pi-pencil"></i>
           <span class="hidden sm:inline">{{ t('common.edit') }}</span>
@@ -117,16 +117,6 @@ const getTypeIcon = (type: MaterialType) => {
   return icons[type]
 }
 
-// 获取类型标签样式
-const getTypeTagClass = (type: MaterialType) => {
-  const classes = {
-    [MaterialType.STUDIO]: 'bg-blue-500 text-white',
-    [MaterialType.CLOTHING]: 'bg-green-500 text-white',
-    [MaterialType.MISC]: 'bg-orange-500 text-white',
-  }
-  return classes[type]
-}
-
 const handleEdit = () => {
   emit('edit', props.material)
 }
@@ -135,3 +125,18 @@ const handleDelete = () => {
   emit('delete', props.material)
 }
 </script>
+
+<style scoped>
+.type-tag {
+  background: linear-gradient(to right, var(--color-primary-from), var(--color-primary-to));
+}
+
+.category-tag {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+  color: var(--color-primary-to);
+}
+
+.location-icon {
+  color: var(--color-primary-to);
+}
+</style>

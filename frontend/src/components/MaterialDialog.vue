@@ -133,7 +133,7 @@
             </div>
             <!-- 上传占位符 -->
             <div v-else class="flex flex-col items-center justify-center h-full text-gray-500">
-              <i class="pi pi-cloud-upload text-4xl sm:text-5xl mb-2 sm:mb-3 text-cyan-400"></i>
+              <i class="pi pi-cloud-upload upload-icon text-4xl sm:text-5xl mb-2 sm:mb-3"></i>
               <p class="text-xs sm:text-sm font-medium">{{ t('material.uploadPhoto') }}</p>
               <p class="text-xs text-gray-400 mt-1">{{ t('material.uploadHint') }}</p>
             </div>
@@ -447,3 +447,9 @@ const handleClose = () => {
   // 不在这里重置表单，让 watch 处理
 }
 </script>
+
+<style scoped>
+.upload-icon {
+  color: var(--color-primary-to);
+}
+</style>

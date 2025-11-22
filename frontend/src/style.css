@@ -10,6 +10,7 @@
   --color-secondary-to: #2563eb;
   --color-accent-from: #0e7490;
   --color-accent-to: #1d4ed8;
+  --color-primary-rgb: 59, 130, 246; /* 主色调的RGB值，用于透明度背景 */
 }
 
 * {

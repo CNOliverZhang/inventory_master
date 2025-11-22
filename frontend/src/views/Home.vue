@@ -88,7 +88,7 @@
               @click="handleCategoryChange(null)"
               class="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors text-sm"
               :class="materialStore.currentCategoryId === null 
-                ? 'bg-cyan-100 text-cyan-700 font-medium' 
+                ? 'category-active font-medium' 
                 : 'text-gray-600 hover:bg-gray-100'"
             >
               <span>{{ t('nav.allMaterials') }}</span>
@@ -99,7 +99,7 @@
               @click="handleCategoryChange(category.id)"
               class="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors text-sm"
               :class="materialStore.currentCategoryId === category.id 
-                ? 'bg-cyan-100 text-cyan-700 font-medium' 
+                ? 'category-active font-medium' 
                 : 'text-gray-600 hover:bg-gray-100'"
             >
               <span>{{ category.name }}</span>
@@ -374,5 +374,8 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* 移除动画，提升性能 */
+.category-active {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+  color: var(--color-primary-to);
+}
 </style>

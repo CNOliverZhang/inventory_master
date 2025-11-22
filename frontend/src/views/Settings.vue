@@ -40,7 +40,7 @@
                 : 'hover:scale-105'"
               :style="{
                 background: `linear-gradient(135deg, ${theme.primary.from}, ${theme.primary.to})`,
-                ringColor: theme.primary.to
+                '--tw-ring-color': theme.primary.to
               }"
             >
               <div class="h-full flex flex-col justify-between">

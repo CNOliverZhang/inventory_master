@@ -18,8 +18,8 @@
         :key="lang.value"
         @click="changeLanguage(lang.value)"
         :class="[
-          'w-full px-4 py-2 text-sm text-left hover:bg-cyan-50 transition-colors',
-          currentLocale === lang.value ? 'bg-cyan-100 text-cyan-600 font-medium' : 'text-gray-700'
+          'w-full px-4 py-2 text-sm text-left transition-colors',
+          currentLocale === lang.value ? 'lang-active font-medium' : 'text-gray-700 hover:bg-gray-50'
         ]"
       >
         {{ lang.label }}
@@ -67,3 +67,14 @@ onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
 </script>
+
+<style scoped>
+.lang-active {
+  background-color: rgba(var(--color-primary-rgb), 0.1);
+  color: var(--color-primary-to);
+}
+
+.lang-active:hover {
+  background-color: rgba(var(--color-primary-rgb), 0.15);
+}
+</style>
