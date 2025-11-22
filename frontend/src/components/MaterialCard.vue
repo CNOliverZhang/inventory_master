@@ -67,20 +67,19 @@
       <div class="mt-auto flex gap-2">
         <!-- 杂物显示快捷操作按钮 -->
         <template v-if="material.type === MaterialType.STUDIO">
-          <div class="relative flex-1" ref="quickActionsRef">
+          <div class="relative" ref="quickActionsRef">
             <button
               @click="toggleQuickActions"
-              class="btn-gradient w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
+              class="btn-gradient h-[30px] sm:h-[36px] px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
             >
               <i class="pi pi-bolt"></i>
-              <span class="hidden sm:inline">{{ t('material.quickActions') }}</span>
               <i :class="showQuickActions ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-xs"></i>
             </button>
             
             <!-- 快捷操作下拉菜单 -->
             <div
               v-if="showQuickActions"
-              class="absolute bottom-full left-0 right-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10"
+              class="absolute bottom-full left-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 whitespace-nowrap"
             >
               <button
                 @click="handleQuickAction('restock')"
@@ -96,7 +95,7 @@
                 :class="canTakeOut ? 'text-gray-700' : 'text-gray-400 cursor-not-allowed'"
               >
                 <i class="pi pi-arrow-circle-up text-blue-600"></i>
-                {{ t('material.takeOut') }}
+                {{ t('material.take-out') }}
               </button>
               <button
                 @click="handleQuickAction('discard')"
@@ -118,13 +117,22 @@
               </button>
             </div>
           </div>
+          
+          <!-- 编辑按钮 -->
+          <button
+            @click="handleEdit"
+            class="btn-gradient h-[30px] sm:h-[36px] flex-1 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
+          >
+            <i class="pi pi-pencil"></i>
+            <span class="hidden sm:inline">{{ t('common.edit') }}</span>
+          </button>
         </template>
         
         <!-- 其他类型显示编辑按钮 -->
         <button
           v-if="material.type !== MaterialType.STUDIO"
           @click="handleEdit"
-          class="btn-gradient flex-1 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
+          class="btn-gradient h-[30px] sm:h-[36px] flex-1 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
         >
           <i class="pi pi-pencil"></i>
           <span class="hidden sm:inline">{{ t('common.edit') }}</span>
@@ -133,18 +141,59 @@
         <!-- 删除按钮（所有类型都有） -->
         <button
           @click="handleDelete"
-          class="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
+          class="h-[30px] sm:h-[36px] flex-1 px-2 sm:px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
         >
           <i class="pi pi-trash"></i>
           <span class="hidden sm:inline">{{ t('common.delete') }}</span>
         </button>
+      </div>
+      
+      <!-- 补充库存输入对话框 -->
+      <div
+        v-if="showRestockDialog"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        @click.self="closeRestockDialog"
+      >
+        <div class="bg-white rounded-lg p-6 w-80 max-w-md shadow-xl">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">
+            {{ t('material.restock') }}
+          </h3>
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              {{ t('material.restockAmount') }}
+            </label>
+            <input
+              v-model.number="restockAmount"
+              type="number"
+              min="1"
+              step="1"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              @keyup.enter="confirmRestock"
+              ref="restockInput"
+            />
+          </div>
+          <div class="flex gap-3 justify-end">
+            <button
+              @click="closeRestockDialog"
+              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition-all"
+            >
+              {{ t('common.cancel') }}
+            </button>
+            <button
+              @click="confirmRestock"
+              class="px-4 py-2 btn-gradient text-white rounded-lg text-sm font-medium transition-all hover:shadow-lg"
+            >
+              {{ t('common.confirm') }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { Material, QuickActionType } from '@/types/material'
 import { MaterialType } from '@/types/material'
@@ -164,6 +213,19 @@ const toast = useToast()
 // 快捷操作状态
 const showQuickActions = ref(false)
 const quickActionsRef = ref<HTMLElement | null>(null)
+
+// 补充库存对话框状态
+const showRestockDialog = ref(false)
+const restockAmount = ref(1)
+const restockInput = ref<HTMLInputElement | null>(null)
+
+// 翻译键映射
+const actionSuccessKeys: Record<QuickActionType, string> = {
+  'restock': 'material.restockSuccess',
+  'take-out': 'material.take-outSuccess',
+  'discard': 'material.discardSuccess',
+  'replace': 'material.replaceSuccess'
+}
 
 // 是否显示数量信息
 const hasQuantity = computed(() => {
@@ -202,35 +264,46 @@ const toggleQuickActions = () => {
   showQuickActions.value = !showQuickActions.value
 }
 
-// 处理快捷操作
-const handleQuickAction = async (action: QuickActionType) => {
-  showQuickActions.value = false
+// 打开补充库存对话框
+const openRestockDialog = () => {
+  showRestockDialog.value = true
+  restockAmount.value = 1
+  nextTick(() => {
+    restockInput.value?.focus()
+  })
+}
+
+// 关闭补充库存对话框
+const closeRestockDialog = () => {
+  showRestockDialog.value = false
+  restockAmount.value = 1
+}
+
+// 确认补充库存
+const confirmRestock = async () => {
+  if (isNaN(restockAmount.value) || restockAmount.value <= 0) {
+    toast.add({
+      severity: 'error',
+      summary: t('common.error'),
+      detail: t('material.invalidAmount'),
+      life: 3000
+    })
+    return
+  }
   
+  closeRestockDialog()
+  await executeQuickAction('restock', restockAmount.value)
+}
+
+// 执行快捷操作
+const executeQuickAction = async (action: QuickActionType, amount: number = 1) => {
   try {
-    let amount = 1
-    
-    // 如果是补充库存，弹出输入框
-    if (action === 'restock') {
-      const input = prompt(t('material.restockPrompt'), '1')
-      if (input === null) return // 用户取消
-      amount = parseInt(input)
-      if (isNaN(amount) || amount <= 0) {
-        toast.add({
-          severity: 'error',
-          summary: t('common.error'),
-          detail: t('material.invalidAmount'),
-          life: 3000
-        })
-        return
-      }
-    }
-    
     await performQuickAction(props.material.id, action, amount)
     
     toast.add({
       severity: 'success',
       summary: t('common.success'),
-      detail: t(`material.${action}Success`),
+      detail: t(actionSuccessKeys[action]),
       life: 3000
     })
     
@@ -244,6 +317,20 @@ const handleQuickAction = async (action: QuickActionType) => {
       life: 3000
     })
   }
+}
+
+// 处理快捷操作
+const handleQuickAction = async (action: QuickActionType) => {
+  showQuickActions.value = false
+  
+  // 如果是补充库存，打开自定义对话框
+  if (action === 'restock') {
+    openRestockDialog()
+    return
+  }
+  
+  // 其他操作直接执行
+  await executeQuickAction(action, 1)
 }
 
 // 点击外部关闭菜单
