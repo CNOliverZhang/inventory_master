@@ -67,14 +67,14 @@
       <div class="mt-auto flex gap-2">
         <button
           @click="handleEdit"
-          class="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-md flex items-center justify-center gap-1"
+          class="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
         >
           <i class="pi pi-pencil"></i>
           <span class="hidden sm:inline">{{ t('common.edit') }}</span>
         </button>
         <button
           @click="handleDelete"
-          class="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-md flex items-center justify-center gap-1"
+          class="flex-1 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
         >
           <i class="pi pi-trash"></i>
           <span class="hidden sm:inline">{{ t('common.delete') }}</span>

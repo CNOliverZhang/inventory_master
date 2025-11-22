@@ -1,109 +1,189 @@
 <template>
-  <div class="home-container">
-    <!-- 左侧导航栏 -->
-    <aside class="sidebar">
-      <div class="logo-section">
-        <el-icon :size="32" color="#1976D2">
-          <Box />
-        </el-icon>
-        <h1 class="app-title">{{ t('auth.appTitle') }}</h1>
-      </div>
+  <div class="min-h-screen bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <header class="glass-card mx-2 sm:mx-4 mt-2 sm:mt-4 px-3 sm:px-6 py-3 sm:py-4 sticky top-2 sm:top-4 z-50 shadow-sm">
+      <div class="flex items-center justify-between">
+        <!-- Logo和标题 -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
+            <i class="pi pi-box text-white text-base sm:text-xl"></i>
+          </div>
+          <h1 class="text-lg sm:text-2xl font-bold text-gray-800">
+            {{ t('auth.appTitle') }}
+          </h1>
+        </div>
 
-      <!-- 用户信息 -->
-      <div class="user-section">
-        <el-dropdown trigger="click" @command="handleUserCommand">
-          <div class="user-info">
-            <el-avatar :size="40" :src="userAvatar">
-              {{ userStore.user?.username.charAt(0).toUpperCase() }}
-            </el-avatar>
-            <div class="user-details">
-              <div class="username">{{ userStore.user?.username }}</div>
-              <div class="user-email">{{ userStore.user?.email }}</div>
+        <!-- 右侧操作区 -->
+        <div class="flex items-center gap-2 sm:gap-4">
+          <LanguageSwitcher />
+          
+          <!-- 用户菜单 -->
+          <div class="relative" ref="userMenuRef">
+            <button
+              @click="toggleUserMenu"
+              class="flex items-center gap-1 sm:gap-3 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center text-white font-semibold text-sm">
+                {{ userStore.user?.username.charAt(0).toUpperCase() }}
+              </div>
+              <span class="text-xs sm:text-sm font-medium text-gray-700 hidden sm:inline">{{ userStore.user?.username }}</span>
+              <i class="pi pi-chevron-down text-xs text-gray-500 hidden sm:block"></i>
+            </button>
+            
+            <!-- 下拉菜单 -->
+            <div
+              v-if="showUserMenu"
+              class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg py-2"
+            >
+              <button
+                @click="handleLogout"
+                class="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
+              >
+                <i class="pi pi-sign-out"></i>
+                {{ t('nav.logout') }}
+              </button>
             </div>
           </div>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="logout">
-                <el-icon><SwitchButton /></el-icon>
-                {{ t('nav.logout') }}
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-      </div>
-
-      <nav class="nav-menu">
-        <div
-          v-for="item in menuItems"
-          :key="item.type"
-          class="nav-item"
-          :class="{ active: materialStore.currentType === item.type }"
-          @click="handleTypeChange(item.type)"
-        >
-          <el-icon :size="20">
-            <component :is="item.icon" />
-          </el-icon>
-          <span class="nav-label">{{ t(item.labelKey) }}</span>
-          <span class="nav-count">{{ getTypeCount(item.type) }}</span>
-        </div>
-      </nav>
-
-      <div class="stats-section">
-        <h3 class="stats-title">{{ t('statistics.title') }}</h3>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-value">{{ materialStore.statistics.total }}</div>
-            <div class="stat-label">{{ t('statistics.total') }}</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">{{ materialStore.statistics.studio }}</div>
-            <div class="stat-label">{{ t('statistics.studio') }}</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">{{ materialStore.statistics.clothing }}</div>
-            <div class="stat-label">{{ t('statistics.clothing') }}</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-value">{{ materialStore.statistics.misc }}</div>
-            <div class="stat-label">{{ t('statistics.misc') }}</div>
-          </div>
         </div>
       </div>
-    </aside>
+    </header>
 
-    <!-- 主内容区 -->
-    <main class="main-content">
-      <!-- 顶部操作栏 -->
-      <header class="content-header">
-        <el-input
-          v-model="materialStore.searchKeyword"
-          :placeholder="t('material.searchPlaceholder')"
-          :prefix-icon="Search"
-          clearable
-          class="search-input"
-        />
-        <el-button type="primary" :icon="Plus" size="large" @click="handleAdd">
-          {{ t('material.addMaterial') }}
-        </el-button>
-        <!-- 语言切换器 -->
-        <LanguageSwitcher />
-      </header>
+    <div class="flex flex-col lg:flex-row gap-4 mx-2 sm:mx-4 mt-2 sm:mt-4 pb-4">
+      <!-- 左侧边栏 -->
+      <aside class="w-full lg:w-64 glass-card p-4 sm:p-6 space-y-4 sm:space-y-6 lg:h-fit lg:sticky lg:top-24">
+        <!-- 分类导航 -->
+        <nav class="space-y-2">
+          <button
+            v-for="item in menuItems"
+            :key="item.type"
+            @click="handleTypeChange(item.type)"
+            class="w-full flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-colors text-sm sm:text-base"
+            :class="materialStore.currentType === item.type 
+              ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white' 
+              : 'text-gray-700 hover:bg-gray-100'"
+          >
+            <div class="flex items-center gap-2 sm:gap-3">
+              <i :class="item.icon" class="text-base sm:text-lg"></i>
+              <span class="font-medium">{{ t(item.labelKey) }}</span>
+            </div>
+            <span class="px-1.5 sm:px-2 py-0.5 rounded-md text-xs font-semibold"
+                  :class="materialStore.currentType === item.type ? 'bg-white/20' : 'bg-gray-200'">
+              {{ getTypeCount(item.type) }}
+            </span>
+          </button>
+        </nav>
 
-      <!-- 物资列表 -->
-      <div v-loading="materialStore.loading" class="materials-grid">
-        <el-empty
-          v-if="materialStore.filteredMaterials.length === 0"
-          :description="t('material.noData')"
-        />
-        <MaterialCard
-          v-for="material in materialStore.filteredMaterials"
-          :key="material.id"
-          :material="material"
-          @edit="handleEdit"
-          @delete="handleDelete"
-        />
-      </div>
-    </main>
+        <!-- 细分类别筛选 -->
+        <div v-if="materialStore.currentType && currentTypeCategories.length > 0" class="space-y-2">
+          <h3 class="text-xs sm:text-sm font-semibold text-gray-600 px-2">{{ t('category.title') }}</h3>
+          <div class="max-h-48 overflow-y-auto space-y-1">
+            <button
+              @click="handleCategoryChange(null)"
+              class="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors text-sm"
+              :class="materialStore.currentCategoryId === null 
+                ? 'bg-cyan-100 text-cyan-700 font-medium' 
+                : 'text-gray-600 hover:bg-gray-100'"
+            >
+              <span>{{ t('nav.allMaterials') }}</span>
+            </button>
+            <button
+              v-for="category in currentTypeCategories"
+              :key="category.id"
+              @click="handleCategoryChange(category.id)"
+              class="w-full flex items-center justify-between px-3 py-2 rounded-lg transition-colors text-sm"
+              :class="materialStore.currentCategoryId === category.id 
+                ? 'bg-cyan-100 text-cyan-700 font-medium' 
+                : 'text-gray-600 hover:bg-gray-100'"
+            >
+              <span>{{ category.name }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="space-y-3">
+          <h3 class="text-xs sm:text-sm font-semibold text-gray-600 mb-3">{{ t('statistics.title') }}</h3>
+          <div class="grid grid-cols-2 lg:grid-cols-2 gap-2 sm:gap-3">
+            <div class="bg-gradient-to-br from-cyan-50 to-cyan-100 border border-cyan-200 rounded-lg p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-cyan-700">
+                {{ materialStore.statistics.total }}
+              </div>
+              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.total') }}</div>
+            </div>
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-blue-700">
+                {{ materialStore.statistics.studio }}
+              </div>
+              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.studio') }}</div>
+            </div>
+            <div class="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-green-700">
+                {{ materialStore.statistics.clothing }}
+              </div>
+              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.clothing') }}</div>
+            </div>
+            <div class="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-lg p-2 sm:p-3 text-center">
+              <div class="text-xl sm:text-2xl font-bold text-orange-700">
+                {{ materialStore.statistics.misc }}
+              </div>
+              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.misc') }}</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- 主内容区 -->
+      <main class="flex-1 space-y-4">
+        <!-- 搜索和操作栏 -->
+        <div class="glass-card px-3 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4">
+          <div class="flex-1 relative">
+            <i class="pi pi-search absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input
+              v-model="materialStore.searchKeyword"
+              type="text"
+              :placeholder="t('material.searchPlaceholder')"
+              class="w-full pl-9 sm:pl-12 pr-4 py-2 sm:py-3 text-sm sm:text-base bg-white border border-gray-300 rounded-lg 
+                     focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition-all"
+            />
+          </div>
+          
+          <div class="flex gap-2">
+            <button @click="handleAdd" class="btn-gradient flex-1 sm:flex-initial flex items-center justify-center gap-2 whitespace-nowrap text-sm sm:text-base px-3 sm:px-6">
+              <i class="pi pi-plus"></i>
+              <span class="hidden sm:inline">{{ t('material.addMaterial') }}</span>
+              <span class="sm:hidden">{{ t('common.add') }}</span>
+            </button>
+
+            <button @click="showCategoryManage = true" class="btn-glass flex-1 sm:flex-initial flex items-center justify-center gap-2 whitespace-nowrap text-sm sm:text-base px-3 sm:px-6">
+              <i class="pi pi-list"></i>
+              <span class="hidden sm:inline">{{ t('nav.categories') }}</span>
+              <span class="sm:hidden">{{ t('category.title') }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 物资网格 -->
+        <div v-if="materialStore.loading" class="glass-card p-8 sm:p-12 text-center">
+          <i class="pi pi-spin pi-spinner text-3xl sm:text-4xl text-cyan-500"></i>
+          <p class="mt-4 text-sm sm:text-base text-gray-600">{{ t('common.loading') }}</p>
+        </div>
+        
+        <div v-else-if="materialStore.filteredMaterials.length === 0" class="glass-card p-8 sm:p-12 text-center">
+          <i class="pi pi-inbox text-5xl sm:text-6xl text-gray-300"></i>
+          <p class="mt-4 text-sm sm:text-base text-gray-600">{{ t('material.noData') }}</p>
+        </div>
+
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4">
+          <MaterialCard
+            v-for="material in materialStore.filteredMaterials"
+            :key="material.id"
+            :material="material"
+            @edit="handleEdit"
+            @delete="handleDelete"
+          />
+        </div>
+      </main>
+    </div>
 
     <!-- 添加/编辑物资对话框 -->
     <MaterialDialog
@@ -111,61 +191,77 @@
       :material="currentEditMaterial"
       @success="handleDialogSuccess"
     />
+
+    <!-- 分类管理对话框 -->
+    <CategoryManageDialog
+      v-model="showCategoryManage"
+    />
+
+    <!-- 删除确认对话框 -->
+    <ConfirmDialog
+      v-model="showDeleteConfirm"
+      :title="t('common.warning')"
+      :message="t('material.deleteConfirm', { name: materialToDelete?.name || '' })"
+      :confirm-text="t('common.confirm')"
+      :cancel-text="t('common.cancel')"
+      type="danger"
+      @confirm="confirmDelete"
+    />
+
+    <!-- 退出登录确认对话框 -->
+    <ConfirmDialog
+      v-model="showLogoutConfirm"
+      :title="t('common.warning')"
+      :message="t('auth.logoutConfirm')"
+      :confirm-text="t('common.confirm')"
+      :cancel-text="t('common.cancel')"
+      type="warning"
+      @confirm="confirmLogout"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useMaterialStore } from '@/stores/material'
+import { useCategoryStore } from '@/stores/category'
 import { useUserStore } from '@/stores/user'
 import { MaterialType } from '@/types/material'
 import type { Material } from '@/types/material'
-import { ElMessageBox } from 'element-plus'
-import { Search, Plus, Box, Briefcase, Handbag, Grid, SwitchButton } from '@element-plus/icons-vue'
 import MaterialCard from '@/components/MaterialCard.vue'
 import MaterialDialog from '@/components/MaterialDialog.vue'
+import CategoryManageDialog from '@/components/CategoryManageDialog.vue'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 
 const router = useRouter()
 const materialStore = useMaterialStore()
+const categoryStore = useCategoryStore()
 const userStore = useUserStore()
 const { t } = useI18n()
 
-// 用户头像（使用首字母作为头像）
-const userAvatar = computed(() => '')
-
 // 菜单项配置
-const menuItems = [
-  { type: '', labelKey: 'nav.allMaterials', icon: Grid },
-  { type: MaterialType.STUDIO, labelKey: 'nav.studioMaterials', icon: Briefcase },
-  { type: MaterialType.CLOTHING, labelKey: 'nav.clothing', icon: Handbag },
-  { type: MaterialType.MISC, labelKey: 'nav.misc', icon: Box },
+const menuItems: Array<{ type: MaterialType | '', labelKey: string, icon: string }> = [
+  { type: '', labelKey: 'nav.allMaterials', icon: 'pi pi-th-large' },
+  { type: MaterialType.STUDIO, labelKey: 'nav.studioMaterials', icon: 'pi pi-briefcase' },
+  { type: MaterialType.CLOTHING, labelKey: 'nav.clothing', icon: 'pi pi-shopping-bag' },
+  { type: MaterialType.MISC, labelKey: 'nav.misc', icon: 'pi pi-box' },
 ]
 
-// 对话框状态
+// 状态
 const dialogVisible = ref(false)
 const currentEditMaterial = ref<Material | null>(null)
-
-// 处理用户下拉菜单命令
-const handleUserCommand = (command: string) => {
-  if (command === 'logout') {
-    ElMessageBox.confirm(t('auth.logoutConfirm'), t('common.warning'), {
-      confirmButtonText: t('common.confirm'),
-      cancelButtonText: t('common.cancel'),
-      type: 'warning',
-    }).then(() => {
-      userStore.logout()
-      router.push('/login')
-    }).catch(() => {
-      // 用户取消
-    })
-  }
-}
+const showUserMenu = ref(false)
+const showCategoryManage = ref(false)
+const userMenuRef = ref<HTMLElement>()
+const showDeleteConfirm = ref(false)
+const materialToDelete = ref<Material | null>(null)
+const showLogoutConfirm = ref(false)
 
 // 获取类型数量
-const getTypeCount = (type: string) => {
+const getTypeCount = (type: MaterialType | '') => {
   if (type === '') return materialStore.statistics.total
   if (type === MaterialType.STUDIO) return materialStore.statistics.studio
   if (type === MaterialType.CLOTHING) return materialStore.statistics.clothing
@@ -177,6 +273,24 @@ const getTypeCount = (type: string) => {
 const handleTypeChange = (type: MaterialType | '') => {
   materialStore.setCurrentType(type)
 }
+
+// 切换类别筛选
+const handleCategoryChange = (categoryId: number | null) => {
+  materialStore.setCurrentCategoryId(categoryId)
+}
+
+// 当前类型的类别列表
+const currentTypeCategories = computed(() => {
+  if (!materialStore.currentType) return []
+  return categoryStore.categories.filter(c => c.type === materialStore.currentType)
+})
+
+// 监听类型变化，加载对应的类别
+watch(() => materialStore.currentType, async (newType) => {
+  if (newType) {
+    await categoryStore.fetchCategoriesByType(newType)
+  }
+})
 
 // 添加物资
 const handleAdd = () => {
@@ -191,20 +305,16 @@ const handleEdit = (material: Material) => {
 }
 
 // 删除物资
-const handleDelete = async (material: Material) => {
-  try {
-    await ElMessageBox.confirm(
-      t('material.deleteConfirm', { name: material.name }),
-      t('common.warning'),
-      {
-        confirmButtonText: t('common.confirm'),
-        cancelButtonText: t('common.cancel'),
-        type: 'warning',
-      }
-    )
-    await materialStore.deleteMaterial(material.id)
-  } catch (error) {
-    // 用户取消删除
+const handleDelete = (material: Material) => {
+  materialToDelete.value = material
+  showDeleteConfirm.value = true
+}
+
+// 确认删除物资
+const confirmDelete = async () => {
+  if (materialToDelete.value) {
+    await materialStore.deleteMaterial(materialToDelete.value.id)
+    materialToDelete.value = null
   }
 }
 
@@ -214,197 +324,42 @@ const handleDialogSuccess = () => {
   currentEditMaterial.value = null
 }
 
+// 切换用户菜单
+const toggleUserMenu = () => {
+  showUserMenu.value = !showUserMenu.value
+}
+
+// 退出登录
+const handleLogout = () => {
+  showUserMenu.value = false
+  showLogoutConfirm.value = true
+}
+
+// 确认退出
+const confirmLogout = () => {
+  userStore.logout()
+  router.push('/login')
+}
+
+// 点击外部关闭用户菜单
+const handleClickOutside = (event: MouseEvent) => {
+  if (userMenuRef.value && !userMenuRef.value.contains(event.target as Node)) {
+    showUserMenu.value = false
+  }
+}
+
 // 初始化
 onMounted(async () => {
   await materialStore.fetchMaterials()
   await materialStore.fetchStatistics()
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
-<style scoped lang="scss">
-.home-container {
-  display: flex;
-  width: 100%;
-  height: 100vh;
-  background-color: #f5f5f5;
-}
-
-.sidebar {
-  width: 260px;
-  background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 24px;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.app-title {
-  font-size: 24px;
-  font-weight: 600;
-  color: white;
-}
-
-.user-section {
-  margin-bottom: 24px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-}
-
-.user-details {
-  flex: 1;
-  overflow: hidden;
-}
-
-.username {
-  font-size: 15px;
-  font-weight: 500;
-  color: white;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.user-email {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.nav-menu {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-  color: rgba(255, 255, 255, 0.8);
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-  }
-
-  &.active {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    font-weight: 500;
-  }
-}
-
-.nav-label {
-  flex: 1;
-  font-size: 15px;
-}
-
-.nav-count {
-  font-size: 14px;
-  font-weight: 500;
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 2px 10px;
-  border-radius: 12px;
-}
-
-.stats-section {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.stats-title {
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 16px;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.stat-card {
-  background-color: rgba(255, 255, 255, 0.1);
-  padding: 12px;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 4px;
-}
-
-.stat-label {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.content-header {
-  background-color: white;
-  padding: 20px 32px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  z-index: 10;
-}
-
-.search-input {
-  flex: 1;
-  max-width: 400px;
-}
-
-.materials-grid {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px 32px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  align-content: start;
-}
+<style scoped>
+/* 移除动画，提升性能 */
 </style>
