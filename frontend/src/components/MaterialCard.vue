@@ -73,7 +73,7 @@
               class="btn-gradient h-[30px] sm:h-[36px] px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
             >
               <i class="pi pi-bolt"></i>
-              <i :class="showQuickActions && menuPosition === 'top' ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-xs"></i>
+              <i :class="showQuickActions ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-xs"></i>
             </button>
             
             <!-- 快捷操作下拉菜单 -->
