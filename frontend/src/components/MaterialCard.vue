@@ -80,42 +80,42 @@
             <div
               v-if="showQuickActions"
               :class="[
-                'absolute left-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 whitespace-nowrap',
+                'absolute left-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-10 whitespace-nowrap',
                 menuPosition === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
               ]"
             >
               <button
                 @click="handleQuickAction('restock')"
-                class="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                class="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
               >
-                <i class="pi pi-plus-circle text-green-600"></i>
+                <i class="pi pi-plus-circle text-green-600 dark:text-green-400"></i>
                 {{ t('material.restock') }}
               </button>
               <button
                 @click="handleQuickAction('take-out')"
                 :disabled="!canTakeOut"
-                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
-                :class="canTakeOut ? 'text-gray-700' : 'text-gray-400 cursor-not-allowed'"
+                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
+                :class="canTakeOut ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'"
               >
-                <i class="pi pi-arrow-circle-up text-blue-600"></i>
+                <i class="pi pi-arrow-circle-up text-blue-600 dark:text-blue-400"></i>
                 {{ t('material.take-out') }}
               </button>
               <button
                 @click="handleQuickAction('discard')"
                 :disabled="!canDiscard"
-                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
-                :class="canDiscard ? 'text-gray-700' : 'text-gray-400 cursor-not-allowed'"
+                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
+                :class="canDiscard ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'"
               >
-                <i class="pi pi-times-circle text-orange-600"></i>
+                <i class="pi pi-times-circle text-orange-600 dark:text-orange-400"></i>
                 {{ t('material.discard') }}
               </button>
               <button
                 @click="handleQuickAction('replace')"
                 :disabled="!canReplace"
-                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2"
-                :class="canReplace ? 'text-gray-700' : 'text-gray-400 cursor-not-allowed'"
+                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
+                :class="canReplace ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'"
               >
-                <i class="pi pi-refresh text-purple-600"></i>
+                <i class="pi pi-refresh text-purple-600 dark:text-purple-400"></i>
                 {{ t('material.replace') }}
               </button>
             </div>
@@ -178,7 +178,7 @@
           <div class="flex gap-3 justify-end">
             <button
               @click="closeRestockDialog"
-              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg text-sm font-medium transition-all"
+              class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg text-sm font-medium transition-all"
             >
               {{ t('common.cancel') }}
             </button>

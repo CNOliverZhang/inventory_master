@@ -88,17 +88,17 @@
             @click="handleDarkModeChange('light')"
             class="relative p-4 rounded-lg border-2 transition-all duration-200 hover:scale-105"
             :class="themeStore.darkMode === 'light' 
-              ? 'border-cyan-500 bg-cyan-50' 
-              : 'border-gray-200 bg-white hover:border-gray-300'"
+              ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/30 dark:border-cyan-400' 
+              : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'"
           >
             <div class="flex flex-col items-center gap-2">
               <i class="pi pi-sun text-3xl text-amber-500"></i>
-              <span class="text-sm font-medium text-gray-700">
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-200">
                 {{ t('settings.darkMode.light') }}
               </span>
               <i 
                 v-if="themeStore.darkMode === 'light'"
-                class="pi pi-check text-cyan-500 absolute top-2 right-2"
+                class="pi pi-check text-cyan-500 dark:text-cyan-400 absolute top-2 right-2"
               ></i>
             </div>
           </button>
@@ -107,17 +107,17 @@
             @click="handleDarkModeChange('dark')"
             class="relative p-4 rounded-lg border-2 transition-all duration-200 hover:scale-105"
             :class="themeStore.darkMode === 'dark' 
-              ? 'border-cyan-500 bg-cyan-50' 
-              : 'border-gray-200 bg-white hover:border-gray-300'"
+              ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/30 dark:border-cyan-400' 
+              : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'"
           >
             <div class="flex flex-col items-center gap-2">
-              <i class="pi pi-moon text-3xl text-indigo-600"></i>
-              <span class="text-sm font-medium text-gray-700">
+              <i class="pi pi-moon text-3xl text-indigo-600 dark:text-indigo-400"></i>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-200">
                 {{ t('settings.darkMode.dark') }}
               </span>
               <i 
                 v-if="themeStore.darkMode === 'dark'"
-                class="pi pi-check text-cyan-500 absolute top-2 right-2"
+                class="pi pi-check text-cyan-500 dark:text-cyan-400 absolute top-2 right-2"
               ></i>
             </div>
           </button>
@@ -126,17 +126,17 @@
             @click="handleDarkModeChange('system')"
             class="relative p-4 rounded-lg border-2 transition-all duration-200 hover:scale-105"
             :class="themeStore.darkMode === 'system' 
-              ? 'border-cyan-500 bg-cyan-50' 
-              : 'border-gray-200 bg-white hover:border-gray-300'"
+              ? 'border-cyan-500 bg-cyan-50 dark:bg-cyan-900/30 dark:border-cyan-400' 
+              : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-gray-300 dark:hover:border-gray-600'"
           >
             <div class="flex flex-col items-center gap-2">
-              <i class="pi pi-desktop text-3xl text-gray-600"></i>
-              <span class="text-sm font-medium text-gray-700">
+              <i class="pi pi-desktop text-3xl text-gray-600 dark:text-gray-400"></i>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-200">
                 {{ t('settings.darkMode.system') }}
               </span>
               <i 
                 v-if="themeStore.darkMode === 'system'"
-                class="pi pi-check text-cyan-500 absolute top-2 right-2"
+                class="pi pi-check text-cyan-500 dark:text-cyan-400 absolute top-2 right-2"
               ></i>
             </div>
           </button>

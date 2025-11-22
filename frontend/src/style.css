@@ -25,6 +25,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background: #f8fafc;
+  transition: background-color 0.3s ease;
+}
+
+/* 深色模式 */
+.dark body {
+  background: #0f172a;
 }
 
 #app {
@@ -35,11 +41,11 @@ body {
 /* 简洁卡片样式 */
 @layer components {
   .glass-card {
-    @apply bg-white border border-gray-200 rounded-xl shadow-sm;
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm;
   }
   
   .glass-card-hover {
-    @apply bg-white border border-gray-200 rounded-xl shadow-sm 
+    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm 
            transition-shadow duration-200 hover:shadow-md;
   }
   
@@ -54,9 +60,9 @@ body {
   }
   
   .btn-glass {
-    @apply bg-white border border-gray-300 text-gray-700 
+    @apply bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200
            px-6 py-2.5 rounded-lg transition-colors duration-200 
-           hover:bg-gray-50 hover:border-gray-400;
+           hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500;
   }
   
   .gradient-primary {
@@ -66,6 +72,127 @@ body {
   .gradient-secondary {
     background: linear-gradient(to right, var(--color-secondary-from), var(--color-secondary-to));
   }
+}
+
+/* 深色模式全局样式 - 使用 CSS 变量和直接样式而非 @apply */
+.dark .text-gray-800 {
+  color: #f3f4f6 !important; /* gray-100 */
+}
+
+.dark .text-gray-700 {
+  color: #e5e7eb !important; /* gray-200 */
+}
+
+.dark .text-gray-600 {
+  color: #d1d5db !important; /* gray-300 */
+}
+
+.dark .text-gray-500 {
+  color: #9ca3af !important; /* gray-400 */
+}
+
+/* 背景颜色 */
+.dark .bg-gray-50 {
+  background-color: #111827 !important; /* gray-900 */
+}
+
+.dark .bg-gray-100 {
+  background-color: #1f2937 !important; /* gray-800 */
+}
+
+.dark .bg-gray-200 {
+  background-color: #374151 !important; /* gray-700 */
+}
+
+.dark .bg-white {
+  background-color: #1f2937 !important; /* gray-800 */
+}
+
+/* 悬停背景 */
+.dark .hover\:bg-gray-50:hover {
+  background-color: #1f2937 !important; /* gray-800 */
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: #374151 !important; /* gray-700 */
+}
+
+.dark .hover\:bg-gray-200:hover {
+  background-color: #4b5563 !important; /* gray-600 */
+}
+
+.dark .hover\:bg-gray-300:hover {
+  background-color: #4b5563 !important; /* gray-600 */
+}
+
+/* 边框颜色 */
+.dark .border-gray-200 {
+  border-color: #374151 !important; /* gray-700 */
+}
+
+.dark .border-gray-300 {
+  border-color: #4b5563 !important; /* gray-600 */
+}
+
+/* 渐变背景 */
+.dark .from-gray-100 {
+  --tw-gradient-from: #1f2937;
+  --tw-gradient-to: rgb(31 41 55 / 0);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+.dark .to-gray-200 {
+  --tw-gradient-to: #374151;
+}
+
+/* 输入框深色模式 */
+.dark input[type="text"],
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input[type="number"],
+.dark textarea,
+.dark select {
+  background-color: #374151 !important; /* gray-700 */
+  border-color: #4b5563 !important; /* gray-600 */
+  color: #f3f4f6 !important; /* gray-100 */
+}
+
+.dark input[type="text"]::placeholder,
+.dark input[type="email"]::placeholder,
+.dark input[type="password"]::placeholder,
+.dark input[type="number"]::placeholder,
+.dark textarea::placeholder {
+  color: #9ca3af !important; /* gray-400 */
+}
+
+.dark input[type="text"]:focus,
+.dark input[type="email"]:focus,
+.dark input[type="password"]:focus,
+.dark input[type="number"]:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: #22d3ee !important; /* cyan-400 */
+  --tw-ring-color: rgba(34, 211, 238, 0.5) !important;
+}
+
+.dark input:disabled,
+.dark select:disabled,
+.dark textarea:disabled {
+  background-color: #1f2937 !important; /* gray-800 */
+  color: #6b7280 !important; /* gray-500 */
+  cursor: not-allowed;
+}
+
+/* 下拉菜单深色模式 */
+.dark .bg-white.border.rounded-lg.shadow-lg {
+  background-color: #1f2937 !important; /* gray-800 */
+  border-color: #374151 !important; /* gray-700 */
+}
+
+/* select 选项深色模式 */
+.dark option {
+  background-color: #374151; /* gray-700 */
+  color: #f3f4f6; /* gray-100 */
 }
 
 /* 自定义滚动条 */
@@ -78,11 +205,23 @@ body {
   background: #f1f5f9;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 4px;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
 }

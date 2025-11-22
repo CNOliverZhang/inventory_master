@@ -11,7 +11,7 @@
     
     <div
       v-if="showDropdown"
-      class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50"
+      class="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
     >
       <button
         v-for="lang in languages"
@@ -19,7 +19,7 @@
         @click="changeLanguage(lang.value)"
         :class="[
           'w-full px-4 py-2 text-sm text-left transition-colors',
-          currentLocale === lang.value ? 'lang-active font-medium' : 'text-gray-700 hover:bg-gray-50'
+          currentLocale === lang.value ? 'lang-active font-medium' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
         ]"
       >
         {{ lang.label }}
