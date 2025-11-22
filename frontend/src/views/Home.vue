@@ -107,33 +107,80 @@
           </div>
         </div>
 
-        <!-- 统计卡片 -->
+        <!-- 统计概览 -->
         <div class="space-y-3">
           <h3 class="text-xs sm:text-sm font-semibold text-gray-600 mb-3">{{ t('statistics.title') }}</h3>
-          <div class="grid grid-cols-2 lg:grid-cols-2 gap-2 sm:gap-3">
-            <div class="bg-gradient-to-br from-cyan-50 to-cyan-100 border border-cyan-200 rounded-lg p-2 sm:p-3 text-center">
-              <div class="text-xl sm:text-2xl font-bold text-cyan-700">
-                {{ materialStore.statistics.total }}
+          
+          <!-- 总数量卡片 -->
+          <div class="stat-card-total gradient-primary rounded-xl p-4 text-white">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="text-xs opacity-90 mb-1">{{ t('statistics.total') }}</div>
+                <div class="text-3xl font-bold">{{ materialStore.statistics.total }}</div>
               </div>
-              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.total') }}</div>
+              <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                <i class="pi pi-box text-2xl"></i>
+              </div>
             </div>
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-2 sm:p-3 text-center">
-              <div class="text-xl sm:text-2xl font-bold text-blue-700">
-                {{ materialStore.statistics.studio }}
+          </div>
+          
+          <!-- 分类统计 -->
+          <div class="space-y-2">
+            <!-- 工作室物料 -->
+            <div class="stat-item glass-card-hover p-3 rounded-lg">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <i class="pi pi-briefcase text-blue-600 text-sm"></i>
+                  </div>
+                  <span class="text-sm font-medium text-gray-700">{{ t('statistics.studio') }}</span>
+                </div>
+                <span class="text-lg font-bold text-blue-600">{{ materialStore.statistics.studio }}</span>
               </div>
-              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.studio') }}</div>
+              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div 
+                  class="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
+                  :style="{ width: getPercentage('studio') + '%' }"
+                ></div>
+              </div>
             </div>
-            <div class="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-2 sm:p-3 text-center">
-              <div class="text-xl sm:text-2xl font-bold text-green-700">
-                {{ materialStore.statistics.clothing }}
+            
+            <!-- 服装 -->
+            <div class="stat-item glass-card-hover p-3 rounded-lg">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                    <i class="pi pi-shopping-bag text-green-600 text-sm"></i>
+                  </div>
+                  <span class="text-sm font-medium text-gray-700">{{ t('statistics.clothing') }}</span>
+                </div>
+                <span class="text-lg font-bold text-green-600">{{ materialStore.statistics.clothing }}</span>
               </div>
-              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.clothing') }}</div>
+              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div 
+                  class="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-500"
+                  :style="{ width: getPercentage('clothing') + '%' }"
+                ></div>
+              </div>
             </div>
-            <div class="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 rounded-lg p-2 sm:p-3 text-center">
-              <div class="text-xl sm:text-2xl font-bold text-orange-700">
-                {{ materialStore.statistics.misc }}
+            
+            <!-- 杂物 -->
+            <div class="stat-item glass-card-hover p-3 rounded-lg">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <i class="pi pi-box text-orange-600 text-sm"></i>
+                  </div>
+                  <span class="text-sm font-medium text-gray-700">{{ t('statistics.misc') }}</span>
+                </div>
+                <span class="text-lg font-bold text-orange-600">{{ materialStore.statistics.misc }}</span>
               </div>
-              <div class="text-xs text-gray-600 mt-1">{{ t('statistics.misc') }}</div>
+              <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div 
+                  class="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
+                  :style="{ width: getPercentage('misc') + '%' }"
+                ></div>
+              </div>
             </div>
           </div>
         </div>
@@ -276,6 +323,14 @@ const getTypeCount = (type: MaterialType | '') => {
   return 0
 }
 
+// 计算百分比
+const getPercentage = (type: 'studio' | 'clothing' | 'misc') => {
+  const total = materialStore.statistics.total
+  if (total === 0) return 0
+  const count = materialStore.statistics[type]
+  return Math.round((count / total) * 100)
+}
+
 // 切换类型
 const handleTypeChange = (type: MaterialType | '') => {
   materialStore.setCurrentType(type)
@@ -377,5 +432,29 @@ onUnmounted(() => {
 .category-active {
   background-color: rgba(var(--color-primary-rgb), 0.1);
   color: var(--color-primary-to);
+}
+
+.stat-card-total {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card-total::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.stat-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-item:hover {
+  transform: translateX(4px);
 }
 </style>
