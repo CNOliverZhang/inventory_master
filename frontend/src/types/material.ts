@@ -25,7 +25,7 @@ export interface Material {
   }
   location: string
   photoUrl?: string
-  quantity?: number           // 总数量（杂物使用）
+  quantity?: number           // 总数量
   inUseQuantity?: number      // 在用数量（杂物使用）
   description?: string        // 详细信息（收藏品使用）
   createdAt: string

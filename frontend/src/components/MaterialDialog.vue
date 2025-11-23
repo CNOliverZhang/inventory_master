@@ -147,21 +147,9 @@
           />
         </div>
 
-        <!-- 工作室物料：双数量 -->
+        <!-- 工作室物料：总数量 + 在用数量 -->
         <template v-if="formData.type === MaterialType.STUDIO">
           <div class="grid grid-cols-2 gap-3 sm:gap-4">
-            <div class="space-y-2">
-              <label class="text-sm font-medium text-gray-700">
-                {{ t('material.inUseQuantity') }}
-              </label>
-              <input
-                v-model.number="formData.inUseQuantity"
-                type="number"
-                min="0"
-                step="1"
-                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
-              />
-            </div>
             <div class="space-y-2">
               <label class="text-sm font-medium text-gray-700">
                 {{ t('material.quantity') }}
@@ -174,10 +162,22 @@
                 class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
               />
             </div>
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700">
+                {{ t('material.inUseQuantity') }}
+              </label>
+              <input
+                v-model.number="formData.inUseQuantity"
+                type="number"
+                min="0"
+                step="1"
+                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+              />
+            </div>
           </div>
         </template>
 
-        <!-- 杂物：单数量 -->
+        <!-- 收藏品：单数量 + 详细信息 -->
         <template v-else-if="formData.type === MaterialType.MISC">
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">
@@ -190,6 +190,19 @@
               step="1"
               class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
             />
+          </div>
+          
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-gray-700">
+              {{ t('material.description') }}
+              <span class="text-gray-400 text-xs ml-1">({{ t('common.optional') }})</span>
+            </label>
+            <textarea
+              v-model="formData.description"
+              rows="4"
+              :placeholder="t('material.enterDescription')"
+              class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all resize-none"
+            ></textarea>
           </div>
         </template>
       </div>
@@ -263,6 +276,7 @@ const formData = reactive<MaterialForm>({
   location: '',
   quantity: 0,
   inUseQuantity: 0,
+  description: '',
 })
 
 const errors = reactive({
@@ -301,6 +315,7 @@ const resetForm = () => {
   formData.location = ''
   formData.quantity = 0
   formData.inUseQuantity = 0
+  formData.description = ''
   errors.name = ''
   errors.type = ''
   errors.location = ''
@@ -323,6 +338,7 @@ watch(
       formData.location = material.location
       formData.quantity = material.quantity || 0
       formData.inUseQuantity = material.inUseQuantity || 0
+      formData.description = material.description || ''
       photoPreview.value = ''
       photoFile.value = undefined
       
