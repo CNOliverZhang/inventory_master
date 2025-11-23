@@ -24,9 +24,9 @@ export default {
   
   nav: {
     allMaterials: 'All Materials',
-    studioMaterials: 'Miscellaneous',
+    miscMaterials: 'Miscellaneous',
     clothing: 'Clothing',
-    misc: 'Collections',
+    collectible: 'Collections',
     categories: 'Categories',
     logout: 'Logout',
   },
@@ -69,9 +69,9 @@ export default {
 
   material: {
     // Types
-    studio: 'Miscellaneous',
+    misc: 'Miscellaneous',
     clothing: 'Clothing',
-    misc: 'Collections',
+    collectible: 'Collections',
     
     // Fields
     name: 'Material Name',
@@ -172,9 +172,9 @@ export default {
   statistics: {
     title: 'Statistics',
     total: 'Total',
-    studio: 'Misc',
+    misc: 'Misc',
     clothing: 'Clothing',
-    misc: 'Collections',
+    collectible: 'Collections',
   },
 
   error: {

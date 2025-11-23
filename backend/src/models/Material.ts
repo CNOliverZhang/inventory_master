@@ -3,9 +3,9 @@ import sequelize from '../config/database';
 
 // 物资类型枚举
 export enum MaterialType {
-  STUDIO = 'studio',      // 杂物（原工作室物料）
-  CLOTHING = 'clothing',  // 衣物
-  MISC = 'misc'          // 收藏品（原杂物）
+  MISC = 'misc',              // 杂物
+  CLOTHING = 'clothing',      // 衣物
+  COLLECTIBLE = 'collectible' // 收藏品
 }
 
 // 物资属性接口

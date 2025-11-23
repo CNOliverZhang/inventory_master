@@ -172,10 +172,10 @@ export const createMaterial = async (req: Request, res: Response) => {
     };
     
     // 根据类型设置数量字段
-    if (type === MaterialType.STUDIO) {
+    if (type === MaterialType.MISC) {
       materialData.quantity = quantity || 0;
       materialData.inUseQuantity = inUseQuantity || 0;
-    } else if (type === MaterialType.MISC) {
+    } else if (type === MaterialType.COLLECTIBLE) {
       materialData.description = description || '';
     }
     
@@ -274,10 +274,10 @@ export const updateMaterial = async (req: Request, res: Response) => {
     };
     
     // 根据类型更新数量字段
-    if (material.type === MaterialType.STUDIO) {
+    if (material.type === MaterialType.MISC) {
       if (quantity !== undefined) updateData.quantity = quantity;
       if (inUseQuantity !== undefined) updateData.inUseQuantity = inUseQuantity;
-    } else if (material.type === MaterialType.MISC) {
+    } else if (material.type === MaterialType.COLLECTIBLE) {
       if (description !== undefined) updateData.description = description;
     }
     
@@ -368,9 +368,9 @@ export const getStatistics = async (req: Request, res: Response) => {
     
     const stats = {
       total: await Material.count({ where: { userId } }),
-      studio: await Material.count({ where: { userId, type: MaterialType.STUDIO } }),
-      clothing: await Material.count({ where: { userId, type: MaterialType.CLOTHING } }),
       misc: await Material.count({ where: { userId, type: MaterialType.MISC } }),
+      clothing: await Material.count({ where: { userId, type: MaterialType.CLOTHING } }),
+      collectible: await Material.count({ where: { userId, type: MaterialType.COLLECTIBLE } }),
     };
     
     res.json({
@@ -413,7 +413,7 @@ export const restockMaterial = async (req: Request, res: Response) => {
       where: {
         id,
         userId: req.user.userId,
-        type: MaterialType.STUDIO, // 只有杂物支持此操作
+        type: MaterialType.MISC, // 只有杂物支持此操作
       },
     });
 
@@ -460,7 +460,7 @@ export const takeOutMaterial = async (req: Request, res: Response) => {
       where: {
         id,
         userId: req.user.userId,
-        type: MaterialType.STUDIO,
+        type: MaterialType.MISC,
       },
     });
 
@@ -517,7 +517,7 @@ export const discardMaterial = async (req: Request, res: Response) => {
       where: {
         id,
         userId: req.user.userId,
-        type: MaterialType.STUDIO,
+        type: MaterialType.MISC,
       },
     });
 
@@ -578,7 +578,7 @@ export const replaceMaterial = async (req: Request, res: Response) => {
       where: {
         id,
         userId: req.user.userId,
-        type: MaterialType.STUDIO,
+        type: MaterialType.MISC,
       },
     });
 

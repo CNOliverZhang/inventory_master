@@ -44,7 +44,7 @@
       <!-- 数量信息 -->
       <div v-if="hasQuantity" class="space-y-1.5 mb-3 sm:mb-4">
         <!-- 杂物：双数量 -->
-        <template v-if="material.type === MaterialType.STUDIO">
+        <template v-if="material.type === MaterialType.MISC">
           <div class="flex justify-between items-center text-xs sm:text-sm">
             <span class="text-gray-600">{{ t('material.inUseQuantity') }}</span>
             <span class="quantity-value font-semibold">{{ material.inUseQuantity || 0 }}</span>
@@ -55,7 +55,7 @@
           </div>
         </template>
         <!-- 收藏品：单数量 -->
-        <template v-else-if="material.type === MaterialType.MISC">
+        <template v-else-if="material.type === MaterialType.COLLECTIBLE">
           <div class="flex justify-between items-center text-xs sm:text-sm">
             <span class="text-gray-600">{{ t('material.quantity') }}</span>
             <span class="quantity-value font-semibold">{{ material.quantity || 0 }}</span>
@@ -66,7 +66,7 @@
       <!-- 操作按钮 -->
       <div class="mt-auto flex gap-2">
         <!-- 杂物显示快捷操作按钮 -->
-        <template v-if="material.type === MaterialType.STUDIO">
+        <template v-if="material.type === MaterialType.MISC">
           <div class="relative" ref="quickActionsRef">
             <button
               @click="toggleQuickActions"
@@ -133,7 +133,7 @@
         
         <!-- 其他类型显示编辑按钮 -->
         <button
-          v-if="material.type !== MaterialType.STUDIO"
+          v-if="material.type !== MaterialType.MISC"
           @click="handleEdit"
           class="btn-gradient h-[30px] sm:h-[36px] flex-1 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
         >
@@ -233,7 +233,7 @@ const actionSuccessKeys: Record<QuickActionType, string> = {
 
 // 是否显示数量信息
 const hasQuantity = computed(() => {
-  return props.material.type === MaterialType.STUDIO || props.material.type === MaterialType.MISC
+  return props.material.type === MaterialType.MISC || props.material.type === MaterialType.COLLECTIBLE
 })
 
 // 快捷操作按钮启用状态
@@ -256,9 +256,9 @@ const canReplace = computed(() => {
 // 获取类型图标
 const getTypeIcon = (type: MaterialType) => {
   const icons = {
-    [MaterialType.STUDIO]: 'pi pi-briefcase',
+    [MaterialType.MISC]: 'pi pi-briefcase',
     [MaterialType.CLOTHING]: 'pi pi-shopping-bag',
-    [MaterialType.MISC]: 'pi pi-box',
+    [MaterialType.COLLECTIBLE]: 'pi pi-box',
   }
   return icons[type]
 }

@@ -17,9 +17,9 @@ export const useMaterialStore = defineStore('material', () => {
   const currentMaterial = ref<Material | null>(null)
   const statistics = ref<Statistics>({
     total: 0,
-    studio: 0,
-    clothing: 0,
     misc: 0,
+    clothing: 0,
+    collectible: 0,
   })
   const loading = ref(false)
   const currentType = ref<MaterialType | ''>('')

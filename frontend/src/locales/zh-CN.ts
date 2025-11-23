@@ -20,9 +20,9 @@ export default {
   
   nav: {
     allMaterials: '全部物资',
-    studioMaterials: '杂物',
+    miscMaterials: '杂物',
     clothing: '衣物',
-    misc: '收藏品',
+    collectible: '收藏品',
     categories: '分类管理',
     logout: '退出登录',
   },
@@ -65,9 +65,9 @@ export default {
 
   material: {
     // 类型
-    studio: '杂物',
+    misc: '杂物',
     clothing: '衣物',
-    misc: '收藏品',
+    collectible: '收藏品',
     
     // 字段
     name: '物资名称',
@@ -168,9 +168,9 @@ export default {
   statistics: {
     title: '统计概览',
     total: '总物资',
-    studio: '杂物',
+    misc: '杂物',
     clothing: '衣物',
-    misc: '收藏品',
+    collectible: '收藏品',
   },
 
   error: {

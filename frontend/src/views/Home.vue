@@ -126,26 +126,26 @@
           
           <!-- 分类统计 -->
           <div class="space-y-2">
-            <!-- 工作室物料 -->
+            <!-- 杂物 -->
             <div class="stat-item glass-card-hover p-3 rounded-lg">
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
                   <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                     <i class="pi pi-briefcase text-blue-600 text-sm"></i>
                   </div>
-                  <span class="text-sm font-medium text-gray-700">{{ t('statistics.studio') }}</span>
+                  <span class="text-sm font-medium text-gray-700">{{ t('statistics.misc') }}</span>
                 </div>
-                <span class="text-lg font-bold text-blue-600">{{ materialStore.statistics.studio }}</span>
+                <span class="text-lg font-bold text-blue-600">{{ materialStore.statistics.misc }}</span>
               </div>
               <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                 <div 
                   class="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500"
-                  :style="{ width: getPercentage('studio') + '%' }"
+                  :style="{ width: getPercentage('misc') + '%' }"
                 ></div>
               </div>
             </div>
             
-            <!-- 服装 -->
+            <!-- 衣物 -->
             <div class="stat-item glass-card-hover p-3 rounded-lg">
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
@@ -164,21 +164,21 @@
               </div>
             </div>
             
-            <!-- 杂物 -->
+            <!-- 收藏品 -->
             <div class="stat-item glass-card-hover p-3 rounded-lg">
               <div class="flex items-center justify-between mb-2">
                 <div class="flex items-center gap-2">
                   <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
                     <i class="pi pi-box text-orange-600 text-sm"></i>
                   </div>
-                  <span class="text-sm font-medium text-gray-700">{{ t('statistics.misc') }}</span>
+                  <span class="text-sm font-medium text-gray-700">{{ t('statistics.collectible') }}</span>
                 </div>
-                <span class="text-lg font-bold text-orange-600">{{ materialStore.statistics.misc }}</span>
+                <span class="text-lg font-bold text-orange-600">{{ materialStore.statistics.collectible }}</span>
               </div>
               <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
                 <div 
                   class="h-full bg-gradient-to-r from-orange-500 to-orange-600 transition-all duration-500"
-                  :style="{ width: getPercentage('misc') + '%' }"
+                  :style="{ width: getPercentage('collectible') + '%' }"
                 ></div>
               </div>
             </div>
@@ -300,9 +300,9 @@ const { t } = useI18n()
 // 菜单项配置
 const menuItems: Array<{ type: MaterialType | '', labelKey: string, icon: string }> = [
   { type: '', labelKey: 'nav.allMaterials', icon: 'pi pi-th-large' },
-  { type: MaterialType.STUDIO, labelKey: 'nav.studioMaterials', icon: 'pi pi-briefcase' },
+  { type: MaterialType.MISC, labelKey: 'nav.miscMaterials', icon: 'pi pi-briefcase' },
   { type: MaterialType.CLOTHING, labelKey: 'nav.clothing', icon: 'pi pi-shopping-bag' },
-  { type: MaterialType.MISC, labelKey: 'nav.misc', icon: 'pi pi-box' },
+  { type: MaterialType.COLLECTIBLE, labelKey: 'nav.collectible', icon: 'pi pi-box' },
 ]
 
 // 状态
@@ -318,14 +318,14 @@ const showLogoutConfirm = ref(false)
 // 获取类型数量
 const getTypeCount = (type: MaterialType | '') => {
   if (type === '') return materialStore.statistics.total
-  if (type === MaterialType.STUDIO) return materialStore.statistics.studio
-  if (type === MaterialType.CLOTHING) return materialStore.statistics.clothing
   if (type === MaterialType.MISC) return materialStore.statistics.misc
+  if (type === MaterialType.CLOTHING) return materialStore.statistics.clothing
+  if (type === MaterialType.COLLECTIBLE) return materialStore.statistics.collectible
   return 0
 }
 
 // 计算百分比
-const getPercentage = (type: 'studio' | 'clothing' | 'misc') => {
+const getPercentage = (type: 'misc' | 'clothing' | 'collectible') => {
   const total = materialStore.statistics.total
   if (total === 0) return 0
   const count = materialStore.statistics[type]

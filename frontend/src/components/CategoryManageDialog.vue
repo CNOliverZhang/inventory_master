@@ -176,9 +176,9 @@ const { t } = useI18n()
 const categoryStore = useCategoryStore()
 
 const materialTypes = [
-  { value: MaterialType.STUDIO },
-  { value: MaterialType.CLOTHING },
   { value: MaterialType.MISC },
+  { value: MaterialType.CLOTHING },
+  { value: MaterialType.COLLECTIBLE },
 ]
 
 const visible = computed({
@@ -203,7 +203,7 @@ const getCategoryStats = (categoryId: number) => {
 // 监听对话框打开
 watch(visible, async (val) => {
   if (val) {
-    categoryStore.setCurrentType(MaterialType.STUDIO)
+    categoryStore.setCurrentType(MaterialType.MISC)
     await Promise.all([
       categoryStore.fetchCategories(),
       categoryStore.fetchCategoryStats(),

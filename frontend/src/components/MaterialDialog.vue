@@ -147,8 +147,8 @@
           />
         </div>
 
-        <!-- 工作室物料：总数量 + 在用数量 -->
-        <template v-if="formData.type === MaterialType.STUDIO">
+        <!-- 杂物：总数量 + 在用数量 -->
+        <template v-if="formData.type === MaterialType.MISC">
           <div class="grid grid-cols-2 gap-3 sm:gap-4">
             <div class="space-y-2">
               <label class="text-sm font-medium text-gray-700">
@@ -178,7 +178,7 @@
         </template>
 
         <!-- 收藏品：单数量 + 详细信息 -->
-        <template v-else-if="formData.type === MaterialType.MISC">
+        <template v-else-if="formData.type === MaterialType.COLLECTIBLE">
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">
               {{ t('material.quantity') }}
@@ -252,9 +252,9 @@ const categoryStore = useCategoryStore()
 const { t } = useI18n()
 
 const materialTypes = [
-  { value: MaterialType.STUDIO },
-  { value: MaterialType.CLOTHING },
   { value: MaterialType.MISC },
+  { value: MaterialType.CLOTHING },
+  { value: MaterialType.COLLECTIBLE },
 ]
 
 const visible = computed({
@@ -271,7 +271,7 @@ const photoFile = ref<File>()
 
 const formData = reactive<MaterialForm>({
   name: '',
-  type: MaterialType.STUDIO,
+  type: MaterialType.MISC,
   categoryId: null,
   location: '',
   quantity: 0,
@@ -310,7 +310,7 @@ const resetForm = () => {
   photoPreview.value = ''
   photoFile.value = undefined
   formData.name = ''
-  formData.type = MaterialType.STUDIO
+  formData.type = MaterialType.MISC
   formData.categoryId = null
   formData.location = ''
   formData.quantity = 0
@@ -348,7 +348,7 @@ watch(
       // 新建模式：重置表单
       resetForm()
       // 加载默认类型的类别
-      await categoryStore.fetchCategoriesByType(MaterialType.STUDIO)
+      await categoryStore.fetchCategoriesByType(MaterialType.MISC)
     } else if (!isVisible) {
       // 对话框关闭后延迟重置，避免视觉闪烁
       setTimeout(() => {

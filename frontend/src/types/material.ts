@@ -1,15 +1,15 @@
 // 物资类型枚举
 export enum MaterialType {
-  STUDIO = 'studio',      // 杂物（原工作室物料）
-  CLOTHING = 'clothing',  // 衣物
-  MISC = 'misc'          // 收藏品（原杂物）
+  MISC = 'misc',              // 杂物
+  CLOTHING = 'clothing',      // 衣物
+  COLLECTIBLE = 'collectible' // 收藏品
 }
 
 // 物资类型标签映射
 export const MaterialTypeLabels: Record<MaterialType, string> = {
-  [MaterialType.STUDIO]: '杂物',
+  [MaterialType.MISC]: '杂物',
   [MaterialType.CLOTHING]: '衣物',
-  [MaterialType.MISC]: '收藏品',
+  [MaterialType.COLLECTIBLE]: '收藏品',
 }
 
 // 物资接口
@@ -47,9 +47,9 @@ export interface MaterialForm {
 // 统计数据
 export interface Statistics {
   total: number
-  studio: number
-  clothing: number
   misc: number
+  clothing: number
+  collectible: number
 }
 
 // 快捷操作类型
