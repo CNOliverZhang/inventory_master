@@ -162,6 +162,18 @@
                 class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
               />
             </div>
+            <div class="space-y-2">
+              <label class="text-sm font-medium text-gray-700">
+                {{ t('material.quantity') }}
+              </label>
+              <input
+                v-model.number="formData.quantity"
+                type="number"
+                min="0"
+                step="1"
+                class="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+              />
+            </div>
           </div>
         </template>
 
