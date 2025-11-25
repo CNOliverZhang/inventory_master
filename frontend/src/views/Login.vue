@@ -98,7 +98,8 @@
       </form>
 
       <!-- 注册表单 -->
-      <form v-if="activeTab === 'register'" @submit.prevent="handleRegister" class="space-y-4">
+      <form v-if="activeTab === 'register'" @submit.prevent="handleSendCodeOrVerify" class="space-y-4">
+        <!-- 用户名 -->
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.username') }}</label>
           <div class="relative group">
@@ -107,50 +108,107 @@
               v-model="registerForm.username"
               type="text"
               required
+              :disabled="codeSent"
               :placeholder="t('auth.enterUsername')"
-              class="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
+              :class="[
+                'w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus',
+                codeSent ? 'opacity-60 cursor-not-allowed' : ''
+              ]"
             />
           </div>
           <p v-if="registerErrors.username" class="text-xs text-red-500">{{ registerErrors.username }}</p>
         </div>
 
+        <!-- 邮箱 -->
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.email') }}</label>
-          <div class="flex gap-2">
-            <div class="flex-1 relative group">
-              <i class="pi pi-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
-              <input
-                v-model="registerForm.email"
-                type="email"
-                required
-                :placeholder="t('auth.enterEmail')"
-                :disabled="codeSent"
-                :class="[
-                  'w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus',
-                  codeSent ? 'opacity-60 cursor-not-allowed' : ''
-                ]"
-              />
-            </div>
-            <button
-              type="button"
-              @click="handleSendCode"
-              :disabled="!canSendCode || sendingCode"
-              class="btn-gradient flex items-center justify-center gap-2 py-3 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <i v-if="sendingCode" class="pi pi-spinner pi-spin mr-1"></i>
-              <template v-if="!codeSent">{{ t('auth.sendCodeBtn') }}</template>
-              <template v-else-if="countdown > 0">{{ countdown }}s</template>
-              <template v-else>{{ t('auth.resendCodeBtn') }}</template>
-            </button>
+          <div class="relative group">
+            <i class="pi pi-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
+            <input
+              v-model="registerForm.email"
+              type="email"
+              required
+              :disabled="codeSent"
+              :placeholder="t('auth.enterEmail')"
+              :class="[
+                'w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus',
+                codeSent ? 'opacity-60 cursor-not-allowed' : ''
+              ]"
+            />
           </div>
           <p v-if="registerErrors.email" class="text-xs text-red-500">{{ registerErrors.email }}</p>
-          <p v-if="codeSent" class="text-xs text-cyan-600">
-            <i class="pi pi-info-circle mr-1"></i>{{ t('auth.codeSentHint') }}
-          </p>
         </div>
 
-        <!-- 验证码输入框 -->
-        <div v-if="codeSent" class="space-y-2">
+        <!-- 密码 -->
+        <div class="space-y-2">
+          <label class="text-sm font-medium text-gray-700">{{ t('auth.password') }}</label>
+          <div class="relative group">
+            <i class="pi pi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
+            <input
+              v-model="registerForm.password"
+              :type="showRegPassword ? 'text' : 'password'"
+              required
+              :disabled="codeSent"
+              :placeholder="t('auth.enterPassword')"
+              :class="[
+                'w-full pl-10 pr-12 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus',
+                codeSent ? 'opacity-60 cursor-not-allowed' : ''
+              ]"
+            />
+            <button
+              type="button"
+              @click="showRegPassword = !showRegPassword"
+              :disabled="codeSent"
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <i :class="showRegPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+            </button>
+          </div>
+          <p v-if="registerErrors.password" class="text-xs text-red-500">{{ registerErrors.password }}</p>
+        </div>
+
+        <!-- 确认密码 -->
+        <div class="space-y-2">
+          <label class="text-sm font-medium text-gray-700">{{ t('auth.confirmPassword') }}</label>
+          <div class="relative group">
+            <i class="pi pi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
+            <input
+              v-model="registerForm.confirmPassword"
+              :type="showConfirmPassword ? 'text' : 'password'"
+              required
+              :disabled="codeSent"
+              :placeholder="t('auth.reEnterPassword')"
+              :class="[
+                'w-full pl-10 pr-12 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus',
+                codeSent ? 'opacity-60 cursor-not-allowed' : ''
+              ]"
+            />
+            <button
+              type="button"
+              @click="showConfirmPassword = !showConfirmPassword"
+              :disabled="codeSent"
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <i :class="showConfirmPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+            </button>
+          </div>
+          <p v-if="registerErrors.confirmPassword" class="text-xs text-red-500">{{ registerErrors.confirmPassword }}</p>
+        </div>
+
+        <!-- 注册/重发验证码按钮 -->
+        <button
+          type="submit"
+          :disabled="!canSendCode || sendingCode"
+          class="btn-gradient w-full flex items-center justify-center gap-2 py-3 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <i v-if="sendingCode" class="pi pi-spinner pi-spin"></i>
+          <template v-if="!codeSent">{{ t('auth.registerBtn') }}</template>
+          <template v-else-if="countdown > 0">{{ t('auth.resendCodeBtn') }} ({{ countdown }}s)</template>
+          <template v-else>{{ t('auth.resendCodeBtn') }}</template>
+        </button>
+
+        <!-- 验证码输入框（只在发送验证码后显示） -->
+        <div v-if="codeSent" class="space-y-2 pt-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.verificationCode') }}</label>
           <div class="relative group">
             <i class="pi pi-shield absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
@@ -165,59 +223,21 @@
             />
           </div>
           <p v-if="registerErrors.verificationCode" class="text-xs text-red-500">{{ registerErrors.verificationCode }}</p>
+          <p class="text-xs text-cyan-600">
+            <i class="pi pi-info-circle mr-1"></i>{{ t('auth.codeSentHint') }}
+          </p>
         </div>
 
-        <div class="space-y-2">
-          <label class="text-sm font-medium text-gray-700">{{ t('auth.password') }}</label>
-          <div class="relative group">
-            <i class="pi pi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
-            <input
-              v-model="registerForm.password"
-              :type="showRegPassword ? 'text' : 'password'"
-              required
-              :placeholder="t('auth.enterPassword')"
-              class="w-full pl-10 pr-12 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
-            />
-            <button
-              type="button"
-              @click="showRegPassword = !showRegPassword"
-              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <i :class="showRegPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
-            </button>
-          </div>
-          <p v-if="registerErrors.password" class="text-xs text-red-500">{{ registerErrors.password }}</p>
-        </div>
-
-        <div class="space-y-2">
-          <label class="text-sm font-medium text-gray-700">{{ t('auth.confirmPassword') }}</label>
-          <div class="relative group">
-            <i class="pi pi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
-            <input
-              v-model="registerForm.confirmPassword"
-              :type="showConfirmPassword ? 'text' : 'password'"
-              required
-              :placeholder="t('auth.reEnterPassword')"
-              class="w-full pl-10 pr-12 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
-            />
-            <button
-              type="button"
-              @click="showConfirmPassword = !showConfirmPassword"
-              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              <i :class="showConfirmPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
-            </button>
-          </div>
-          <p v-if="registerErrors.confirmPassword" class="text-xs text-red-500">{{ registerErrors.confirmPassword }}</p>
-        </div>
-
+        <!-- 验证邮箱并完成注册按钮（只在发送验证码后显示） -->
         <button
-          type="submit"
-          :disabled="loading || !canRegister"
+          v-if="codeSent"
+          type="button"
+          @click="handleCompleteRegister"
+          :disabled="loading || !canCompleteRegister"
           class="btn-gradient w-full flex items-center justify-center gap-2 py-3 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <i v-if="loading" class="pi pi-spinner pi-spin"></i>
-          {{ t('auth.registerBtn') }}
+          {{ t('auth.verifyAndCompleteBtn') }}
         </button>
       </form>
     </div>
@@ -288,14 +308,66 @@ const isValidCode = (code: string): boolean => {
   return /^\d{6}$/.test(code)
 }
 
-// 能否发送验证码
+// 验证注册表单基本字段
+const validateBasicRegisterFields = (): boolean => {
+  registerErrors.username = ''
+  registerErrors.email = ''
+  registerErrors.password = ''
+  registerErrors.confirmPassword = ''
+  
+  let isValid = true
+  
+  if (!registerForm.username) {
+    registerErrors.username = t('auth.usernameRequired')
+    isValid = false
+  } else if (registerForm.username.length < 3 || registerForm.username.length > 50) {
+    registerErrors.username = t('auth.usernameLength')
+    isValid = false
+  }
+  
+  if (!registerForm.email) {
+    registerErrors.email = t('auth.emailRequired')
+    isValid = false
+  } else if (!isValidEmail(registerForm.email)) {
+    registerErrors.email = t('auth.emailInvalid')
+    isValid = false
+  }
+  
+  if (!registerForm.password) {
+    registerErrors.password = t('auth.passwordRequired')
+    isValid = false
+  } else if (registerForm.password.length < 6) {
+    registerErrors.password = t('auth.passwordLength')
+    isValid = false
+  }
+  
+  if (!registerForm.confirmPassword) {
+    registerErrors.confirmPassword = t('auth.confirmPasswordRequired')
+    isValid = false
+  } else if (registerForm.confirmPassword !== registerForm.password) {
+    registerErrors.confirmPassword = t('auth.passwordMismatch')
+    isValid = false
+  }
+  
+  return isValid
+}
+
+// 能否发送验证码（所有字段都填写完整且格式正确）
 const canSendCode = computed(() => {
-  return registerForm.username.trim() !== '' && isValidEmail(registerForm.email) && countdown.value === 0
+  return (
+    registerForm.username.trim() !== '' &&
+    registerForm.username.length >= 3 &&
+    registerForm.username.length <= 50 &&
+    isValidEmail(registerForm.email) &&
+    registerForm.password.length >= 6 &&
+    registerForm.password === registerForm.confirmPassword &&
+    countdown.value === 0
+  )
 })
 
-// 能否注册
-const canRegister = computed(() => {
-  return codeSent.value && isValidCode(verificationCode.value)
+// 能否完成注册（验证码格式正确）
+const canCompleteRegister = computed(() => {
+  return isValidCode(verificationCode.value)
 })
 
 // 处理验证码输入（只允许数字）
@@ -322,21 +394,10 @@ const startCountdown = () => {
   }, 1000)
 }
 
-// 发送验证码
-const handleSendCode = async () => {
-  // 清空之前的错误
-  registerErrors.email = ''
-  
-  // 验证邮箱格式
-  if (!registerForm.email) {
-    registerErrors.email = t('auth.emailRequired')
-    return
-  }
-  
-  if (!isValidEmail(registerForm.email)) {
-    registerErrors.email = t('auth.emailInvalid')
-    return
-  }
+// 发送验证码或重发
+const handleSendCodeOrVerify = async () => {
+  // 验证基本字段
+  if (!validateBasicRegisterFields()) return
 
   sendingCode.value = true
   
@@ -381,50 +442,6 @@ const validateLoginForm = () => {
   return isValid
 }
 
-// 验证注册表单
-const validateRegisterForm = () => {
-  registerErrors.username = ''
-  registerErrors.password = ''
-  registerErrors.confirmPassword = ''
-  registerErrors.verificationCode = ''
-  
-  let isValid = true
-  
-  if (!registerForm.username) {
-    registerErrors.username = t('auth.usernameRequired')
-    isValid = false
-  } else if (registerForm.username.length < 3 || registerForm.username.length > 50) {
-    registerErrors.username = t('auth.usernameLength')
-    isValid = false
-  }
-  
-  if (!registerForm.password) {
-    registerErrors.password = t('auth.passwordRequired')
-    isValid = false
-  } else if (registerForm.password.length < 6) {
-    registerErrors.password = t('auth.passwordLength')
-    isValid = false
-  }
-  
-  if (!registerForm.confirmPassword) {
-    registerErrors.confirmPassword = t('auth.confirmPasswordRequired')
-    isValid = false
-  } else if (registerForm.confirmPassword !== registerForm.password) {
-    registerErrors.confirmPassword = t('auth.passwordMismatch')
-    isValid = false
-  }
-  
-  if (!verificationCode.value) {
-    registerErrors.verificationCode = t('auth.verificationCodeRequired')
-    isValid = false
-  } else if (!isValidCode(verificationCode.value)) {
-    registerErrors.verificationCode = t('auth.verificationCodeInvalid')
-    isValid = false
-  }
-  
-  return isValid
-}
-
 // 处理登录
 const handleLogin = async () => {
   if (!validateLoginForm()) return
@@ -440,9 +457,20 @@ const handleLogin = async () => {
   }
 }
 
-// 处理注册
-const handleRegister = async () => {
-  if (!validateRegisterForm()) return
+// 完成注册
+const handleCompleteRegister = async () => {
+  // 验证验证码
+  registerErrors.verificationCode = ''
+  
+  if (!verificationCode.value) {
+    registerErrors.verificationCode = t('auth.verificationCodeRequired')
+    return
+  }
+  
+  if (!isValidCode(verificationCode.value)) {
+    registerErrors.verificationCode = t('auth.verificationCodeInvalid')
+    return
+  }
 
   loading.value = true
   try {
@@ -490,5 +518,3 @@ onUnmounted(() => {
   }
 })
 </script>
-
-
