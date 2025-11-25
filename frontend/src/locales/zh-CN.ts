@@ -40,9 +40,9 @@ export default {
     createAccount: '创建新账户',
     appTitle: '洋芋田收纳大师',
     loginBtn: '登录',
-    registerBtn: '完成注册',
-    sendCodeBtn: '发送验证码',
-    resendCodeBtn: '重新发送',
+    registerBtn: '注册',
+    verifyAndCompleteBtn: '验证邮箱并完成注册',
+    resendCodeBtn: '重发验证码',
     
     // 占位符
     enterUsername: '请输入用户名（3-50个字符）',

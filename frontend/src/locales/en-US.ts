@@ -44,9 +44,9 @@ export default {
     createAccount: 'Create New Account',
     appTitle: 'Potatofield Inventory Master',
     loginBtn: 'Login',
-    registerBtn: 'Complete Registration',
-    sendCodeBtn: 'Send Code',
-    resendCodeBtn: 'Resend',
+    registerBtn: 'Register',
+    verifyAndCompleteBtn: 'Verify Email & Complete',
+    resendCodeBtn: 'Resend Code',
     
     // Placeholders
     enterUsername: 'Enter username (3-50 characters)',
