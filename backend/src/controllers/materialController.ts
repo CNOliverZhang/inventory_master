@@ -113,7 +113,14 @@ export const createMaterial = async (req: Request, res: Response) => {
       });
     }
 
-    const { name, type, categoryId, location, quantity, inUseQuantity, description } = req.body;
+    let { name, type, categoryId, location, quantity, inUseQuantity, description } = req.body;
+    
+    // 处理 multipart/form-data 中的 'null' 字符串
+    if (categoryId === 'null' || categoryId === '' || categoryId === undefined) {
+      categoryId = null;
+    } else if (categoryId) {
+      categoryId = parseInt(categoryId, 10);
+    }
     
     // 验证必填字段
     if (!name || !type || !location) {
@@ -209,7 +216,14 @@ export const updateMaterial = async (req: Request, res: Response) => {
     }
 
     const { id } = req.params;
-    const { name, categoryId, location, quantity, inUseQuantity, description } = req.body;
+    let { name, categoryId, location, quantity, inUseQuantity, description } = req.body;
+    
+    // 处理 multipart/form-data 中的 'null' 字符串
+    if (categoryId === 'null' || categoryId === '') {
+      categoryId = null;
+    } else if (categoryId && categoryId !== undefined) {
+      categoryId = parseInt(categoryId, 10);
+    }
     
     const material = await Material.findOne({
       where: {
