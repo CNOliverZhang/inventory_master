@@ -14,7 +14,10 @@
     "pm2:delete": "pm2 delete inventory-master-backend",
     "pm2:logs": "pm2 logs inventory-master-backend",
     "pm2:status": "pm2 status inventory-master-backend",
-    "deploy": "npm run build && npm run pm2:reload"
+    "deploy": "npm run build && npm run pm2:reload",
+    "test:email": "ts-node src/scripts/testEmail.ts",
+    "db:fix": "ts-node src/scripts/fixDatabase.ts",
+    "check:env": "bash check-server-env.sh"
   },
   "keywords": [],
   "author": "",
