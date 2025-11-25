@@ -5,8 +5,8 @@
       <div class="flex items-center justify-between">
         <!-- Logo和标题 -->
         <div class="flex items-center gap-3 sm:gap-4">
-          <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-primary-500/30 rotate-3 hover:rotate-0 transition-transform duration-300">
-            <i class="pi pi-box text-white text-lg sm:text-xl"></i>
+          <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl flex items-center justify-center rotate-3 hover:rotate-0 transition-transform duration-300">
+            <img src="@/assets/images/logo.png" alt="Logo" class="w-full h-full object-contain" />
           </div>
           <h1 class="text-xl sm:text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300 tracking-tight">
             {{ t('auth.appTitle') }}

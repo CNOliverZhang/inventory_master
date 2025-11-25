@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/database';
+import redis from './config/redis';
 import authRoutes from './routes/authRoutes';
 import materialRoutes from './routes/materialRoutes';
 import categoryRoutes from './routes/categoryRoutes';
