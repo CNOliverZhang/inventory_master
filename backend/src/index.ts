@@ -45,7 +45,7 @@ const startServer = async () => {
 
     // 同步数据库模型（开发环境）
     // 注意：生产环境建议使用迁移工具
-    await sequelize.sync({ alter: true });
+    await sequelize.sync({ alter: false });
     console.log('✅ 数据库模型同步成功');
 
     // 启动服务器

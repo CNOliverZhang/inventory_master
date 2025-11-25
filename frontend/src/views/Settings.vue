@@ -318,7 +318,7 @@ import { updatePasswordApi, updateEmailApi } from '@/api/settings'
 import type { UpdatePasswordForm, UpdateEmailForm } from '@/types/settings'
 import type { DarkModeOption } from '@/types/theme'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
-import { ElMessage } from 'element-plus'
+import { toast } from '@/utils/toast'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -349,39 +349,39 @@ const emailForm = reactive<UpdateEmailForm>({
 // 切换主题
 const handleThemeChange = (themeId: string) => {
   themeStore.setTheme(themeId)
-  ElMessage.success(t('settings.theme.changed'))
+  toast.success(t('settings.theme.changed'))
 }
 
 // 切换深色模式
 const handleDarkModeChange = (mode: DarkModeOption) => {
   themeStore.setDarkMode(mode)
-  ElMessage.success(t('settings.darkMode.changed'))
+  toast.success(t('settings.darkMode.changed'))
 }
 
 // 修改密码
 const handleUpdatePassword = async () => {
   if (!passwordForm.oldPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
-    ElMessage.warning(t('settings.account.fillAllFields'))
+    toast.warning(t('settings.account.fillAllFields'))
     return
   }
 
   if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-    ElMessage.warning(t('settings.account.passwordMismatch'))
+    toast.warning(t('settings.account.passwordMismatch'))
     return
   }
 
   if (passwordForm.newPassword.length < 6) {
-    ElMessage.warning(t('settings.account.passwordTooShort'))
+    toast.warning(t('settings.account.passwordTooShort'))
     return
   }
 
   try {
     passwordLoading.value = true
     await updatePasswordApi(passwordForm)
-    ElMessage.success(t('settings.account.passwordChanged'))
+    toast.success(t('settings.account.passwordChanged'))
     closePasswordDialog()
   } catch (error: any) {
-    ElMessage.error(error.response?.data?.message || t('common.error'))
+    toast.error(error.response?.data?.message || t('common.error'))
   } finally {
     passwordLoading.value = false
   }
@@ -390,13 +390,13 @@ const handleUpdatePassword = async () => {
 // 修改邮箱
 const handleUpdateEmail = async () => {
   if (!emailForm.email || !emailForm.password) {
-    ElMessage.warning(t('settings.account.fillAllFields'))
+    toast.warning(t('settings.account.fillAllFields'))
     return
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(emailForm.email)) {
-    ElMessage.warning(t('settings.account.invalidEmail'))
+    toast.warning(t('settings.account.invalidEmail'))
     return
   }
 
@@ -405,10 +405,10 @@ const handleUpdateEmail = async () => {
     const res = await updateEmailApi(emailForm)
     userStore.user = res.data
     localStorage.setItem('user', JSON.stringify(res.data))
-    ElMessage.success(t('settings.account.emailChanged'))
+    toast.success(t('settings.account.emailChanged'))
     closeEmailDialog()
   } catch (error: any) {
-    ElMessage.error(error.response?.data?.message || t('common.error'))
+    toast.error(error.response?.data?.message || t('common.error'))
   } finally {
     emailLoading.value = false
   }

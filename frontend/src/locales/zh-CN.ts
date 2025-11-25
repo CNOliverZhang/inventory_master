@@ -15,6 +15,7 @@ export default {
     yes: '是',
     no: '否',
     optional: '可选',
+    actions: '操作',
     operationFailed: '操作失败',
   },
   
@@ -127,6 +128,7 @@ export default {
     
     // 状态
     noData: '暂无物资数据',
+    addFirst: '快来添加第一个物资吧',
     notFound: '物资不存在或无权访问',
     noCategory: '无分类',
   },

@@ -9,7 +9,7 @@ import {
   deleteCategoryAPI,
   getCategoryStatisticsAPI,
 } from '@/api/category'
-import { ElMessage } from 'element-plus'
+import { toast } from '@/utils/toast'
 import { useI18n } from 'vue-i18n'
 
 export const useCategoryStore = defineStore('category', () => {
@@ -38,7 +38,7 @@ export const useCategoryStore = defineStore('category', () => {
       const res = await getCategoriesAPI(type)
       categories.value = res.data
     } catch (error: any) {
-      ElMessage.error(error.response?.data?.message || t('common.error'))
+      toast.error(error.response?.data?.message || t('common.error'))
       throw error
     } finally {
       loading.value = false
@@ -72,11 +72,11 @@ export const useCategoryStore = defineStore('category', () => {
     try {
       loading.value = true
       await createCategoryAPI(data)
-      ElMessage.success(t('category.createSuccess'))
+      toast.success(t('category.createSuccess'))
       await fetchCategories()
       await fetchCategoryStats()
     } catch (error: any) {
-      ElMessage.error(error.response?.data?.message || t('common.error'))
+      toast.error(error.response?.data?.message || t('common.error'))
       throw error
     } finally {
       loading.value = false
@@ -88,11 +88,11 @@ export const useCategoryStore = defineStore('category', () => {
     try {
       loading.value = true
       await updateCategoryAPI(id, data)
-      ElMessage.success(t('category.updateSuccess'))
+      toast.success(t('category.updateSuccess'))
       await fetchCategories()
       await fetchCategoryStats()
     } catch (error: any) {
-      ElMessage.error(error.response?.data?.message || t('common.error'))
+      toast.error(error.response?.data?.message || t('common.error'))
       throw error
     } finally {
       loading.value = false
@@ -104,11 +104,11 @@ export const useCategoryStore = defineStore('category', () => {
     try {
       loading.value = true
       await deleteCategoryAPI(id)
-      ElMessage.success(t('category.deleteSuccess'))
+      toast.success(t('category.deleteSuccess'))
       await fetchCategories()
       await fetchCategoryStats()
     } catch (error: any) {
-      ElMessage.error(error.response?.data?.message || t('common.error'))
+      toast.error(error.response?.data?.message || t('common.error'))
       throw error
     } finally {
       loading.value = false

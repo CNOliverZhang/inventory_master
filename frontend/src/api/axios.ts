@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import { toast } from '@/utils/toast'
 
 // 创建 axios 实例
 const request = axios.create({
@@ -39,7 +39,7 @@ request.interceptors.response.use(
         window.location.href = '/login'
       }
     } else {
-      ElMessage.error(message)
+      toast.error(message)
     }
     
     return Promise.reject(error)

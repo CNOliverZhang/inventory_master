@@ -35,9 +35,9 @@ themeStore.initTheme()
 
 app.use(router)
 
-// 使用 PrimeVue（unstyled 模式，完全自定义）
+// 使用 PrimeVue
 app.use(PrimeVue, {
-  unstyled: true,
+  ripple: true,
 })
 
 // 使用 Toast 服务

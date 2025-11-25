@@ -14,6 +14,7 @@ export default {
     yes: 'Yes',
     no: 'No',
     optional: 'Optional',
+    actions: 'Actions',
     loading: 'Loading...',
     success: 'Success',
     error: 'Error',
@@ -131,6 +132,7 @@ export default {
     
     // Status
     noData: 'No materials found',
+    addFirst: 'Add your first material now',
     notFound: 'Material not found or access denied',
     noCategory: 'No category',
   },

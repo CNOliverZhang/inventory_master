@@ -9,7 +9,7 @@ import {
   deleteMaterialApi,
   getStatisticsApi,
 } from '@/api/material'
-import { ElMessage } from 'element-plus'
+import { toast } from '@/utils/toast'
 
 export const useMaterialStore = defineStore('material', () => {
   // 状态
@@ -82,7 +82,7 @@ export const useMaterialStore = defineStore('material', () => {
     loading.value = true
     try {
       const res = await createMaterialApi(data)
-      ElMessage.success(res.message || '创建成功')
+      toast.success(res.message || '创建成功')
       await fetchMaterials()
       await fetchStatistics()
       return res.data
@@ -99,7 +99,7 @@ export const useMaterialStore = defineStore('material', () => {
     loading.value = true
     try {
       const res = await updateMaterialApi(id, data)
-      ElMessage.success(res.message || '更新成功')
+      toast.success(res.message || '更新成功')
       await fetchMaterials()
       await fetchStatistics()
       return res.data
@@ -116,7 +116,7 @@ export const useMaterialStore = defineStore('material', () => {
     loading.value = true
     try {
       const res = await deleteMaterialApi(id)
-      ElMessage.success(res.message || '删除成功')
+      toast.success(res.message || '删除成功')
       await fetchMaterials()
       await fetchStatistics()
     } catch (error) {

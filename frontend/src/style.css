@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  /* 默认主题色 - 海洋蓝 */
+  /* 默认主题色 - 海洋蓝（会被 theme store 动态覆盖） */
   --color-primary-from: #06b6d4;
   --color-primary-to: #3b82f6;
   --color-secondary-from: #0891b2;
@@ -38,39 +38,95 @@ body {
   height: 100vh;
 }
 
-/* 简洁卡片样式 */
+/* 简洁卡片样式 - 增强玻璃拟态 */
 @layer components {
   .glass-card {
-    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm;
+    @apply bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-white/50 dark:border-gray-700/50 rounded-2xl shadow-sm;
   }
   
   .glass-card-hover {
-    @apply bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm 
-           transition-shadow duration-200 hover:shadow-md;
+    @apply bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-white/50 dark:border-gray-700/50 rounded-2xl shadow-sm 
+           transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
   }
   
   .btn-gradient {
-    background: linear-gradient(to right, var(--color-primary-from), var(--color-primary-to));
-    @apply text-white font-medium px-6 py-2.5 rounded-lg transition-all duration-200;
+    background: linear-gradient(135deg, var(--color-primary-from), var(--color-primary-to));
+    @apply text-white font-medium px-6 py-2.5 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg hover:brightness-105 active:scale-95;
+    box-shadow: 0 10px 25px -5px rgba(var(--color-primary-rgb), 0.3);
   }
   
   .btn-gradient:hover {
-    background: linear-gradient(to right, var(--color-secondary-from), var(--color-secondary-to));
-    @apply shadow-lg;
+    background: linear-gradient(135deg, var(--color-secondary-from), var(--color-secondary-to));
   }
   
   .btn-glass {
-    @apply bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200
-           px-6 py-2.5 rounded-lg transition-colors duration-200 
-           hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500;
+    @apply bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200
+           px-6 py-2.5 rounded-xl transition-all duration-300 
+           hover:bg-white dark:hover:bg-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:shadow-md;
   }
   
   .gradient-primary {
-    background: linear-gradient(to right, var(--color-primary-from), var(--color-primary-to));
+    background: linear-gradient(135deg, var(--color-primary-from), var(--color-primary-to));
   }
   
   .gradient-secondary {
-    background: linear-gradient(to right, var(--color-secondary-from), var(--color-secondary-to));
+    background: linear-gradient(135deg, var(--color-secondary-from), var(--color-secondary-to));
+  }
+  
+  /* 输入框聚焦样式 */
+  .input-focus:focus {
+    border-color: var(--color-primary-to);
+    --tw-ring-color: rgba(var(--color-primary-rgb), 0.3);
+  }
+  
+  /* 图标聚焦高亮 */
+  .group:focus-within .icon-focus {
+    color: var(--color-primary-to);
+  }
+  
+  /* 导航项激活状态 */
+  .nav-item-active {
+    background: linear-gradient(to right, var(--color-primary-from), var(--color-primary-to));
+    box-shadow: 0 4px 14px -2px rgba(var(--color-primary-rgb), 0.3);
+  }
+  
+  /* 类别激活状态 */
+  .category-active {
+    background-color: rgba(var(--color-primary-rgb), 0.1);
+    color: var(--color-primary-to);
+  }
+  
+  .dark .category-active {
+    background-color: rgba(var(--color-primary-rgb), 0.2);
+  }
+  
+  /* 统计卡片阴影 */
+  .stat-card-shadow {
+    box-shadow: 0 10px 25px -5px rgba(var(--color-primary-rgb), 0.2);
+  }
+  
+  /* 加载图标 */
+  .loading-spinner {
+    color: var(--color-primary-to);
+  }
+  
+  /* 链接文字 */
+  .text-link {
+    color: var(--color-primary-to);
+  }
+  
+  .text-link:hover {
+    color: var(--color-secondary-to);
+  }
+  
+  /* 头像文字 */
+  .avatar-text {
+    color: var(--color-primary-to);
+  }
+  
+  /* 下拉箭头悬停 */
+  .group:hover .chevron-hover {
+    color: var(--color-primary-to);
   }
 }
 
@@ -218,4 +274,151 @@ body {
 
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #64748b;
+}
+
+/* ==================== Toast 样式 ==================== */
+/* Toast 容器 */
+div[data-p="top-right"][data-pc-name="toast"] {
+  position: fixed !important;
+  width: 25rem !important;
+  opacity: 1 !important;
+  z-index: 9999 !important;
+  top: 1.5rem !important;
+  right: 1.5rem !important;
+}
+
+/* Toast 消息动画 */
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Toast 消息容器 */
+div[data-pc-name="toast"] > div[data-pc-group-toast="true"] {
+  margin: 0 0 1rem 0 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+  animation: toast-in 0.3s ease-out !important;
+  min-width: 20rem !important;
+}
+
+/* Toast 消息内容 */
+div[data-pc-name="toast"] > div > div[data-pc-section="content"] {
+  padding: 1rem 1.25rem !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 0.75rem !important;
+  min-height: 4rem !important;
+}
+
+/* 成功消息 */
+div[data-pc-name="toast"] > div[data-pc-group-toast="true"][data-pc-severity="success"] {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+/* 错误消息 */
+div[data-pc-name="toast"] > div[data-pc-group-toast="true"][data-pc-severity="error"] {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+/* 信息消息 */
+div[data-pc-name="toast"] > div[data-pc-group-toast="true"][data-pc-severity="info"] {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+/* 警告消息 */
+div[data-pc-name="toast"] > div[data-pc-group-toast="true"][data-pc-severity="warn"] {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  border: none !important;
+  color: white !important;
+}
+
+/* Toast 内所有元素强制白色 */
+div[data-pc-name="toast"] * {
+  color: white !important;
+}
+
+/* Toast 图标 */
+div[data-pc-name="toast"] svg,
+div[data-pc-name="toast"] i {
+  font-size: 1.5rem !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  flex-shrink: 0 !important;
+}
+
+/* Toast 文本区域 */
+div[data-pc-section="text"] {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.25rem !important;
+}
+
+/* Toast 标题 */
+div[data-pc-section="summary"] {
+  font-weight: 600 !important;
+  font-size: 0.9375rem !important;
+  line-height: 1.4 !important;
+}
+
+/* Toast 详情 */
+div[data-pc-section="detail"] {
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  opacity: 0.95 !important;
+}
+
+/* Toast 关闭按钮 */
+div[data-pc-name="toast"] button[data-pc-section="closebutton"] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  border-radius: 0.375rem !important;
+  cursor: pointer !important;
+  opacity: 0.8 !important;
+  transition: all 0.2s !important;
+  flex-shrink: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-width: auto !important;
+}
+
+div[data-pc-name="toast"] button[data-pc-section="closebutton"]:hover {
+  opacity: 1 !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+div[data-pc-name="toast"] button svg,
+div[data-pc-name="toast"] button i {
+  font-size: 1rem !important;
+  width: 1rem !important;
+  height: 1rem !important;
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  div[data-p="top-right"][data-pc-name="toast"] {
+    width: calc(100% - 2rem) !important;
+    left: 1rem !important;
+    right: 1rem !important;
+    top: 1rem !important;
+  }
 }

@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { User, LoginForm, RegisterForm } from '@/types/user'
 import { loginApi, registerApi, getCurrentUserApi } from '@/api/auth'
-import { ElMessage } from 'element-plus'
+import { toast } from '@/utils/toast'
 
 export const useUserStore = defineStore('user', () => {
   // 状态
@@ -47,7 +47,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       const res = await loginApi(loginForm)
       saveAuth(res.data.token, res.data.user)
-      ElMessage.success(res.message || '登录成功')
+      toast.success(res.message || '登录成功')
       return res.data.user
     } catch (error) {
       console.error('Login failed:', error)
@@ -60,7 +60,7 @@ export const useUserStore = defineStore('user', () => {
     try {
       const res = await registerApi(registerForm)
       saveAuth(res.data.token, res.data.user)
-      ElMessage.success(res.message || '注册成功')
+      toast.success(res.message || '注册成功')
       return res.data.user
     } catch (error) {
       console.error('Register failed:', error)
@@ -71,7 +71,7 @@ export const useUserStore = defineStore('user', () => {
   // 退出登录
   const logout = () => {
     clearAuth()
-    ElMessage.success('已退出登录')
+    toast.success('已退出登录')
   }
 
   // 获取当前用户信息（用于验证 token 有效性）

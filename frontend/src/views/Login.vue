@@ -52,14 +52,14 @@
       <form v-if="activeTab === 'login'" @submit.prevent="handleLogin" class="space-y-4">
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.email') }}</label>
-          <div class="relative">
-            <i class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <div class="relative group">
+            <i class="pi pi-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
             <input
               v-model="loginForm.email"
               type="email"
               required
               :placeholder="t('auth.enterEmail')"
-              class="w-full pl-10 pr-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+              class="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
             />
           </div>
           <p v-if="loginErrors.email" class="text-xs text-red-500">{{ loginErrors.email }}</p>
@@ -67,19 +67,19 @@
 
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.password') }}</label>
-          <div class="relative">
-            <i class="pi pi-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <div class="relative group">
+            <i class="pi pi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
             <input
               v-model="loginForm.password"
               :type="showLoginPassword ? 'text' : 'password'"
               required
               :placeholder="t('auth.enterPassword')"
-              class="w-full pl-10 pr-12 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+              class="w-full pl-10 pr-12 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
             />
             <button
               type="button"
               @click="showLoginPassword = !showLoginPassword"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <i :class="showLoginPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
             </button>
@@ -90,7 +90,7 @@
         <button
           type="submit"
           :disabled="loading"
-          class="btn-gradient w-full flex items-center justify-center gap-2 text-sm sm:text-base"
+          class="btn-gradient w-full flex items-center justify-center gap-2 py-3 text-sm font-semibold"
         >
           <i v-if="loading" class="pi pi-spinner pi-spin"></i>
           {{ t('auth.loginBtn') }}
@@ -101,14 +101,14 @@
       <form v-if="activeTab === 'register'" @submit.prevent="handleRegister" class="space-y-4">
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.username') }}</label>
-          <div class="relative">
-            <i class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <div class="relative group">
+            <i class="pi pi-user absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
             <input
               v-model="registerForm.username"
               type="text"
               required
               :placeholder="t('auth.enterUsername')"
-              class="w-full pl-10 pr-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+              class="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
             />
           </div>
           <p v-if="registerErrors.username" class="text-xs text-red-500">{{ registerErrors.username }}</p>
@@ -116,14 +116,14 @@
 
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.email') }}</label>
-          <div class="relative">
-            <i class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <div class="relative group">
+            <i class="pi pi-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
             <input
               v-model="registerForm.email"
               type="email"
               required
               :placeholder="t('auth.enterEmail')"
-              class="w-full pl-10 pr-4 py-2 sm:py-2.5 text-sm sm:text-base bg-white/50 border border-white/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all"
+              class="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
             />
           </div>
           <p v-if="registerErrors.email" class="text-xs text-red-500">{{ registerErrors.email }}</p>
@@ -131,19 +131,19 @@
 
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.password') }}</label>
-          <div class="relative">
-            <i class="pi pi-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <div class="relative group">
+            <i class="pi pi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
             <input
               v-model="registerForm.password"
               :type="showRegPassword ? 'text' : 'password'"
               required
               :placeholder="t('auth.enterPassword')"
-              class="w-full pl-10 pr-12 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+              class="w-full pl-10 pr-12 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
             />
             <button
               type="button"
               @click="showRegPassword = !showRegPassword"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <i :class="showRegPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
             </button>
@@ -153,19 +153,19 @@
 
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.confirmPassword') }}</label>
-          <div class="relative">
-            <i class="pi pi-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <div class="relative group">
+            <i class="pi pi-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
             <input
               v-model="registerForm.confirmPassword"
               :type="showConfirmPassword ? 'text' : 'password'"
               required
               :placeholder="t('auth.reEnterPassword')"
-              class="w-full pl-10 pr-12 py-2 sm:py-2.5 text-sm sm:text-base bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all"
+              class="w-full pl-10 pr-12 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
             />
             <button
               type="button"
               @click="showConfirmPassword = !showConfirmPassword"
-              class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <i :class="showConfirmPassword ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
             </button>
@@ -176,7 +176,7 @@
         <button
           type="submit"
           :disabled="loading"
-          class="btn-gradient w-full flex items-center justify-center gap-2 text-sm sm:text-base"
+          class="btn-gradient w-full flex items-center justify-center gap-2 py-3 text-sm font-semibold"
         >
           <i v-if="loading" class="pi pi-spinner pi-spin"></i>
           {{ t('auth.registerBtn') }}

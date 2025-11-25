@@ -1,20 +1,20 @@
 <template>
-  <div class="glass-card-hover p-3 sm:p-4 flex flex-col h-full">
+  <div class="glass-card-hover p-3 sm:p-4 flex flex-col h-full group relative">
     <!-- 图片区域 -->
-    <div class="relative w-full h-36 sm:h-44 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden mb-3">
+    <div class="relative w-full h-40 sm:h-48 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 rounded-xl overflow-hidden mb-4 shadow-inner">
       <img
         v-if="material.photoUrl"
         :src="material.photoUrl"
         :alt="material.name"
-        class="w-full h-full object-cover"
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
       <div v-else class="w-full h-full flex items-center justify-center">
-        <i :class="getTypeIcon(material.type)" class="text-5xl sm:text-6xl text-gray-400"></i>
+        <i :class="getTypeIcon(material.type)" class="text-5xl sm:text-6xl text-gray-300 dark:text-gray-600"></i>
       </div>
       
-      <!-- 类型标签 -->
-      <div class="absolute top-2 left-2">
-        <span class="type-tag px-2 sm:px-3 py-1 rounded-md text-xs font-medium text-white">
+      <!-- 类型标签 - 悬浮在左上角 -->
+      <div class="absolute top-3 left-3">
+        <span class="type-tag px-2.5 py-1 rounded-lg text-xs font-semibold text-white shadow-sm backdrop-blur-sm bg-opacity-90">
           {{ t(`material.${material.type}`) }}
         </span>
       </div>
@@ -23,42 +23,44 @@
     <!-- 内容区域 -->
     <div class="flex-1 flex flex-col">
       <!-- 标题 -->
-      <h3 class="text-base sm:text-lg font-semibold text-gray-800 mb-2 truncate">
+      <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 mb-1 truncate group-hover:text-primary-600 transition-colors">
         {{ material.name }}
       </h3>
 
       <!-- 类别标签 -->
-      <div v-if="material.category" class="mb-2">
-        <span class="category-tag inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs">
-          <i class="pi pi-tag"></i>
+      <div v-if="material.category" class="mb-3">
+        <span class="category-tag inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium">
+          <i class="pi pi-tag text-[10px]"></i>
           {{ material.category.name }}
         </span>
       </div>
 
       <!-- 位置信息 -->
-      <div class="flex items-center gap-1.5 text-xs sm:text-sm text-gray-600 mb-3">
-        <i class="pi pi-map-marker location-icon"></i>
+      <div class="flex items-center gap-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <i class="pi pi-map-marker text-primary-500"></i>
         <span class="truncate">{{ material.location }}</span>
       </div>
 
       <!-- 数量信息 -->
-      <div v-if="hasQuantity" class="space-y-1.5 mb-3 sm:mb-4">
+      <div v-if="hasQuantity" class="space-y-2 mb-4 bg-gray-50 dark:bg-gray-800/50 p-2.5 rounded-lg border border-gray-100 dark:border-gray-700/50">
         <!-- 杂物：双数量 -->
         <template v-if="material.type === MaterialType.MISC">
-          <div class="flex justify-between items-center text-xs sm:text-sm">
-            <span class="text-gray-600">{{ t('material.inUseQuantity') }}</span>
-            <span class="quantity-value font-semibold">{{ material.inUseQuantity || 0 }}</span>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-500">{{ t('material.inUseQuantity') }}</span>
+            <span class="font-bold text-gray-700 dark:text-gray-200">{{ material.inUseQuantity || 0 }}</span>
           </div>
-          <div class="flex justify-between items-center text-xs sm:text-sm">
-            <span class="text-gray-600">{{ t('material.stockQuantity') }}</span>
-            <span class="quantity-value font-semibold">{{ stockQuantity }}</span>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-500">{{ t('material.stockQuantity') }}</span>
+            <span :class="stockQuantity > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-500'" class="font-bold">
+              {{ stockQuantity }}
+            </span>
           </div>
         </template>
         <!-- 收藏品：单数量 -->
         <template v-else-if="material.type === MaterialType.COLLECTIBLE">
-          <div class="flex justify-between items-center text-xs sm:text-sm">
-            <span class="text-gray-600">{{ t('material.quantity') }}</span>
-            <span class="quantity-value font-semibold">{{ material.quantity || 0 }}</span>
+          <div class="flex justify-between items-center text-xs">
+            <span class="text-gray-500">{{ t('material.quantity') }}</span>
+            <span class="font-bold text-gray-700 dark:text-gray-200">{{ material.quantity || 0 }}</span>
           </div>
         </template>
       </div>
@@ -67,89 +69,85 @@
       <div class="mt-auto flex gap-2">
         <!-- 杂物显示快捷操作按钮 -->
         <template v-if="material.type === MaterialType.MISC">
-          <div class="relative" ref="quickActionsRef">
+          <div class="relative flex-1" ref="quickActionsRef">
             <button
               @click="toggleQuickActions"
-              class="btn-gradient h-[30px] sm:h-[36px] px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
+              class="w-full btn-gradient h-[36px] px-3 rounded-xl text-xs sm:text-sm font-medium flex items-center justify-center gap-1.5"
             >
               <i class="pi pi-bolt"></i>
-              <i :class="showQuickActions ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-xs"></i>
+              <span class="hidden sm:inline">{{ t('common.actions') }}</span>
+              <i :class="showQuickActions ? 'pi pi-chevron-up' : 'pi pi-chevron-down'" class="text-[10px] opacity-80"></i>
             </button>
             
             <!-- 快捷操作下拉菜单 -->
             <div
               v-if="showQuickActions"
               :class="[
-                'absolute left-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-10 whitespace-nowrap',
+                'absolute left-0 w-full min-w-[140px] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl shadow-xl py-1.5 z-20 overflow-hidden ring-1 ring-black/5',
                 menuPosition === 'top' ? 'bottom-full mb-2' : 'top-full mt-2'
               ]"
             >
               <button
                 @click="handleQuickAction('restock')"
-                class="w-full px-3 py-2 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
+                class="w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2.5 transition-colors"
               >
-                <i class="pi pi-plus-circle text-green-600 dark:text-green-400"></i>
+                <i class="pi pi-plus-circle text-green-500"></i>
                 {{ t('material.restock') }}
               </button>
               <button
                 @click="handleQuickAction('take-out')"
                 :disabled="!canTakeOut"
-                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
-                :class="canTakeOut ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'"
+                class="w-full px-4 py-2.5 text-left text-sm flex items-center gap-2.5 transition-colors"
+                :class="canTakeOut ? 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700' : 'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-50'"
               >
-                <i class="pi pi-arrow-circle-up text-blue-600 dark:text-blue-400"></i>
+                <i class="pi pi-arrow-circle-up text-blue-500"></i>
                 {{ t('material.take-out') }}
               </button>
               <button
                 @click="handleQuickAction('discard')"
                 :disabled="!canDiscard"
-                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
-                :class="canDiscard ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'"
+                class="w-full px-4 py-2.5 text-left text-sm flex items-center gap-2.5 transition-colors"
+                :class="canDiscard ? 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700' : 'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-50'"
               >
-                <i class="pi pi-times-circle text-orange-600 dark:text-orange-400"></i>
+                <i class="pi pi-times-circle text-orange-500"></i>
                 {{ t('material.discard') }}
               </button>
               <button
                 @click="handleQuickAction('replace')"
                 :disabled="!canReplace"
-                class="w-full px-3 py-2 text-left text-sm hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center gap-2"
-                :class="canReplace ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400 dark:text-gray-600 cursor-not-allowed'"
+                class="w-full px-4 py-2.5 text-left text-sm flex items-center gap-2.5 transition-colors"
+                :class="canReplace ? 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700' : 'text-gray-400 dark:text-gray-600 cursor-not-allowed opacity-50'"
               >
-                <i class="pi pi-refresh text-purple-600 dark:text-purple-400"></i>
+                <i class="pi pi-refresh text-purple-500"></i>
                 {{ t('material.replace') }}
               </button>
             </div>
           </div>
-          
-          <!-- 编辑按钮 -->
-          <button
-            @click="handleEdit"
-            class="btn-gradient h-[30px] sm:h-[36px] flex-1 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
-          >
-            <i class="pi pi-pencil"></i>
-            <span class="hidden sm:inline">{{ t('common.edit') }}</span>
-          </button>
         </template>
         
-        <!-- 其他类型显示编辑按钮 -->
+        <!-- 编辑按钮 - 幽灵样式 -->
         <button
-          v-if="material.type !== MaterialType.MISC"
           @click="handleEdit"
-          class="btn-gradient h-[30px] sm:h-[36px] flex-1 px-2 sm:px-3 rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
+          class="h-[36px] px-3 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-primary-600 hover:border-primary-200 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all flex items-center justify-center"
+          :class="material.type !== MaterialType.MISC ? 'flex-1 gap-2' : ''"
+          v-tooltip.top="t('common.edit')"
         >
           <i class="pi pi-pencil"></i>
-          <span class="hidden sm:inline">{{ t('common.edit') }}</span>
+          <span v-if="material.type !== MaterialType.MISC" class="text-sm font-medium">{{ t('common.edit') }}</span>
         </button>
         
-        <!-- 删除按钮（所有类型都有） -->
+        <!-- 删除按钮 - 幽灵样式 -->
         <button
           @click="handleDelete"
-          class="h-[30px] sm:h-[36px] flex-1 px-2 sm:px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-all hover:shadow-lg flex items-center justify-center gap-1"
+          class="h-[36px] px-3 rounded-xl border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-red-600 hover:border-red-200 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center justify-center"
+          :class="material.type !== MaterialType.MISC ? 'flex-1 gap-2' : ''"
+          v-tooltip.top="t('common.delete')"
         >
           <i class="pi pi-trash"></i>
-          <span class="hidden sm:inline">{{ t('common.delete') }}</span>
+          <span v-if="material.type !== MaterialType.MISC" class="text-sm font-medium">{{ t('common.delete') }}</span>
         </button>
       </div>
+
       
       <!-- 补充库存输入对话框 -->
       <div
