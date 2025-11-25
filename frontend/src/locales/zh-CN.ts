@@ -35,17 +35,21 @@ export default {
     email: '邮箱',
     password: '密码',
     confirmPassword: '确认密码',
+    verificationCode: '验证码',
     welcomeBack: '欢迎回来',
     createAccount: '创建新账户',
     appTitle: '洋芋田收纳大师',
     loginBtn: '登录',
-    registerBtn: '注册',
+    registerBtn: '完成注册',
+    sendCodeBtn: '发送验证码',
+    resendCodeBtn: '重新发送',
     
     // 占位符
     enterUsername: '请输入用户名（3-50个字符）',
     enterEmail: '请输入邮箱',
     enterPassword: '请输入密码（至少6位）',
     reEnterPassword: '请再次输入密码',
+    enterVerificationCode: '请输入6位验证码',
     
     // 验证消息
     usernameRequired: '请输入用户名',
@@ -56,6 +60,17 @@ export default {
     passwordLength: '密码长度至少为 6 位',
     confirmPasswordRequired: '请再次输入密码',
     passwordMismatch: '两次输入密码不一致',
+    verificationCodeRequired: '请输入验证码',
+    verificationCodeInvalid: '验证码格式不正确（6位数字）',
+    
+    // 验证码相关
+    codeSentSuccess: '验证码已发送到您的邮箱',
+    codeSentHint: '验证码已发送，请查收邮件（有效期30分钟）',
+    codeResendHint: '验证码已重新发送',
+    codeExpired: '验证码已过期，请重新发送',
+    codeInvalid: '验证码错误',
+    sendingCode: '发送中...',
+    waitBeforeResend: '请等待 {seconds} 秒后再重新发送',
     
     // 响应消息
     loginSuccess: '登录成功',

@@ -288,11 +288,14 @@ body {
 
 /* ==================== Toast 样式 ==================== */
 /* Toast 容器 */
-div[data-p="top-right"][data-pc-name="toast"] {
+.p-toast {
   position: fixed !important;
   width: 25rem !important;
   opacity: 1 !important;
   z-index: 9999 !important;
+}
+
+.p-toast.p-toast-top-right {
   top: 1.5rem !important;
   right: 1.5rem !important;
 }
@@ -310,17 +313,18 @@ div[data-p="top-right"][data-pc-name="toast"] {
 }
 
 /* Toast 消息容器 */
-div[data-pc-name="toast"] > div[data-pc-group-toast="true"] {
+.p-toast-message {
   margin: 0 0 1rem 0 !important;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
   border-radius: 0.75rem !important;
   overflow: hidden !important;
   animation: toast-in 0.3s ease-out !important;
   min-width: 20rem !important;
+  border: none !important;
 }
 
 /* Toast 消息内容 */
-div[data-pc-name="toast"] > div > div[data-pc-section="content"] {
+.p-toast-message-content {
   padding: 1rem 1.25rem !important;
   display: flex !important;
   align-items: flex-start !important;
@@ -329,41 +333,48 @@ div[data-pc-name="toast"] > div > div[data-pc-section="content"] {
 }
 
 /* 成功消息 */
-div[data-pc-name="toast"] > div[data-pc-group-toast="true"][data-pc-severity="success"] {
+.p-toast-message.p-toast-message-success {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-  border: none !important;
+  color: white !important;
+}
+
+.p-toast-message.p-toast-message-success * {
   color: white !important;
 }
 
 /* 错误消息 */
-div[data-pc-name="toast"] > div[data-pc-group-toast="true"][data-pc-severity="error"] {
+.p-toast-message.p-toast-message-error {
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-  border: none !important;
+  color: white !important;
+}
+
+.p-toast-message.p-toast-message-error * {
   color: white !important;
 }
 
 /* 信息消息 */
-div[data-pc-name="toast"] > div[data-pc-group-toast="true"][data-pc-severity="info"] {
+.p-toast-message.p-toast-message-info {
   background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
-  border: none !important;
+  color: white !important;
+}
+
+.p-toast-message.p-toast-message-info * {
   color: white !important;
 }
 
 /* 警告消息 */
-div[data-pc-name="toast"] > div[data-pc-group-toast="true"][data-pc-severity="warn"] {
+.p-toast-message.p-toast-message-warn {
   background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-  border: none !important;
   color: white !important;
 }
 
-/* Toast 内所有元素强制白色 */
-div[data-pc-name="toast"] * {
+.p-toast-message.p-toast-message-warn * {
   color: white !important;
 }
 
 /* Toast 图标 */
-div[data-pc-name="toast"] svg,
-div[data-pc-name="toast"] i {
+.p-toast-message-icon,
+.p-toast-icon-close-icon {
   font-size: 1.5rem !important;
   width: 1.5rem !important;
   height: 1.5rem !important;
@@ -371,7 +382,7 @@ div[data-pc-name="toast"] i {
 }
 
 /* Toast 文本区域 */
-div[data-pc-section="text"] {
+.p-toast-message-text {
   flex: 1 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -379,26 +390,27 @@ div[data-pc-section="text"] {
 }
 
 /* Toast 标题 */
-div[data-pc-section="summary"] {
+.p-toast-summary {
   font-weight: 600 !important;
   font-size: 0.9375rem !important;
   line-height: 1.4 !important;
 }
 
 /* Toast 详情 */
-div[data-pc-section="detail"] {
+.p-toast-detail {
   font-size: 0.875rem !important;
   line-height: 1.5 !important;
   opacity: 0.95 !important;
+  margin: 0 !important;
 }
 
 /* Toast 关闭按钮 */
-div[data-pc-name="toast"] button[data-pc-section="closebutton"] {
+.p-toast-icon-close {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 1.5rem !important;
-  height: 1.5rem !important;
+  width: 2rem !important;
+  height: 2rem !important;
   border-radius: 0.375rem !important;
   cursor: pointer !important;
   opacity: 0.8 !important;
@@ -408,16 +420,15 @@ div[data-pc-name="toast"] button[data-pc-section="closebutton"] {
   border: none !important;
   padding: 0 !important;
   margin: 0 !important;
-  min-width: auto !important;
+  margin-left: 0.5rem !important;
 }
 
-div[data-pc-name="toast"] button[data-pc-section="closebutton"]:hover {
+.p-toast-icon-close:hover {
   opacity: 1 !important;
   background-color: rgba(255, 255, 255, 0.2) !important;
 }
 
-div[data-pc-name="toast"] button svg,
-div[data-pc-name="toast"] button i {
+.p-toast-icon-close-icon {
   font-size: 1rem !important;
   width: 1rem !important;
   height: 1rem !important;
@@ -425,7 +436,7 @@ div[data-pc-name="toast"] button i {
 
 /* 响应式 */
 @media (max-width: 640px) {
-  div[data-p="top-right"][data-pc-name="toast"] {
+  .p-toast.p-toast-top-right {
     width: calc(100% - 2rem) !important;
     left: 1rem !important;
     right: 1rem !important;

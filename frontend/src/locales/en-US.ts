@@ -39,17 +39,21 @@ export default {
     email: 'Email',
     password: 'Password',
     confirmPassword: 'Confirm Password',
+    verificationCode: 'Verification Code',
     welcomeBack: 'Welcome Back',
     createAccount: 'Create New Account',
     appTitle: 'Potatofield Inventory Master',
     loginBtn: 'Login',
-    registerBtn: 'Register',
+    registerBtn: 'Complete Registration',
+    sendCodeBtn: 'Send Code',
+    resendCodeBtn: 'Resend',
     
     // Placeholders
     enterUsername: 'Enter username (3-50 characters)',
     enterEmail: 'Enter email address',
     enterPassword: 'Enter password (at least 6 characters)',
     reEnterPassword: 'Re-enter password',
+    enterVerificationCode: 'Enter 6-digit code',
     
     // Validation messages
     usernameRequired: 'Username is required',
@@ -60,6 +64,17 @@ export default {
     passwordLength: 'Password must be at least 6 characters',
     confirmPasswordRequired: 'Please confirm your password',
     passwordMismatch: 'Passwords do not match',
+    verificationCodeRequired: 'Verification code is required',
+    verificationCodeInvalid: 'Code must be 6 digits',
+    
+    // Verification code related
+    codeSentSuccess: 'Verification code sent to your email',
+    codeSentHint: 'Code sent, please check your email (valid for 30 minutes)',
+    codeResendHint: 'Code resent successfully',
+    codeExpired: 'Code expired, please resend',
+    codeInvalid: 'Invalid verification code',
+    sendingCode: 'Sending...',
+    waitBeforeResend: 'Please wait {seconds} seconds before resending',
     
     // Response messages
     loginSuccess: 'Login successful',

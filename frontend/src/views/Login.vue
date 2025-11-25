@@ -10,8 +10,8 @@
       <!-- 头部 -->
       <div class="text-center space-y-2 sm:space-y-3">
         <div class="flex justify-center">
-          <div class="w-14 h-14 sm:w-16 sm:h-16 gradient-primary rounded-xl flex items-center justify-center shadow-md">
-            <i class="pi pi-box text-2xl sm:text-3xl text-white"></i>
+          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center">
+            <img src="@/assets/images/logo.png" alt="Logo" class="w-full h-full object-contain" />
           </div>
         </div>
         <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">
@@ -116,17 +116,55 @@
 
         <div class="space-y-2">
           <label class="text-sm font-medium text-gray-700">{{ t('auth.email') }}</label>
-          <div class="relative group">
-            <i class="pi pi-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
-            <input
-              v-model="registerForm.email"
-              type="email"
-              required
-              :placeholder="t('auth.enterEmail')"
-              class="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus"
-            />
+          <div class="flex gap-2">
+            <div class="flex-1 relative group">
+              <i class="pi pi-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
+              <input
+                v-model="registerForm.email"
+                type="email"
+                required
+                :placeholder="t('auth.enterEmail')"
+                :disabled="codeSent"
+                :class="[
+                  'w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus',
+                  codeSent ? 'opacity-60 cursor-not-allowed' : ''
+                ]"
+              />
+            </div>
+            <button
+              type="button"
+              @click="handleSendCode"
+              :disabled="!canSendCode || sendingCode"
+              class="btn-gradient flex items-center justify-center gap-2 py-3 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <i v-if="sendingCode" class="pi pi-spinner pi-spin mr-1"></i>
+              <template v-if="!codeSent">{{ t('auth.sendCodeBtn') }}</template>
+              <template v-else-if="countdown > 0">{{ countdown }}s</template>
+              <template v-else>{{ t('auth.resendCodeBtn') }}</template>
+            </button>
           </div>
           <p v-if="registerErrors.email" class="text-xs text-red-500">{{ registerErrors.email }}</p>
+          <p v-if="codeSent" class="text-xs text-cyan-600">
+            <i class="pi pi-info-circle mr-1"></i>{{ t('auth.codeSentHint') }}
+          </p>
+        </div>
+
+        <!-- 验证码输入框 -->
+        <div v-if="codeSent" class="space-y-2">
+          <label class="text-sm font-medium text-gray-700">{{ t('auth.verificationCode') }}</label>
+          <div class="relative group">
+            <i class="pi pi-shield absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 transition-colors icon-focus"></i>
+            <input
+              v-model="verificationCode"
+              type="text"
+              maxlength="6"
+              required
+              :placeholder="t('auth.enterVerificationCode')"
+              class="w-full pl-10 pr-4 py-3 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 transition-all input-focus tracking-widest text-center text-lg font-semibold"
+              @input="handleCodeInput"
+            />
+          </div>
+          <p v-if="registerErrors.verificationCode" class="text-xs text-red-500">{{ registerErrors.verificationCode }}</p>
         </div>
 
         <div class="space-y-2">
@@ -175,8 +213,8 @@
 
         <button
           type="submit"
-          :disabled="loading"
-          class="btn-gradient w-full flex items-center justify-center gap-2 py-3 text-sm font-semibold"
+          :disabled="loading || !canRegister"
+          class="btn-gradient w-full flex items-center justify-center gap-2 py-3 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <i v-if="loading" class="pi pi-spinner pi-spin"></i>
           {{ t('auth.registerBtn') }}
@@ -187,7 +225,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useUserStore } from '@/stores/user'
@@ -203,6 +241,13 @@ const loading = ref(false)
 const showLoginPassword = ref(false)
 const showRegPassword = ref(false)
 const showConfirmPassword = ref(false)
+
+// 验证码相关状态
+const codeSent = ref(false)
+const sendingCode = ref(false)
+const verificationCode = ref('')
+const countdown = ref(0)
+let countdownTimer: number | null = null
 
 const isLogin = computed(() => activeTab.value === 'login')
 
@@ -230,7 +275,88 @@ const registerErrors = reactive({
   email: '',
   password: '',
   confirmPassword: '',
+  verificationCode: '',
 })
+
+// 验证邮箱格式
+const isValidEmail = (email: string): boolean => {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+// 验证验证码格式（6位数字）
+const isValidCode = (code: string): boolean => {
+  return /^\d{6}$/.test(code)
+}
+
+// 能否发送验证码
+const canSendCode = computed(() => {
+  return registerForm.username.trim() !== '' && isValidEmail(registerForm.email) && countdown.value === 0
+})
+
+// 能否注册
+const canRegister = computed(() => {
+  return codeSent.value && isValidCode(verificationCode.value)
+})
+
+// 处理验证码输入（只允许数字）
+const handleCodeInput = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  input.value = input.value.replace(/\D/g, '')
+  verificationCode.value = input.value
+}
+
+// 开始倒计时
+const startCountdown = () => {
+  countdown.value = 60
+  if (countdownTimer) {
+    clearInterval(countdownTimer)
+  }
+  countdownTimer = window.setInterval(() => {
+    countdown.value--
+    if (countdown.value <= 0) {
+      if (countdownTimer) {
+        clearInterval(countdownTimer)
+        countdownTimer = null
+      }
+    }
+  }, 1000)
+}
+
+// 发送验证码
+const handleSendCode = async () => {
+  // 清空之前的错误
+  registerErrors.email = ''
+  
+  // 验证邮箱格式
+  if (!registerForm.email) {
+    registerErrors.email = t('auth.emailRequired')
+    return
+  }
+  
+  if (!isValidEmail(registerForm.email)) {
+    registerErrors.email = t('auth.emailInvalid')
+    return
+  }
+
+  sendingCode.value = true
+  
+  try {
+    if (codeSent.value) {
+      // 重新发送
+      await userStore.resendCode(registerForm.email)
+    } else {
+      // 首次发送
+      await userStore.sendRegisterCode(registerForm)
+      codeSent.value = true
+    }
+    startCountdown()
+  } catch (error: any) {
+    console.error('Send code error:', error)
+    // 错误已在 store 中通过 toast 显示
+  } finally {
+    sendingCode.value = false
+  }
+}
 
 // 验证登录表单
 const validateLoginForm = () => {
@@ -242,7 +368,7 @@ const validateLoginForm = () => {
   if (!loginForm.email) {
     loginErrors.email = t('auth.emailRequired')
     isValid = false
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginForm.email)) {
+  } else if (!isValidEmail(loginForm.email)) {
     loginErrors.email = t('auth.emailInvalid')
     isValid = false
   }
@@ -258,9 +384,9 @@ const validateLoginForm = () => {
 // 验证注册表单
 const validateRegisterForm = () => {
   registerErrors.username = ''
-  registerErrors.email = ''
   registerErrors.password = ''
   registerErrors.confirmPassword = ''
+  registerErrors.verificationCode = ''
   
   let isValid = true
   
@@ -269,14 +395,6 @@ const validateRegisterForm = () => {
     isValid = false
   } else if (registerForm.username.length < 3 || registerForm.username.length > 50) {
     registerErrors.username = t('auth.usernameLength')
-    isValid = false
-  }
-  
-  if (!registerForm.email) {
-    registerErrors.email = t('auth.emailRequired')
-    isValid = false
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerForm.email)) {
-    registerErrors.email = t('auth.emailInvalid')
     isValid = false
   }
   
@@ -293,6 +411,14 @@ const validateRegisterForm = () => {
     isValid = false
   } else if (registerForm.confirmPassword !== registerForm.password) {
     registerErrors.confirmPassword = t('auth.passwordMismatch')
+    isValid = false
+  }
+  
+  if (!verificationCode.value) {
+    registerErrors.verificationCode = t('auth.verificationCodeRequired')
+    isValid = false
+  } else if (!isValidCode(verificationCode.value)) {
+    registerErrors.verificationCode = t('auth.verificationCodeInvalid')
     isValid = false
   }
   
@@ -320,7 +446,7 @@ const handleRegister = async () => {
 
   loading.value = true
   try {
-    await userStore.register(registerForm)
+    await userStore.verifyEmail(registerForm.email, verificationCode.value)
     router.push('/')
   } catch (error) {
     console.error('Register error:', error)
@@ -328,6 +454,41 @@ const handleRegister = async () => {
     loading.value = false
   }
 }
+
+// 切换标签时重置状态
+watch(activeTab, () => {
+  // 重置表单
+  if (activeTab.value === 'login') {
+    loginForm.email = ''
+    loginForm.password = ''
+    loginErrors.email = ''
+    loginErrors.password = ''
+  } else {
+    registerForm.username = ''
+    registerForm.email = ''
+    registerForm.password = ''
+    registerForm.confirmPassword = ''
+    verificationCode.value = ''
+    codeSent.value = false
+    countdown.value = 0
+    registerErrors.username = ''
+    registerErrors.email = ''
+    registerErrors.password = ''
+    registerErrors.confirmPassword = ''
+    registerErrors.verificationCode = ''
+    if (countdownTimer) {
+      clearInterval(countdownTimer)
+      countdownTimer = null
+    }
+  }
+})
+
+// 组件卸载时清理定时器
+onUnmounted(() => {
+  if (countdownTimer) {
+    clearInterval(countdownTimer)
+  }
+})
 </script>
 
 
