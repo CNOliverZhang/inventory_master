@@ -23,7 +23,7 @@
     <!-- 内容区域 -->
     <div class="flex-1 flex flex-col">
       <!-- 标题 -->
-      <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 mb-1 truncate group-hover:text-primary-600 transition-colors">
+      <h3 class="text-base sm:text-lg font-bold text-gray-800 dark:text-gray-100 mb-1 truncate transition-colors card-title-hover">
         {{ material.name }}
       </h3>
 
@@ -37,7 +37,7 @@
 
       <!-- 位置信息 -->
       <div class="flex items-center gap-2 text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-4">
-        <i class="pi pi-map-marker text-primary-500"></i>
+        <i class="pi pi-map-marker location-icon-color"></i>
         <span class="truncate">{{ material.location }}</span>
       </div>
 

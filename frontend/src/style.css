@@ -128,6 +128,16 @@ body {
   .group:hover .chevron-hover {
     color: var(--color-primary-to);
   }
+  
+  /* 物资卡片标题悬停 */
+  .group:hover .card-title-hover {
+    color: var(--color-primary-to);
+  }
+  
+  /* 位置图标颜色 */
+  .location-icon-color {
+    color: var(--color-primary-to);
+  }
 }
 
 /* 深色模式全局样式 - 使用更具体的选择器提高优先级 */
