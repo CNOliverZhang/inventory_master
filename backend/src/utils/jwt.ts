@@ -10,8 +10,10 @@ const JWT_EXPIRES_IN: StringValue = (process.env.JWT_EXPIRES_IN || '7d') as Stri
 // JWT 载荷接口
 export interface JwtPayload {
   userId: number;
-  username: string;
-  email: string;
+  username?: string; // 用户名可选（在注册后可能需要设置）
+  email?: string;    // 邮箱可选（可能通过其他方式登录）
+  phone?: string;    // 手机号可选
+  identifier?: string; // 通用标识符（用于多方式登录）
 }
 
 /**

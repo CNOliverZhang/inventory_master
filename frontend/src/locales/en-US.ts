@@ -37,6 +37,7 @@ export default {
     register: 'Register',
     username: 'Username',
     email: 'Email',
+    phone: 'Phone',
     password: 'Password',
     confirmPassword: 'Confirm Password',
     verificationCode: 'Verification Code',
@@ -47,10 +48,30 @@ export default {
     registerBtn: 'Register',
     verifyAndCompleteBtn: 'Verify Email & Complete',
     resendCodeBtn: 'Resend Code',
+    registerMethod: 'Registration Method',
+    emailRegister: 'Email Registration',
+    phoneRegister: 'Phone Registration',
+    
+    // New fields
+    emailOrUsername: 'Email/Username/Phone',
+    enterEmailOrUsername: 'Enter email, username or phone',
+    emailOrPhone: 'Email/Phone',
+    enterEmailOrPhone: 'Enter email or phone number',
+    graphicCaptcha: 'Captcha',
+    enterCaptcha: 'Enter captcha',
+    sendCode: 'Send Code',
+    completeRegistration: 'Complete Registration',
+    resendAfter: 'Resend after',
+    resendCode: 'Resend Code',
+    orLoginWith: 'Or login with',
+    orRegisterWith: 'Or register with',
+    wechat: 'WeChat',
+    qq: 'QQ',
     
     // Placeholders
     enterUsername: 'Enter username (3-50 characters)',
     enterEmail: 'Enter email address',
+    enterPhone: 'Enter phone number',
     enterPassword: 'Enter password (at least 6 characters)',
     reEnterPassword: 'Re-enter password',
     enterVerificationCode: 'Enter 6-digit code',
@@ -60,6 +81,8 @@ export default {
     usernameLength: 'Username must be 3-50 characters',
     emailRequired: 'Email is required',
     emailInvalid: 'Please enter a valid email',
+    phoneRequired: 'Phone number is required',
+    phoneInvalid: 'Please enter a valid phone number',
     passwordRequired: 'Password is required',
     passwordLength: 'Password must be at least 6 characters',
     confirmPasswordRequired: 'Please confirm your password',
@@ -68,8 +91,8 @@ export default {
     verificationCodeInvalid: 'Code must be 6 digits',
     
     // Verification code related
-    codeSentSuccess: 'Verification code sent to your email',
-    codeSentHint: 'Code sent, please check your email (valid for 30 minutes)',
+    codeSentSuccess: 'Verification code sent',
+    codeSentHint: 'Code sent, please check (valid for 5 minutes)',
     codeResendHint: 'Code resent successfully',
     codeExpired: 'Code expired, please resend',
     codeInvalid: 'Invalid verification code',
@@ -78,9 +101,28 @@ export default {
     
     // Response messages
     loginSuccess: 'Login successful',
+    loginFailed: 'Login failed',
     registerSuccess: 'Registration successful',
+    registerFailed: 'Registration failed',
+    sendCodeSuccess: 'Verification code sent',
+    sendCodeFailed: 'Failed to send code',
+    getCaptchaFailed: 'Failed to get captcha',
     logoutSuccess: 'Logged out successfully',
     logoutConfirm: 'Are you sure you want to logout?',
+    
+    // OAuth related
+    oauthNeedBind: 'This account is not bound, please bind an existing account or register a new one',
+    oauthLoginSuccess: 'Third-party login successful',
+    oauthLoginFailed: 'Third-party login failed',
+    oauthBindSuccess: 'Binding successful',
+    oauthBindFailed: 'Binding failed',
+    bindExistingAccount: 'Bind Existing Account',
+    registerNewAccount: 'Register New Account',
+    chooseAction: 'Choose Action',
+    oauthNotBoundHint: 'This third-party account is not bound to any account',
+    bindExistingAccountHint: 'Login with existing credentials and bind',
+    registerNewAccountHint: 'Register a new user with this third-party account',
+    bindAndLogin: 'Bind and Login',
   },
 
   material: {
@@ -218,11 +260,14 @@ export default {
     },
     account: {
       title: 'Account Settings',
+      nickname: 'Nickname',
       username: 'Username',
       email: 'Email',
+      phone: 'Phone',
       password: 'Password',
       changeEmail: 'Change Email',
       changePassword: 'Change Password',
+      setPassword: 'Set Password',
       oldPassword: 'Old Password',
       newPassword: 'New Password',
       confirmPassword: 'Confirm Password',
@@ -232,7 +277,51 @@ export default {
       passwordTooShort: 'Password must be at least 6 characters',
       invalidEmail: 'Please enter a valid email',
       passwordChanged: 'Password changed successfully',
+      passwordSet: 'Password set successfully',
       emailChanged: 'Email changed successfully',
+      
+      bindAccountFirst: 'Please bind a phone, email or username before setting a password',
+      
+      // Binding management
+      notSet: 'Not Set',
+      notBound: 'Not Bound',
+      bound: 'Bound',
+      bind: 'Bind',
+      unbind: 'Unbind',
+      rebind: 'Rebind',
+      
+      // Edit dialogs
+      editNickname: 'Edit Nickname',
+      editUsername: 'Edit Username',
+      bindUsername: 'Bind Username',
+      bindEmail: 'Bind Email',
+      rebindEmail: 'Rebind Email',
+      bindPhone: 'Bind Phone',
+      rebindPhone: 'Rebind Phone',
+      
+      enterNickname: 'Enter nickname',
+      
+      // Status messages
+      nicknameChanged: 'Nickname changed successfully',
+      usernameChanged: 'Username changed successfully',
+      emailBound: 'Email bound successfully',
+      emailRebound: 'Email rebound successfully',
+      phoneBound: 'Phone bound successfully',
+      phoneRebound: 'Phone rebound successfully',
+      unbindSuccess: 'Unbound successfully',
+      rebindSuccess: 'Rebound successfully',
+      alreadyBound: 'This account is already bound to another user',
+      
+      // OAuth related
+      rebindOAuth: 'Rebind {provider}',
+      rebindOAuthHint: 'Click the button below to authorize {provider} for rebinding',
+      rebindOAuthNote: 'The original binding will be replaced after rebinding',
+      startAuth: 'Start Authorization',
+      unbindConfirm: 'Are you sure you want to unbind {provider}?',
+      unbindConfirmTitle: 'Confirm Unbind',
+      unbindConfirmMessage: 'Are you sure you want to unbind {provider}? You will not be able to login with {provider} after unbinding.',
+      cannotUnbindWechat: 'Cannot unbind: WeChat is your only login method, please bind other login methods first',
+      cannotUnbindQQ: 'Cannot unbind: QQ is your only login method, please bind other login methods first',
     },
   },
 }
