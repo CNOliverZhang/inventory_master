@@ -25,11 +25,11 @@
             >
               <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full gradient-primary p-[2px] shadow-md group-hover:shadow-lg transition-all">
                  <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center font-bold text-sm avatar-text">
-                    {{ userStore.user?.username.charAt(0).toUpperCase() }}
+                    {{ getUserInitial() }}
                  </div>
               </div>
               <div class="flex flex-col items-start hidden sm:flex">
-                  <span class="text-sm font-semibold text-gray-700 dark:text-gray-200 leading-none">{{ userStore.user?.username }}</span>
+                  <span class="text-sm font-semibold text-gray-700 dark:text-gray-200 leading-none">{{ getUserDisplayName() }}</span>
                   <span class="text-[10px] text-gray-500 dark:text-gray-400 font-medium">User</span>
               </div>
               <i class="pi pi-chevron-down text-xs text-gray-400 transition-colors hidden sm:block ml-1 chevron-hover"></i>
@@ -309,6 +309,35 @@ const materialStore = useMaterialStore()
 const categoryStore = useCategoryStore()
 const userStore = useUserStore()
 const { t } = useI18n()
+
+// 获取用户显示名称
+const getUserDisplayName = () => {
+  const user = userStore.user as any
+  if (!user) return 'User'
+  
+  // 优先使用 profile.nickname
+  if (user.profile?.nickname) {
+    return user.profile.nickname
+  }
+  
+  // 兼容旧版本的 username
+  if (user.username) {
+    return user.username
+  }
+  
+  // 使用 email 或 phone
+  if (user.email) {
+    return user.email.split('@')[0]
+  }
+  
+  return 'User'
+}
+
+// 获取用户首字母
+const getUserInitial = () => {
+  const displayName = getUserDisplayName()
+  return displayName.charAt(0).toUpperCase()
+}
 
 // 菜单项配置
 const menuItems: Array<{ type: MaterialType | '', labelKey: string, icon: string }> = [
