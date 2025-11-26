@@ -265,6 +265,110 @@ export const oauthBind = async (req: Request, res: Response) => {
 };
 
 /**
+ * OAuth换绑（已登录用户）
+ */
+export const oauthRebind = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: '未认证',
+      });
+    }
+
+    const { unionId } = req.body;
+
+    if (!unionId) {
+      return res.status(400).json({
+        success: false,
+        message: '缺少必要参数',
+      });
+    }
+
+    // 从Redis获取OAuth信息
+    const oauthKeys = await redisClient.keys(`oauth:*:${unionId}`);
+    if (!oauthKeys || oauthKeys.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'OAuth信息已过期，请重新授权',
+      });
+    }
+
+    const oauthDataStr = await redisClient.get(oauthKeys[0]);
+    if (!oauthDataStr) {
+      return res.status(400).json({
+        success: false,
+        message: 'OAuth信息已过期，请重新授权',
+      });
+    }
+
+    const oauthData = JSON.parse(oauthDataStr);
+
+    // 检查该OAuth账号是否已被其他用户绑定
+    const existingOAuthCred = await AuthCredential.findOne({
+      where: {
+        identifier: unionId,
+        authType: oauthData.authType,
+      },
+    });
+
+    if (existingOAuthCred && existingOAuthCred.userId !== req.user.userId) {
+      return res.status(400).json({
+        success: false,
+        message: `该${oauthData.state === 'wechat' ? '微信' : 'QQ'}账号已被其他用户绑定`,
+      });
+    }
+
+    // 查找当前用户的该类型OAuth凭据
+    const userOAuthCred = await AuthCredential.findOne({
+      where: {
+        userId: req.user.userId,
+        authType: oauthData.authType,
+      },
+    });
+
+    if (userOAuthCred) {
+      // 换绑：更新unionId
+      await AuthCredential.update(
+        { identifier: unionId },
+        {
+          where: {
+            userId: req.user.userId,
+            authType: oauthData.authType,
+          },
+        }
+      );
+    } else {
+      // 绑定：创建新凭据
+      await AuthCredential.create({
+        userId: req.user.userId,
+        authType: oauthData.authType,
+        identifier: unionId,
+      });
+    }
+
+    // 删除临时OAuth数据
+    await redisClient.del(oauthKeys[0]);
+
+    res.json({
+      success: true,
+      message: userOAuthCred ? `${oauthData.state === 'wechat' ? '微信' : 'QQ'}换绑成功` : `${oauthData.state === 'wechat' ? '微信' : 'QQ'}绑定成功`,
+      data: {
+        provider: oauthData.state,
+        unionId,
+      },
+    });
+  } catch (error) {
+    console.error('OAuth rebind error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'OAuth换绑失败',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+/**
  * OAuth注册新账号
  */
 export const oauthRegister = async (req: Request, res: Response) => {

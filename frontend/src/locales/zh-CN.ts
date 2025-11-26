@@ -256,11 +256,14 @@ export default {
     },
     account: {
       title: '账户设置',
+      nickname: '昵称',
       username: '用户名',
       email: '邮箱',
+      phone: '手机号',
       password: '密码',
       changeEmail: '修改邮箱',
       changePassword: '修改密码',
+      setPassword: '设置密码',
       oldPassword: '原密码',
       newPassword: '新密码',
       confirmPassword: '确认密码',
@@ -270,7 +273,51 @@ export default {
       passwordTooShort: '密码长度至少为 6 位',
       invalidEmail: '请输入正确的邮箱格式',
       passwordChanged: '密码修改成功',
+      passwordSet: '密码设置成功',
       emailChanged: '邮箱修改成功',
+      
+      bindAccountFirst: '请先绑定手机号、邮箱或用户名后再设置密码',
+      
+      // 绑定管理
+      notSet: '未设置',
+      notBound: '未绑定',
+      bound: '已绑定',
+      bind: '绑定',
+      unbind: '解绑',
+      rebind: '换绑',
+      
+      // 编辑对话框
+      editNickname: '修改昵称',
+      editUsername: '修改用户名',
+      bindUsername: '绑定用户名',
+      bindEmail: '绑定邮箱',
+      rebindEmail: '换绑邮箱',
+      bindPhone: '绑定手机号',
+      rebindPhone: '换绑手机号',
+      
+      enterNickname: '请输入昵称',
+      
+      // 状态提示
+      nicknameChanged: '昵称修改成功',
+      usernameChanged: '用户名修改成功',
+      emailBound: '邮箱绑定成功',
+      emailRebound: '邮箱换绑成功',
+      phoneBound: '手机号绑定成功',
+      phoneRebound: '手机号换绑成功',
+      unbindSuccess: '解绑成功',
+      rebindSuccess: '换绑成功',
+      alreadyBound: '该账号已被其他用户绑定',
+      
+      // OAuth相关
+      rebindOAuth: '换绑{provider}',
+      rebindOAuthHint: '点击下方按钮将跳转到{provider}授权页面进行换绑',
+      rebindOAuthNote: '换绑后原绑定将被替换',
+      startAuth: '开始授权',
+      unbindConfirm: '确定要解绑{provider}吗？',
+      unbindConfirmTitle: '确认解绑',
+      unbindConfirmMessage: '确定要解绑{provider}吗？解绑后您将无法使用{provider}登录。',
+      cannotUnbindWechat: '无法解绑：微信是您唯一的登录方式，请先绑定其他登录方式',
+      cannotUnbindQQ: '无法解绑：QQ是您唯一的登录方式，请先绑定其他登录方式',
     },
   },
 }

@@ -260,11 +260,14 @@ export default {
     },
     account: {
       title: 'Account Settings',
+      nickname: 'Nickname',
       username: 'Username',
       email: 'Email',
+      phone: 'Phone',
       password: 'Password',
       changeEmail: 'Change Email',
       changePassword: 'Change Password',
+      setPassword: 'Set Password',
       oldPassword: 'Old Password',
       newPassword: 'New Password',
       confirmPassword: 'Confirm Password',
@@ -274,7 +277,51 @@ export default {
       passwordTooShort: 'Password must be at least 6 characters',
       invalidEmail: 'Please enter a valid email',
       passwordChanged: 'Password changed successfully',
+      passwordSet: 'Password set successfully',
       emailChanged: 'Email changed successfully',
+      
+      bindAccountFirst: 'Please bind a phone, email or username before setting a password',
+      
+      // Binding management
+      notSet: 'Not Set',
+      notBound: 'Not Bound',
+      bound: 'Bound',
+      bind: 'Bind',
+      unbind: 'Unbind',
+      rebind: 'Rebind',
+      
+      // Edit dialogs
+      editNickname: 'Edit Nickname',
+      editUsername: 'Edit Username',
+      bindUsername: 'Bind Username',
+      bindEmail: 'Bind Email',
+      rebindEmail: 'Rebind Email',
+      bindPhone: 'Bind Phone',
+      rebindPhone: 'Rebind Phone',
+      
+      enterNickname: 'Enter nickname',
+      
+      // Status messages
+      nicknameChanged: 'Nickname changed successfully',
+      usernameChanged: 'Username changed successfully',
+      emailBound: 'Email bound successfully',
+      emailRebound: 'Email rebound successfully',
+      phoneBound: 'Phone bound successfully',
+      phoneRebound: 'Phone rebound successfully',
+      unbindSuccess: 'Unbound successfully',
+      rebindSuccess: 'Rebound successfully',
+      alreadyBound: 'This account is already bound to another user',
+      
+      // OAuth related
+      rebindOAuth: 'Rebind {provider}',
+      rebindOAuthHint: 'Click the button below to authorize {provider} for rebinding',
+      rebindOAuthNote: 'The original binding will be replaced after rebinding',
+      startAuth: 'Start Authorization',
+      unbindConfirm: 'Are you sure you want to unbind {provider}?',
+      unbindConfirmTitle: 'Confirm Unbind',
+      unbindConfirmMessage: 'Are you sure you want to unbind {provider}? You will not be able to login with {provider} after unbinding.',
+      cannotUnbindWechat: 'Cannot unbind: WeChat is your only login method, please bind other login methods first',
+      cannotUnbindQQ: 'Cannot unbind: QQ is your only login method, please bind other login methods first',
     },
   },
 }
