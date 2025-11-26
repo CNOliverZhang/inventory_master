@@ -23,7 +23,7 @@ const handleWechatLogin = () => {
   const encodedCallback = encodeURIComponent(callbackUrl)
   
   // 3. 跳转到微信授权页，redirect_uri指向站群
-  const wechatAppId = 'wx0ae11b6c0e393491'  // 站群的微信AppID
+  const wechatAppId = 'wxbcf6b197b348b750'  // 站群的微信AppID
   window.location.href = `https://open.weixin.qq.com/connect/qrconnect?appid=${wechatAppId}&redirect_uri=${encodedCallback}&response_type=code&scope=snsapi_login&state=wechat#wechat_redirect`
 }
 ```
@@ -31,7 +31,7 @@ const handleWechatLogin = () => {
 **跳转到微信授权页的URL示例：**
 ```
 https://open.weixin.qq.com/connect/qrconnect?
-  appid=wx0ae11b6c0e393491
+  appid=wxbcf6b197b348b750
   &redirect_uri=https%3A%2F%2Fpotatofield.cn%2Foauth%2Fcallback%3Freturn_url%3Dhttp%253A%252F%252Flocalhost%253A5173%252Flogin
   &response_type=code
   &scope=snsapi_login
@@ -195,10 +195,10 @@ await authV2API.oauthRegister({ code, state })
 
 ```env
 # 微信网站应用AppID（站群的AppID）
-VITE_WECHAT_APPID=wx0ae11b6c0e393491
+VITE_WECHAT_APPID=wxbcf6b197b348b750
 
 # QQ互联AppID（站群的AppID）
-VITE_QQ_APPID=101491009
+VITE_QQ_APPID=101966175
 ```
 
 **注意：** 这些AppID是站群的，不需要自己申请新的。

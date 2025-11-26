@@ -267,24 +267,25 @@
 
     <!-- 删除确认对话框 -->
     <ConfirmDialog
-      v-model="showDeleteConfirm"
+      :visible="showDeleteConfirm"
       :title="t('common.warning')"
       :message="t('material.deleteConfirm', { name: materialToDelete?.name || '' })"
       :confirm-text="t('common.confirm')"
       :cancel-text="t('common.cancel')"
-      type="danger"
+      :dangerous="true"
       @confirm="confirmDelete"
+      @cancel="showDeleteConfirm = false"
     />
 
     <!-- 退出登录确认对话框 -->
     <ConfirmDialog
-      v-model="showLogoutConfirm"
+      :visible="showLogoutConfirm"
       :title="t('common.warning')"
       :message="t('auth.logoutConfirm')"
       :confirm-text="t('common.confirm')"
       :cancel-text="t('common.cancel')"
-      type="warning"
       @confirm="confirmLogout"
+      @cancel="showLogoutConfirm = false"
     />
   </div>
 </template>
@@ -420,6 +421,7 @@ const confirmDelete = async () => {
   if (materialToDelete.value) {
     await materialStore.deleteMaterial(materialToDelete.value.id)
     materialToDelete.value = null
+    showDeleteConfirm.value = false
   }
 }
 
@@ -447,9 +449,11 @@ const handleLogout = () => {
 }
 
 // 确认退出
-const confirmLogout = () => {
-  userStore.logout()
-  router.push('/login')
+const confirmLogout = async () => {
+  showLogoutConfirm.value = false
+  await userStore.logout()
+  // 使用 window.location 强制刷新，避免路由守卫干扰
+  window.location.href = '/login'
 }
 
 // 点击外部关闭用户菜单

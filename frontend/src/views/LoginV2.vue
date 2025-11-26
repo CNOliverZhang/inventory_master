@@ -600,7 +600,7 @@ const handleQQLogin = () => {
   const encodedCallback = encodeURIComponent(callbackUrl)
   
   // QQ互联AppID（需要配置）
-  const qqAppId = import.meta.env.VITE_QQ_APPID || '101491009'
+  const qqAppId = import.meta.env.VITE_QQ_APPID || '101966175'
   
   // 检测是否为移动设备
   const isMobile = /ipod|iphone|android|coolpad|mmp|smartphone|midp|wap|xoom|symbian|j2me|blackberry|wince/i.test(navigator.userAgent)
