@@ -151,46 +151,136 @@
         </h2>
         
         <div class="space-y-4">
+          <!-- 昵称 -->
+          <div class="flex items-center justify-between py-3 border-b border-gray-200">
+            <div class="flex-1 min-w-0 mr-4">
+              <p class="text-sm text-gray-600">{{ t('settings.account.nickname') }}</p>
+              <p class="text-base font-medium text-gray-800 truncate">{{ bindings.nickname || t('settings.account.notSet') }}</p>
+            </div>
+            <button
+              @click="handleEditNickname"
+              class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm gradient-primary text-white rounded-lg hover:shadow-lg transition-all flex-shrink-0"
+            >
+              {{ t('common.edit') }}
+            </button>
+          </div>
+
           <!-- 用户名 -->
           <div class="flex items-center justify-between py-3 border-b border-gray-200">
-            <div>
+            <div class="flex-1 min-w-0 mr-4">
               <p class="text-sm text-gray-600">{{ t('settings.account.username') }}</p>
-              <p class="text-base font-medium text-gray-800">{{ userStore.user?.username }}</p>
+              <p class="text-base font-medium text-gray-800 truncate">{{ bindings.username || t('settings.account.notSet') }}</p>
             </div>
+            <button
+              @click="handleEditUsername"
+              class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm gradient-primary text-white rounded-lg hover:shadow-lg transition-all flex-shrink-0"
+            >
+              {{ bindings.username ? t('common.edit') : t('settings.account.bind') }}
+            </button>
           </div>
 
           <!-- 邮箱 -->
           <div class="flex items-center justify-between py-3 border-b border-gray-200">
             <div class="flex-1 min-w-0 mr-4">
               <p class="text-sm text-gray-600">{{ t('settings.account.email') }}</p>
-              <p class="text-base font-medium text-gray-800 truncate">{{ userStore.user?.email }}</p>
+              <p class="text-base font-medium text-gray-800 truncate">{{ bindings.email || t('settings.account.notBound') }}</p>
             </div>
             <button
-              @click="showEmailDialog = true"
+              @click="handleEditEmail"
               class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm gradient-primary text-white rounded-lg hover:shadow-lg transition-all flex-shrink-0"
             >
-              {{ t('settings.account.changeEmail') }}
+              {{ bindings.email ? t('settings.account.rebind') : t('settings.account.bind') }}
             </button>
+          </div>
+
+          <!-- 手机号 -->
+          <div class="flex items-center justify-between py-3 border-b border-gray-200">
+            <div class="flex-1 min-w-0 mr-4">
+              <p class="text-sm text-gray-600">{{ t('settings.account.phone') }}</p>
+              <p class="text-base font-medium text-gray-800 truncate">{{ bindings.phone || t('settings.account.notBound') }}</p>
+            </div>
+            <button
+              @click="handleEditPhone"
+              class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm gradient-primary text-white rounded-lg hover:shadow-lg transition-all flex-shrink-0"
+            >
+              {{ bindings.phone ? t('settings.account.rebind') : t('settings.account.bind') }}
+            </button>
+          </div>
+
+          <!-- 微信 -->
+          <div class="flex items-center justify-between py-3 border-b border-gray-200">
+            <div class="flex-1 min-w-0 mr-4">
+              <p class="text-sm text-gray-600 flex items-center gap-2">
+                <i class="pi pi-comments text-green-600"></i>
+                {{ t('auth.wechat') }}
+              </p>
+              <p class="text-base font-medium text-gray-800 truncate">
+                {{ bindings.wechat ? t('settings.account.bound') : t('settings.account.notBound') }}
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button
+                v-if="bindings.wechat"
+                @click="handleUnbindOAuth('wechat')"
+                class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all flex-shrink-0"
+              >
+                {{ t('settings.account.unbind') }}
+              </button>
+              <button
+                @click="handleRebindOAuth('wechat')"
+                class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm gradient-primary text-white rounded-lg hover:shadow-lg transition-all flex-shrink-0"
+              >
+                {{ bindings.wechat ? t('settings.account.rebind') : t('settings.account.bind') }}
+              </button>
+            </div>
+          </div>
+
+          <!-- QQ -->
+          <div class="flex items-center justify-between py-3 border-b border-gray-200">
+            <div class="flex-1 min-w-0 mr-4">
+              <p class="text-sm text-gray-600 flex items-center gap-2">
+                <i class="pi pi-comment text-blue-600"></i>
+                {{ t('auth.qq') }}
+              </p>
+              <p class="text-base font-medium text-gray-800 truncate">
+                {{ bindings.qq ? t('settings.account.bound') : t('settings.account.notBound') }}
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button
+                v-if="bindings.qq"
+                @click="handleUnbindOAuth('qq')"
+                class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all flex-shrink-0"
+              >
+                {{ t('settings.account.unbind') }}
+              </button>
+              <button
+                @click="handleRebindOAuth('qq')"
+                class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm gradient-primary text-white rounded-lg hover:shadow-lg transition-all flex-shrink-0"
+              >
+                {{ bindings.qq ? t('settings.account.rebind') : t('settings.account.bind') }}
+              </button>
+            </div>
           </div>
 
           <!-- 密码 -->
           <div class="flex items-center justify-between py-3">
             <div>
               <p class="text-sm text-gray-600">{{ t('settings.account.password') }}</p>
-              <p class="text-base font-medium text-gray-800">••••••••</p>
+              <p class="text-base font-medium text-gray-800">{{ hasPassword ? '••••••••' : t('settings.account.notSet') }}</p>
             </div>
             <button
-              @click="showPasswordDialog = true"
+              @click="handleChangePassword"
               class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm gradient-primary text-white rounded-lg hover:shadow-lg transition-all"
             >
-              {{ t('settings.account.changePassword') }}
+              {{ hasPassword ? t('settings.account.changePassword') : t('settings.account.setPassword') }}
             </button>
           </div>
         </div>
       </section>
     </div>
 
-    <!-- 修改密码对话框 -->
+    <!-- 修改/设置密码对话框 -->
     <div
       v-if="showPasswordDialog"
       class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4"
@@ -198,7 +288,7 @@
     >
       <div class="glass-card w-full max-w-md">
         <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 class="text-lg font-bold text-gray-800">{{ t('settings.account.changePassword') }}</h3>
+          <h3 class="text-lg font-bold text-gray-800">{{ hasPassword ? t('settings.account.changePassword') : t('settings.account.setPassword') }}</h3>
           <button @click="closePasswordDialog" class="text-gray-500 hover:text-gray-700">
             <i class="pi pi-times text-xl"></i>
           </button>
@@ -206,19 +296,11 @@
 
         <div class="p-4 sm:p-6 space-y-4">
           <div class="space-y-2">
-            <label class="text-sm font-medium text-gray-700">{{ t('settings.account.oldPassword') }}</label>
+            <label class="text-sm font-medium text-gray-700">{{ hasPassword ? t('settings.account.newPassword') : t('settings.account.password') }}</label>
             <input
-              v-model="passwordForm.oldPassword"
+              v-model="passwordForm.password"
               type="password"
-              class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-            />
-          </div>
-
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-gray-700">{{ t('settings.account.newPassword') }}</label>
-            <input
-              v-model="passwordForm.newPassword"
-              type="password"
+              :placeholder="t('auth.enterPassword')"
               class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
           </div>
@@ -228,6 +310,7 @@
             <input
               v-model="passwordForm.confirmPassword"
               type="password"
+              :placeholder="t('auth.reEnterPassword')"
               class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
             />
           </div>
@@ -252,72 +335,71 @@
       </div>
     </div>
 
-    <!-- 修改邮箱对话框 -->
-    <div
-      v-if="showEmailDialog"
-      class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-3 sm:p-4"
-      @click.self="closeEmailDialog"
-    >
-      <div class="glass-card w-full max-w-md">
-        <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 flex items-center justify-between">
-          <h3 class="text-lg font-bold text-gray-800">{{ t('settings.account.changeEmail') }}</h3>
-          <button @click="closeEmailDialog" class="text-gray-500 hover:text-gray-700">
-            <i class="pi pi-times text-xl"></i>
-          </button>
-        </div>
+    <!-- 通用绑定对话框 -->
+    <BindingDialog
+      :visible="bindingDialog.visible"
+      :title="bindingDialog.title"
+      :input-label="bindingDialog.inputLabel"
+      :placeholder="bindingDialog.placeholder"
+      :input-type="bindingDialog.inputType"
+      :need-code="bindingDialog.needCode"
+      :loading="bindingDialog.loading"
+      @close="handleCloseBindingDialog"
+      @submit="handleBindingSubmit"
+      @send-code="handleSendBindingCode"
+    />
 
-        <div class="p-4 sm:p-6 space-y-4">
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-gray-700">{{ t('settings.account.newEmail') }}</label>
-            <input
-              v-model="emailForm.email"
-              type="email"
-              class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-            />
-          </div>
+    <!-- OAuth换绑对话框 -->
+    <OAuthRebindDialog
+      :visible="oauthRebindDialog.visible"
+      :provider="oauthRebindDialog.provider"
+      :loading="oauthRebindDialog.loading"
+      @close="handleCloseOAuthRebindDialog"
+      @start-auth="handleStartOAuthAuth"
+    />
 
-          <div class="space-y-2">
-            <label class="text-sm font-medium text-gray-700">{{ t('settings.account.confirmPassword') }}</label>
-            <input
-              v-model="emailForm.password"
-              type="password"
-              class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-            />
-          </div>
-        </div>
-
-        <div class="px-4 sm:px-6 py-3 sm:py-4 border-t border-gray-200 flex justify-end gap-3">
-          <button
-            @click="closeEmailDialog"
-            class="px-4 sm:px-6 py-2 sm:py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors"
-          >
-            {{ t('common.cancel') }}
-          </button>
-          <button
-            @click="handleUpdateEmail"
-            :disabled="emailLoading"
-            class="btn-gradient flex items-center gap-2 px-4 sm:px-6"
-          >
-            <i v-if="emailLoading" class="pi pi-spinner pi-spin"></i>
-            {{ t('common.save') }}
-          </button>
-        </div>
-      </div>
-    </div>
+    <!-- 解绑确认对话框 -->
+    <ConfirmDialog
+      :visible="unbindConfirmDialog.visible"
+      :title="t('settings.account.unbindConfirmTitle')"
+      :message="t('settings.account.unbindConfirmMessage', { 
+        provider: unbindConfirmDialog.provider === 'wechat' ? t('auth.wechat') : t('auth.qq') 
+      })"
+      :confirm-text="t('settings.account.unbind')"
+      :cancel-text="t('common.cancel')"
+      :dangerous="true"
+      :loading="unbindConfirmDialog.loading"
+      @confirm="handleConfirmUnbindOAuth"
+      @cancel="handleCancelUnbindOAuth"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useThemeStore } from '@/stores/theme'
 import { useUserStore } from '@/stores/user'
 import { useLocaleStore } from '@/stores/locale'
-import { updatePasswordApi, updateEmailApi } from '@/api/settings'
-import type { UpdatePasswordForm, UpdateEmailForm } from '@/types/settings'
+import {
+  getBindings,
+  updateUsername,
+  updateNickname,
+  sendBindEmailCode,
+  sendBindPhoneCode,
+  bindEmail,
+  bindPhone,
+  unbindOAuth,
+  rebindOAuth,
+  changePassword,
+} from '@/api/account'
+import { oauthLogin } from '@/api/authV2'
 import type { DarkModeOption } from '@/types/theme'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+import BindingDialog from '@/components/BindingDialog.vue'
+import OAuthRebindDialog from '@/components/OAuthRebindDialog.vue'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { toast } from '@/utils/toast'
 
 const router = useRouter()
@@ -328,22 +410,123 @@ const localeStore = useLocaleStore()
 
 const locale = localeStore.locale
 
+// 绑定信息
+const bindings = reactive({
+  username: null as string | null,
+  email: null as string | null,
+  phone: null as string | null,
+  wechat: null as string | null,
+  qq: null as string | null,
+  nickname: null as string | null,
+})
+
+// 判断用户是否有密码（检查是否绑定了username/email/phone）
+const hasPassword = computed(() => {
+  return !!(bindings.username || bindings.email || bindings.phone)
+})
+
+// 计算总的登录方式数量
+const totalLoginMethods = computed(() => {
+  let count = 0
+  if (bindings.username || bindings.email || bindings.phone) count++ // 密码登录算一种
+  if (bindings.wechat) count++
+  if (bindings.qq) count++
+  return count
+})
+
+// 判断是否可以解绑某个OAuth
+const canUnbindOAuth = (provider: 'wechat' | 'qq') => {
+  // 如果总登录方式只有1种，不能解绑
+  return totalLoginMethods.value > 1
+}
+
 // 对话框状态
 const showPasswordDialog = ref(false)
-const showEmailDialog = ref(false)
 const passwordLoading = ref(false)
-const emailLoading = ref(false)
+
+// 通用绑定对话框
+const bindingDialog = reactive({
+  visible: false,
+  title: '',
+  inputLabel: '',
+  placeholder: '',
+  inputType: 'text',
+  needCode: false,
+  loading: false,
+  type: '' as 'username' | 'nickname' | 'email' | 'phone' | '',
+})
+
+// OAuth换绑对话框
+const oauthRebindDialog = reactive({
+  visible: false,
+  provider: 'wechat' as 'wechat' | 'qq',
+  loading: false,
+})
+
+// 解绑确认对话框
+const unbindConfirmDialog = reactive({
+  visible: false,
+  provider: 'wechat' as 'wechat' | 'qq',
+  loading: false,
+})
 
 // 表单数据
-const passwordForm = reactive<UpdatePasswordForm>({
-  oldPassword: '',
-  newPassword: '',
+const passwordForm = reactive({
+  password: '',
   confirmPassword: '',
 })
 
-const emailForm = reactive<UpdateEmailForm>({
-  email: '',
-  password: '',
+// 加载绑定信息
+const loadBindings = async () => {
+  try {
+    const res = await getBindings()
+    Object.assign(bindings, res.data)
+  } catch (error: any) {
+    console.error('Load bindings error:', error)
+    toast.error(error.response?.data?.message || t('common.error'))
+  }
+}
+
+// 检查OAuth回调
+const checkOAuthRebindCallback = async () => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const code = urlParams.get('code')
+  const state = urlParams.get('state')
+  
+  if (code && (state === 'wechat_rebind' || state === 'qq_rebind')) {
+    try {
+      // 调用OAuth登录API获取unionId
+      const provider = state === 'wechat_rebind' ? 'wechat' : 'qq'
+      const res = await oauthLogin({ code, state: provider })
+      
+      if (res.data.needBind) {
+        // 需要绑定，调用换绑API
+        const rebindRes = await rebindOAuth({ unionId: res.data.unionId })
+        
+        if (provider === 'wechat') {
+          bindings.wechat = res.data.unionId
+        } else {
+          bindings.qq = res.data.unionId
+        }
+        
+        toast.success(t('settings.account.rebindSuccess'))
+      } else {
+        // 已经绑定到其他账号
+        toast.error(t('settings.account.alreadyBound'))
+      }
+    } catch (error: any) {
+      console.error('OAuth rebind callback error:', error)
+      toast.error(error.response?.data?.message || t('common.error'))
+    } finally {
+      // 清除URL参数
+      window.history.replaceState({}, '', '/settings')
+    }
+  }
+}
+
+onMounted(() => {
+  loadBindings()
+  checkOAuthRebindCallback()
 })
 
 // 切换主题
@@ -358,27 +541,196 @@ const handleDarkModeChange = (mode: DarkModeOption) => {
   toast.success(t('settings.darkMode.changed'))
 }
 
-// 修改密码
+// 编辑昵称
+const handleEditNickname = () => {
+  bindingDialog.type = 'nickname'
+  bindingDialog.title = t('settings.account.editNickname')
+  bindingDialog.inputLabel = t('settings.account.nickname')
+  bindingDialog.placeholder = t('settings.account.enterNickname')
+  bindingDialog.inputType = 'text'
+  bindingDialog.needCode = false
+  bindingDialog.visible = true
+}
+
+// 编辑用户名
+const handleEditUsername = () => {
+  bindingDialog.type = 'username'
+  bindingDialog.title = bindings.username ? t('settings.account.editUsername') : t('settings.account.bindUsername')
+  bindingDialog.inputLabel = t('settings.account.username')
+  bindingDialog.placeholder = t('auth.enterUsername')
+  bindingDialog.inputType = 'text'
+  bindingDialog.needCode = false
+  bindingDialog.visible = true
+}
+
+// 编辑邮箱
+const handleEditEmail = () => {
+  bindingDialog.type = 'email'
+  bindingDialog.title = bindings.email ? t('settings.account.rebindEmail') : t('settings.account.bindEmail')
+  bindingDialog.inputLabel = t('settings.account.email')
+  bindingDialog.placeholder = t('auth.enterEmail')
+  bindingDialog.inputType = 'email'
+  bindingDialog.needCode = true
+  bindingDialog.visible = true
+}
+
+// 编辑手机号
+const handleEditPhone = () => {
+  bindingDialog.type = 'phone'
+  bindingDialog.title = bindings.phone ? t('settings.account.rebindPhone') : t('settings.account.bindPhone')
+  bindingDialog.inputLabel = t('settings.account.phone')
+  bindingDialog.placeholder = t('auth.enterPhone')
+  bindingDialog.inputType = 'tel'
+  bindingDialog.needCode = true
+  bindingDialog.visible = true
+}
+
+// 处理绑定对话框提交
+const handleBindingSubmit = async (data: { input: string; code?: string }) => {
+  try {
+    bindingDialog.loading = true
+
+    if (bindingDialog.type === 'nickname') {
+      await updateNickname({ nickname: data.input })
+      bindings.nickname = data.input
+      toast.success(t('settings.account.nicknameChanged'))
+    } else if (bindingDialog.type === 'username') {
+      await updateUsername({ username: data.input })
+      bindings.username = data.input
+      toast.success(t('settings.account.usernameChanged'))
+    } else if (bindingDialog.type === 'email' && data.code) {
+      await bindEmail({ email: data.input, code: data.code })
+      bindings.email = data.input
+      toast.success(bindings.email ? t('settings.account.emailRebound') : t('settings.account.emailBound'))
+    } else if (bindingDialog.type === 'phone' && data.code) {
+      await bindPhone({ phone: data.input, code: data.code })
+      bindings.phone = data.input
+      toast.success(bindings.phone ? t('settings.account.phoneRebound') : t('settings.account.phoneBound'))
+    }
+
+    bindingDialog.visible = false
+  } catch (error: any) {
+    toast.error(error.response?.data?.message || t('common.error'))
+  } finally {
+    bindingDialog.loading = false
+  }
+}
+
+// 发送绑定验证码
+const handleSendBindingCode = async (value: string) => {
+  try {
+    if (bindingDialog.type === 'email') {
+      await sendBindEmailCode({ email: value })
+      toast.success(t('auth.codeSentSuccess'))
+    } else if (bindingDialog.type === 'phone') {
+      await sendBindPhoneCode({ phone: value })
+      toast.success(t('auth.codeSentSuccess'))
+    }
+  } catch (error: any) {
+    toast.error(error.response?.data?.message || t('common.error'))
+  }
+}
+
+// 关闭绑定对话框
+const handleCloseBindingDialog = () => {
+  bindingDialog.visible = false
+}
+
+// OAuth换绑
+const handleRebindOAuth = (provider: 'wechat' | 'qq') => {
+  oauthRebindDialog.provider = provider
+  oauthRebindDialog.visible = true
+}
+
+// 开始OAuth授权
+const handleStartOAuthAuth = () => {
+  const provider = oauthRebindDialog.provider
+  const wechatAppId = import.meta.env.VITE_WECHAT_APPID
+  const qqAppId = import.meta.env.VITE_QQ_APPID
+  
+  const returnUrl = encodeURIComponent(window.location.origin + '/settings?oauth_rebind=' + provider)
+  const callbackUrl = encodeURIComponent(`https://potatofield.cn/oauth/callback?return_url=${returnUrl}`)
+  
+  if (provider === 'wechat') {
+    window.location.href = `https://open.weixin.qq.com/connect/qrconnect?appid=${wechatAppId}&redirect_uri=${callbackUrl}&response_type=code&scope=snsapi_login&state=wechat_rebind`
+  } else {
+    window.location.href = `https://graph.qq.com/oauth2.0/authorize?client_id=${qqAppId}&redirect_uri=${callbackUrl}&response_type=code&state=qq_rebind`
+  }
+}
+
+// 关闭OAuth换绑对话框
+const handleCloseOAuthRebindDialog = () => {
+  oauthRebindDialog.visible = false
+}
+
+// 解绑OAuth
+const handleUnbindOAuth = (provider: 'wechat' | 'qq') => {
+  // 检查是否可以解绑
+  if (!canUnbindOAuth(provider)) {
+    toast.warning(
+      provider === 'wechat' 
+        ? t('settings.account.cannotUnbindWechat') 
+        : t('settings.account.cannotUnbindQQ')
+    )
+    return
+  }
+
+  unbindConfirmDialog.provider = provider
+  unbindConfirmDialog.visible = true
+}
+
+// 确认解绑OAuth
+const handleConfirmUnbindOAuth = async () => {
+  try {
+    unbindConfirmDialog.loading = true
+    await unbindOAuth({ provider: unbindConfirmDialog.provider })
+    
+    if (unbindConfirmDialog.provider === 'wechat') {
+      bindings.wechat = null
+    } else {
+      bindings.qq = null
+    }
+    
+    toast.success(t('settings.account.unbindSuccess'))
+    unbindConfirmDialog.visible = false
+  } catch (error: any) {
+    toast.error(error.response?.data?.message || t('common.error'))
+  } finally {
+    unbindConfirmDialog.loading = false
+  }
+}
+
+// 取消解绑
+const handleCancelUnbindOAuth = () => {
+  unbindConfirmDialog.visible = false
+}
+
+// 处理修改/设置密码
+const handleChangePassword = () => {
+  showPasswordDialog.value = true
+}
+
+// 修改/设置密码
 const handleUpdatePassword = async () => {
-  if (!passwordForm.oldPassword || !passwordForm.newPassword || !passwordForm.confirmPassword) {
+  if (!passwordForm.password || !passwordForm.confirmPassword) {
     toast.warning(t('settings.account.fillAllFields'))
     return
   }
 
-  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+  if (passwordForm.password !== passwordForm.confirmPassword) {
     toast.warning(t('settings.account.passwordMismatch'))
     return
   }
 
-  if (passwordForm.newPassword.length < 6) {
+  if (passwordForm.password.length < 6) {
     toast.warning(t('settings.account.passwordTooShort'))
     return
   }
 
   try {
     passwordLoading.value = true
-    await updatePasswordApi(passwordForm)
-    toast.success(t('settings.account.passwordChanged'))
+    const res = await changePassword({ password: passwordForm.password })
+    toast.success(res.message || t('settings.account.passwordChanged'))
     closePasswordDialog()
   } catch (error: any) {
     toast.error(error.response?.data?.message || t('common.error'))
@@ -387,45 +739,10 @@ const handleUpdatePassword = async () => {
   }
 }
 
-// 修改邮箱
-const handleUpdateEmail = async () => {
-  if (!emailForm.email || !emailForm.password) {
-    toast.warning(t('settings.account.fillAllFields'))
-    return
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(emailForm.email)) {
-    toast.warning(t('settings.account.invalidEmail'))
-    return
-  }
-
-  try {
-    emailLoading.value = true
-    const res = await updateEmailApi(emailForm)
-    userStore.user = res.data
-    localStorage.setItem('user', JSON.stringify(res.data))
-    toast.success(t('settings.account.emailChanged'))
-    closeEmailDialog()
-  } catch (error: any) {
-    toast.error(error.response?.data?.message || t('common.error'))
-  } finally {
-    emailLoading.value = false
-  }
-}
-
 // 关闭密码对话框
 const closePasswordDialog = () => {
   showPasswordDialog.value = false
-  passwordForm.oldPassword = ''
-  passwordForm.newPassword = ''
+  passwordForm.password = ''
   passwordForm.confirmPassword = ''
-}
-
-// 关闭邮箱对话框
-const closeEmailDialog = () => {
-  showEmailDialog.value = false
-  emailForm.email = ''
-  emailForm.password = ''
 }
 </script>
