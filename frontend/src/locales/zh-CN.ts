@@ -33,6 +33,7 @@ export default {
     register: '注册',
     username: '用户名',
     email: '邮箱',
+    phone: '手机号',
     password: '密码',
     confirmPassword: '确认密码',
     verificationCode: '验证码',
@@ -43,10 +44,30 @@ export default {
     registerBtn: '注册',
     verifyAndCompleteBtn: '验证邮箱并完成注册',
     resendCodeBtn: '重发验证码',
+    registerMethod: '注册方式',
+    emailRegister: '邮箱注册',
+    phoneRegister: '手机号注册',
+    
+    // 新增字段
+    emailOrUsername: '邮箱/用户名/手机号',
+    enterEmailOrUsername: '请输入邮箱、用户名或手机号',
+    emailOrPhone: '邮箱/手机号',
+    enterEmailOrPhone: '请输入邮箱或手机号',
+    graphicCaptcha: '图形验证码',
+    enterCaptcha: '请输入验证码',
+    sendCode: '发送验证码',
+    completeRegistration: '完成注册',
+    resendAfter: '重新发送',
+    resendCode: '重新发送验证码',
+    orLoginWith: '或使用以下方式登录',
+    orRegisterWith: '或使用以下方式注册',
+    wechat: '微信',
+    qq: 'QQ',
     
     // 占位符
     enterUsername: '请输入用户名（3-50个字符）',
     enterEmail: '请输入邮箱',
+    enterPhone: '请输入手机号',
     enterPassword: '请输入密码（至少6位）',
     reEnterPassword: '请再次输入密码',
     enterVerificationCode: '请输入6位验证码',
@@ -56,6 +77,8 @@ export default {
     usernameLength: '用户名长度为 3-50 个字符',
     emailRequired: '请输入邮箱',
     emailInvalid: '请输入正确的邮箱格式',
+    phoneRequired: '请输入手机号',
+    phoneInvalid: '请输入正确的手机号格式',
     passwordRequired: '请输入密码',
     passwordLength: '密码长度至少为 6 位',
     confirmPasswordRequired: '请再次输入密码',
@@ -64,8 +87,8 @@ export default {
     verificationCodeInvalid: '验证码格式不正确（6位数字）',
     
     // 验证码相关
-    codeSentSuccess: '验证码已发送到您的邮箱',
-    codeSentHint: '验证码已发送，请查收邮件（有效期30分钟）',
+    codeSentSuccess: '验证码已发送',
+    codeSentHint: '验证码已发送，请查收（有效期5分钟）',
     codeResendHint: '验证码已重新发送',
     codeExpired: '验证码已过期，请重新发送',
     codeInvalid: '验证码错误',
@@ -74,9 +97,28 @@ export default {
     
     // 响应消息
     loginSuccess: '登录成功',
+    loginFailed: '登录失败',
     registerSuccess: '注册成功',
+    registerFailed: '注册失败',
+    sendCodeSuccess: '验证码已发送',
+    sendCodeFailed: '发送验证码失败',
+    getCaptchaFailed: '获取验证码失败',
     logoutSuccess: '已退出登录',
     logoutConfirm: '确定要退出登录吗？',
+    
+    // OAuth相关
+    oauthNeedBind: '该账号尚未绑定，请绑定已有账号或注册新账号',
+    oauthLoginSuccess: '第三方登录成功',
+    oauthLoginFailed: '第三方登录失败',
+    oauthBindSuccess: '绑定成功',
+    oauthBindFailed: '绑定失败',
+    bindExistingAccount: '绑定已有账号',
+    registerNewAccount: '注册新账号',
+    chooseAction: '选择操作',
+    oauthNotBoundHint: '该第三方账号尚未绑定本站账号',
+    bindExistingAccountHint: '使用已有账号密码登录并绑定',
+    registerNewAccountHint: '使用该第三方账号注册新用户',
+    bindAndLogin: '绑定并登录',
   },
 
   material: {
