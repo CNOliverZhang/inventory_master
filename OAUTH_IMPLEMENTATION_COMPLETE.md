@@ -110,7 +110,7 @@ const handleWechatLogin = () => {
   const returnUrl = encodeURIComponent(`${window.location.origin}/login`)
   const callbackUrl = `https://potatofield.cn/oauth/callback?return_url=${returnUrl}`
   const encodedCallback = encodeURIComponent(callbackUrl)
-  const wechatAppId = import.meta.env.VITE_WECHAT_APPID || 'wx0ae11b6c0e393491'
+  const wechatAppId = import.meta.env.VITE_WECHAT_APPID || 'wxbcf6b197b348b750'
   
   // 直接跳转到微信授权页
   window.location.href = `https://open.weixin.qq.com/connect/qrconnect?appid=${wechatAppId}&redirect_uri=${encodedCallback}&response_type=code&scope=snsapi_login&state=wechat#wechat_redirect`
@@ -198,10 +198,10 @@ QQ_WEBSITE_SECRET=your_qq_secret
 #### 前端环境变量 (`frontend/.env.example`)
 ```env
 # 微信网站应用AppID（站群的AppID）
-VITE_WECHAT_APPID=wx0ae11b6c0e393491
+VITE_WECHAT_APPID=wxbcf6b197b348b750
 
 # QQ互联AppID（站群的AppID）
-VITE_QQ_APPID=101491009
+VITE_QQ_APPID=101966175
 ```
 
 ## 🔄 完整流程

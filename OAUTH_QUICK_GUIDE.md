@@ -51,8 +51,8 @@ http://localhost:5173/login?code=AUTHORIZATION_CODE&state=wechat
 创建 `frontend/.env` 文件：
 ```env
 VITE_API_BASE_URL=http://localhost:9702
-VITE_WECHAT_APPID=wx0ae11b6c0e393491
-VITE_QQ_APPID=101491009
+VITE_WECHAT_APPID=wxbcf6b197b348b750
+VITE_QQ_APPID=101966175
 ```
 
 ## ❓ 常见问题

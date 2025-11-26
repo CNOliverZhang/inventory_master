@@ -645,8 +645,8 @@ const handleRebindOAuth = (provider: 'wechat' | 'qq') => {
 // 开始OAuth授权
 const handleStartOAuthAuth = () => {
   const provider = oauthRebindDialog.provider
-  const wechatAppId = import.meta.env.VITE_WECHAT_APPID
-  const qqAppId = import.meta.env.VITE_QQ_APPID
+  const wechatAppId = import.meta.env.VITE_WECHAT_APPID || 'wxbcf6b197b348b750'
+  const qqAppId = import.meta.env.VITE_QQ_APPID || '101966175'
   
   const returnUrl = encodeURIComponent(window.location.origin + '/settings?oauth_rebind=' + provider)
   const callbackUrl = encodeURIComponent(`https://potatofield.cn/oauth/callback?return_url=${returnUrl}`)
