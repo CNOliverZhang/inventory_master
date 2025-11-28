@@ -308,7 +308,7 @@
               @click="handleWechatLogin"
               class="flex items-center justify-center gap-2 px-4 py-2.5 border border-green-500 text-green-600 rounded-lg hover:bg-green-50 transition-all text-sm font-medium"
             >
-              <i class="pi pi-wechat text-lg"></i>
+              <font-awesome-icon :icon="['fab', 'weixin']" class="text-green-600" />
               {{ t('auth.wechat') }}
             </button>
             <button
@@ -316,9 +316,7 @@
               @click="handleQQLogin"
               class="flex items-center justify-center gap-2 px-4 py-2.5 border border-blue-500 text-blue-600 rounded-lg hover:bg-blue-50 transition-all text-sm font-medium"
             >
-              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879-.11-.937-.209-2.373.044-3.396.228-.919 1.476-6.257 1.476-6.257s-.377-.753-.377-1.867c0-1.75 1.014-3.058 2.278-3.058 1.074 0 1.593.807 1.593 1.774 0 1.08-.688 2.696-.104 4.196.307 1.297 1.315 2.35 2.61 2.35 3.13 0 5.538-3.301 5.538-8.062 0-4.213-3.027-7.156-7.351-7.156-5.009 0-7.95 3.757-7.95 7.645 0 1.514.583 3.137 1.311 4.018.144.173.164.325.122.502-.134.563-.435 1.771-.494 2.018-.077.324-.252.393-.582.237-2.185-.917-3.549-3.797-3.549-6.104 0-4.97 3.608-9.533 10.413-9.533 5.464 0 9.711 3.894 9.711 9.095 0 5.428-3.424 9.794-8.174 9.794-1.596 0-3.096-.83-3.608-1.81 0 0-.79 3.007-.983 3.743-.355 1.372-1.317 3.09-1.96 4.137C9.405 21.844 10.69 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
-              </svg>
+              <font-awesome-icon :icon="['fab', 'qq']" class="text-blue-600" />
               {{ t('auth.qq') }}
             </button>
           </div>

@@ -211,7 +211,7 @@
           <div class="flex items-center justify-between py-3 border-b border-gray-200">
             <div class="flex-1 min-w-0 mr-4">
               <p class="text-sm text-gray-600 flex items-center gap-2">
-                <i class="pi pi-comments text-green-600"></i>
+                <font-awesome-icon :icon="['fab', 'weixin']" class="text-green-600" />
                 {{ t('auth.wechat') }}
               </p>
               <p class="text-base font-medium text-gray-800 truncate">
@@ -239,7 +239,7 @@
           <div class="flex items-center justify-between py-3 border-b border-gray-200">
             <div class="flex-1 min-w-0 mr-4">
               <p class="text-sm text-gray-600 flex items-center gap-2">
-                <i class="pi pi-comment text-blue-600"></i>
+                <font-awesome-icon :icon="['fab', 'qq']" class="text-blue-600" />
                 {{ t('auth.qq') }}
               </p>
               <p class="text-base font-medium text-gray-800 truncate">
@@ -380,7 +380,6 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useThemeStore } from '@/stores/theme'
-import { useUserStore } from '@/stores/user'
 import { useLocaleStore } from '@/stores/locale'
 import {
   getBindings,
@@ -405,7 +404,6 @@ import { toast } from '@/utils/toast'
 const router = useRouter()
 const { t } = useI18n()
 const themeStore = useThemeStore()
-const userStore = useUserStore()
 const localeStore = useLocaleStore()
 
 const locale = localeStore.locale
@@ -435,7 +433,7 @@ const totalLoginMethods = computed(() => {
 })
 
 // 判断是否可以解绑某个OAuth
-const canUnbindOAuth = (provider: 'wechat' | 'qq') => {
+const canUnbindOAuth = () => {
   // 如果总登录方式只有1种，不能解绑
   return totalLoginMethods.value > 1
 }
@@ -666,7 +664,7 @@ const handleCloseOAuthRebindDialog = () => {
 // 解绑OAuth
 const handleUnbindOAuth = (provider: 'wechat' | 'qq') => {
   // 检查是否可以解绑
-  if (!canUnbindOAuth(provider)) {
+  if (!canUnbindOAuth()) {
     toast.warning(
       provider === 'wechat' 
         ? t('settings.account.cannotUnbindWechat') 
