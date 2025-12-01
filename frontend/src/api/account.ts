@@ -81,3 +81,26 @@ export const changePassword = async (data: { password: string }) => {
   const response = await request.post(`${API_V2_PREFIX}/change-password`, data);
   return response;
 };
+
+/**
+ * 上传用户头像
+ */
+export const uploadAvatar = async (file: File) => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+  
+  const response = await request.post(`${API_V2_PREFIX}/upload-avatar`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+  return response;
+};
+
+/**
+ * 删除用户头像
+ */
+export const deleteAvatar = async () => {
+  const response = await request.delete(`${API_V2_PREFIX}/delete-avatar`);
+  return response;
+};

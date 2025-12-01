@@ -1,8 +1,11 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import { AuthUser, AuthCredential, UserProfile, AuthType } from '../models/auth';
+import crypto from 'crypto';
+import sharp from 'sharp';
+import { AuthCredential, UserProfile, AuthType } from '../models/auth';
 import { sendVerificationEmail } from '../services/emailService';
 import { sendSMS } from '../services/smsService';
+import { uploadToCos, deleteFromCos } from '../services/cosService';
 import redisClient from '../config/redis';
 
 /**
@@ -709,6 +712,143 @@ export const changePassword = async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       message: '操作失败',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+/**
+ * 上传用户头像
+ */
+export const uploadAvatar = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: '未认证',
+      });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: '未上传头像文件',
+      });
+    }
+
+    const userId = req.user.userId;
+
+    // 获取用户资料
+    const profile = await UserProfile.findOne({
+      where: { userId },
+    });
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: '用户资料不存在',
+      });
+    }
+
+    // 如果已有头像，删除旧头像
+    if (profile.avatar) {
+      try {
+        await deleteFromCos({ url: profile.avatar, bucket: 'user' });
+      } catch (error) {
+        console.error('删除旧头像失败:', error);
+        // 继续执行，不阻塞上传新头像
+      }
+    }
+
+    // 处理头像：压缩并转换为webp格式
+    const avatarBuffer = await sharp(req.file.buffer)
+      .resize(640, 640, { fit: 'cover' })
+      .webp({ quality: 80 })
+      .toBuffer();
+
+    // 生成头像文件名
+    const hash = crypto.createHash('md5').update(String(userId)).digest('hex');
+    const key = `User/Avatars/user_${hash}_${Date.now()}.webp`;
+
+    // 上传到COS（用户头像桶）
+    const avatar = await uploadToCos({
+      buffer: avatarBuffer,
+      key,
+      contentType: 'image/webp',
+      bucket: 'user',
+    });
+
+    // 更新用户资料
+    await profile.update({ avatar });
+
+    res.json({
+      success: true,
+      message: '头像上传成功',
+      data: { avatar },
+    });
+  } catch (error) {
+    console.error('Upload avatar error:', error);
+    res.status(500).json({
+      success: false,
+      message: '上传头像失败',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
+};
+
+/**
+ * 删除用户头像
+ */
+export const deleteAvatar = async (req: Request, res: Response) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        message: '未认证',
+      });
+    }
+
+    const userId = req.user.userId;
+
+    // 获取用户资料
+    const profile = await UserProfile.findOne({
+      where: { userId },
+    });
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        message: '用户资料不存在',
+      });
+    }
+
+    if (!profile.avatar) {
+      return res.status(400).json({
+        success: false,
+        message: '用户未设置头像',
+      });
+    }
+
+    // 从COS删除头像（用户头像桶）
+    try {
+      await deleteFromCos({ url: profile.avatar, bucket: 'user' });
+    } catch (error) {
+      console.error('从COS删除头像失败:', error);
+      // 继续执行，更新数据库
+    }
+
+    // 更新用户资料
+    await profile.update({ avatar: null });
+
+    res.json({
+      success: true,
+      message: '头像删除成功',
+    });
+  } catch (error) {
+    console.error('Delete avatar error:', error);
+    res.status(500).json({
+      success: false,
+      message: '删除头像失败',
       error: error instanceof Error ? error.message : 'Unknown error',
     });
   }

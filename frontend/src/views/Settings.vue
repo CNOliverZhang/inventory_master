@@ -151,6 +151,65 @@
         </h2>
         
         <div class="space-y-4">
+          <!-- 头像 -->
+          <div class="flex items-center justify-between py-3 border-b border-gray-200">
+            <div class="flex items-center gap-4">
+              <div class="relative group">
+                <!-- 头像显示 -->
+                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
+                  <img 
+                    v-if="bindings.avatar" 
+                    :src="bindings.avatar" 
+                    :alt="bindings.nickname || 'Avatar'"
+                    class="w-full h-full object-cover"
+                  />
+                  <font-awesome-icon 
+                    v-else
+                    icon="user" 
+                    class="text-3xl sm:text-4xl text-gray-400"
+                  />
+                </div>
+                
+                <!-- 悬停提示 -->
+                <div class="absolute inset-0 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer" @click="triggerAvatarUpload">
+                  <font-awesome-icon icon="camera" class="text-white text-xl" />
+                </div>
+              </div>
+              
+              <div>
+                <p class="text-sm text-gray-600">{{ t('settings.account.avatar') }}</p>
+                <p class="text-xs text-gray-500 mt-1">{{ t('settings.account.avatarHint') }}</p>
+              </div>
+            </div>
+            
+            <div class="flex gap-2">
+              <button
+                @click="triggerAvatarUpload"
+                class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm gradient-primary text-white rounded-lg hover:shadow-lg transition-all flex-shrink-0"
+              >
+                {{ bindings.avatar ? t('common.edit') : t('settings.account.upload') }}
+              </button>
+              <button
+                v-if="bindings.avatar"
+                @click="handleDeleteAvatar"
+                :disabled="avatarLoading"
+                class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all flex-shrink-0 disabled:opacity-50"
+              >
+                <i v-if="avatarLoading" class="pi pi-spinner pi-spin"></i>
+                <span v-else>{{ t('common.delete') }}</span>
+              </button>
+            </div>
+            
+            <!-- 隐藏的文件输入框 -->
+            <input
+              ref="avatarInput"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              @change="handleAvatarChange"
+            />
+          </div>
+
           <!-- 昵称 -->
           <div class="flex items-center justify-between py-3 border-b border-gray-200">
             <div class="flex-1 min-w-0 mr-4">
@@ -392,6 +451,8 @@ import {
   unbindOAuth,
   rebindOAuth,
   changePassword,
+  uploadAvatar,
+  deleteAvatar,
 } from '@/api/account'
 import { oauthLogin } from '@/api/authV2'
 import type { DarkModeOption } from '@/types/theme'
@@ -416,6 +477,7 @@ const bindings = reactive({
   wechat: null as string | null,
   qq: null as string | null,
   nickname: null as string | null,
+  avatar: null as string | null,
 })
 
 // 判断用户是否有密码（检查是否绑定了username/email/phone）
@@ -441,6 +503,8 @@ const canUnbindOAuth = () => {
 // 对话框状态
 const showPasswordDialog = ref(false)
 const passwordLoading = ref(false)
+const avatarLoading = ref(false)
+const avatarInput = ref<HTMLInputElement>()
 
 // 通用绑定对话框
 const bindingDialog = reactive({
@@ -727,8 +791,8 @@ const handleUpdatePassword = async () => {
 
   try {
     passwordLoading.value = true
-    const res = await changePassword({ password: passwordForm.password })
-    toast.success(res.message || t('settings.account.passwordChanged'))
+    await changePassword({ password: passwordForm.password })
+    toast.success(t('settings.account.passwordChanged'))
     closePasswordDialog()
   } catch (error: any) {
     toast.error(error.response?.data?.message || t('common.error'))
@@ -742,5 +806,65 @@ const closePasswordDialog = () => {
   showPasswordDialog.value = false
   passwordForm.password = ''
   passwordForm.confirmPassword = ''
+}
+
+// 触发头像上传
+const triggerAvatarUpload = () => {
+  avatarInput.value?.click()
+}
+
+// 处理头像文件选择
+const handleAvatarChange = async (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  
+  if (!file) return
+  
+  // 验证文件类型
+  if (!file.type.startsWith('image/')) {
+    toast.error(t('settings.account.invalidImageType'))
+    return
+  }
+  
+  // 验证文件大小（5MB）
+  if (file.size > 5 * 1024 * 1024) {
+    toast.error(t('settings.account.imageTooLarge'))
+    return
+  }
+  
+  try {
+    avatarLoading.value = true
+    const res = await uploadAvatar(file)
+    bindings.avatar = res.data.avatar
+    toast.success(t('settings.account.avatarUploadSuccess'))
+  } catch (error: any) {
+    console.error('Upload avatar error:', error)
+    toast.error(error.response?.data?.message || t('common.error'))
+  } finally {
+    avatarLoading.value = false
+    // 清空 input，允许再次选择相同文件
+    if (avatarInput.value) {
+      avatarInput.value.value = ''
+    }
+  }
+}
+
+// 删除头像
+const handleDeleteAvatar = async () => {
+  if (!confirm(t('settings.account.confirmDeleteAvatar'))) {
+    return
+  }
+  
+  try {
+    avatarLoading.value = true
+    await deleteAvatar()
+    bindings.avatar = null
+    toast.success(t('settings.account.avatarDeleteSuccess'))
+  } catch (error: any) {
+    console.error('Delete avatar error:', error)
+    toast.error(error.response?.data?.message || t('common.error'))
+  } finally {
+    avatarLoading.value = false
+  }
 }
 </script>

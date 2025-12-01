@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import sharp from 'sharp';
 import { AuthUser, AuthCredential, UserProfile, AuthType } from '../models/auth';
 import { generateToken } from '../utils/jwt';
 import { getWechatUserInfo, getQQUserInfo, downloadAvatar } from '../services/oauthService';
+import { uploadToCos } from '../services/cosService';
 import redisClient from '../config/redis';
-import sharp from 'sharp';
-import crypto from 'crypto';
 
 /**
  * OAuth登录（微信/QQ）
@@ -400,7 +401,7 @@ export const oauthRegister = async (req: Request, res: Response) => {
     }
 
     const oauthData = JSON.parse(oauthDataStr);
-    const { openId, nickname, avatar: avatarUrl, authType } = oauthData;
+    const { nickname, avatar: avatarUrl, authType } = oauthData;
 
     // 检查该OAuth账号是否已被绑定
     const existingCred = await AuthCredential.findOne({
@@ -422,28 +423,33 @@ export const oauthRegister = async (req: Request, res: Response) => {
       isAdmin: false,
     });
 
-    // 处理头像（下载并上传）
+    // 处理头像（下载并上传到COS）
     let processedAvatar = '';
     try {
-      // 下载头像
+      // 下载第三方头像
       const avatarBuffer = await downloadAvatar(avatarUrl);
       
       // 使用sharp压缩并转换为webp格式
       const compressedBuffer = await sharp(avatarBuffer)
-        .resize(200, 200, { fit: 'cover' })
+        .resize(640, 640, { fit: 'cover' })
         .webp({ quality: 80 })
         .toBuffer();
 
       // 生成文件名
       const hash = crypto.createHash('md5').update(String(user.id)).digest('hex');
-      const filename = `user_${hash}_${Date.now()}.webp`;
+      const key = `User/Avatars/user_${hash}_${Date.now()}.webp`;
       
-      // TODO: 上传到COS
-      // 暂时使用原始头像URL
-      processedAvatar = avatarUrl;
+      // 上传到COS（用户头像桶）
+      processedAvatar = await uploadToCos({
+        buffer: compressedBuffer,
+        key,
+        contentType: 'image/webp',
+        bucket: 'user',
+      });
     } catch (error) {
       console.error('处理头像失败:', error);
-      processedAvatar = avatarUrl; // 使用原始URL
+      // 头像处理失败不影响注册流程，使用空字符串
+      processedAvatar = '';
     }
 
     // 创建用户资料

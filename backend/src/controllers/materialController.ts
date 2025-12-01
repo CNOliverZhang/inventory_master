@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
+import crypto from 'crypto';
 import { Material, Category } from '../models';
 import { MaterialType } from '../models/Material';
-import { uploadFile, deleteFile, getKeyFromUrl } from '../services/cosService';
+import { uploadToCos, deleteFromCos } from '../services/cosService';
 import { processImage, isValidImage } from '../services/imageService';
 import { Op } from 'sequelize';
 
@@ -151,7 +152,7 @@ export const createMaterial = async (req: Request, res: Response) => {
         });
       }
 
-      // 处理图片：压缩、转换为 WebP、重命名
+      // 处理图片：压缩、转换为 WebP
       const processedImage = await processImage(req.file.buffer, {
         maxWidth: 1920,
         maxHeight: 1920,
@@ -159,13 +160,19 @@ export const createMaterial = async (req: Request, res: Response) => {
         prefix: 'material',
       });
 
-      // 上传到 COS
-      const uploadResult = await uploadFile(
-        processedImage.buffer,
-        processedImage.filename,
-        'image/webp'
-      );
-      photoUrl = uploadResult.url;
+      // 生成文件名（使用MD5哈希 + 时间戳）
+      const hash = crypto.createHash('md5')
+        .update(`${req.user.userId}_${Date.now()}`)
+        .digest('hex');
+      const key = `Materials/Images/material_${hash}.webp`;
+
+      // 上传到 COS（物资图片桶）
+      photoUrl = await uploadToCos({
+        buffer: processedImage.buffer,
+        key,
+        contentType: 'image/webp',
+        bucket: 'material',
+      });
     }
     
     // 创建物资
@@ -252,17 +259,16 @@ export const updateMaterial = async (req: Request, res: Response) => {
         });
       }
 
-      // 删除旧照片
+      // 删除旧照片（物资图片桶）
       if (material.photoUrl) {
         try {
-          const oldKey = getKeyFromUrl(material.photoUrl);
-          await deleteFile(oldKey);
+          await deleteFromCos({ url: material.photoUrl, bucket: 'material' });
         } catch (error) {
           console.error('Error deleting old photo:', error);
         }
       }
       
-      // 处理图片：压缩、转换为 WebP、重命名
+      // 处理图片：压缩、转换为 WebP
       const processedImage = await processImage(req.file.buffer, {
         maxWidth: 1920,
         maxHeight: 1920,
@@ -270,13 +276,19 @@ export const updateMaterial = async (req: Request, res: Response) => {
         prefix: 'material',
       });
 
-      // 上传新照片到 COS
-      const uploadResult = await uploadFile(
-        processedImage.buffer,
-        processedImage.filename,
-        'image/webp'
-      );
-      photoUrl = uploadResult.url;
+      // 生成文件名（使用MD5哈希 + 时间戳）
+      const hash = crypto.createHash('md5')
+        .update(`${req.user.userId}_${Date.now()}`)
+        .digest('hex');
+      const key = `Materials/Images/material_${hash}.webp`;
+
+      // 上传新照片到 COS（物资图片桶）
+      photoUrl = await uploadToCos({
+        buffer: processedImage.buffer,
+        key,
+        contentType: 'image/webp',
+        bucket: 'material',
+      });
     }
     
     // 更新物资
@@ -340,11 +352,10 @@ export const deleteMaterial = async (req: Request, res: Response) => {
       });
     }
     
-    // 删除关联的照片
+    // 删除关联的照片（物资图片桶）
     if (material.photoUrl) {
       try {
-        const key = getKeyFromUrl(material.photoUrl);
-        await deleteFile(key);
+        await deleteFromCos({ url: material.photoUrl, bucket: 'material' });
       } catch (error) {
         console.error('Error deleting photo:', error);
       }

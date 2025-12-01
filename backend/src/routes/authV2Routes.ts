@@ -1,4 +1,5 @@
 import express from 'express';
+import multer from 'multer';
 import {
   getCaptcha,
   sendEmailCode,
@@ -23,10 +24,28 @@ import {
   bindPhone,
   unbindOAuth,
   changePassword,
+  uploadAvatar,
+  deleteAvatar,
 } from '../controllers/accountController';
 import { authenticate } from '../middleware/auth';
 
 const router = express.Router();
+
+// 配置 multer 用于头像上传
+const avatarUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
+  fileFilter: (_req, file, cb) => {
+    // 只允许图片格式
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('只允许上传图片文件'));
+    }
+  },
+});
 
 // 图形验证码
 router.get('/captcha', getCaptcha);
@@ -86,5 +105,11 @@ router.post('/unbind-oauth', authenticate, unbindOAuth);
 
 // 修改/设置密码
 router.post('/change-password', authenticate, changePassword);
+
+// 上传头像
+router.post('/upload-avatar', authenticate, avatarUpload.single('avatar'), uploadAvatar);
+
+// 删除头像
+router.delete('/delete-avatar', authenticate, deleteAvatar);
 
 export default router;
