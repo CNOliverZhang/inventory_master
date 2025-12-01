@@ -1,12 +1,12 @@
 import request from "./axios";
 
-const API_V2_PREFIX = '/v2/auth';
+const AUTH_API_PREFIX = '/auth';
 
 /**
  * 获取用户所有绑定信息
  */
 export const getBindings = async () => {
-  const response = await request.get(`${API_V2_PREFIX}/bindings`);
+  const response = await request.get(`${AUTH_API_PREFIX}/bindings`);
   return response;
 };
 
@@ -14,7 +14,7 @@ export const getBindings = async () => {
  * 修改用户名
  */
 export const updateUsername = async (data: { username: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/update-username`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/update-username`, data);
   return response;
 };
 
@@ -22,7 +22,7 @@ export const updateUsername = async (data: { username: string }) => {
  * 修改昵称
  */
 export const updateNickname = async (data: { nickname: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/update-nickname`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/update-nickname`, data);
   return response;
 };
 
@@ -30,7 +30,7 @@ export const updateNickname = async (data: { nickname: string }) => {
  * 发送绑定邮箱验证码
  */
 export const sendBindEmailCode = async (data: { email: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/send-bind-email-code`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/send-bind-email-code`, data);
   return response;
 };
 
@@ -38,7 +38,7 @@ export const sendBindEmailCode = async (data: { email: string }) => {
  * 发送绑定手机验证码
  */
 export const sendBindPhoneCode = async (data: { phone: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/send-bind-phone-code`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/send-bind-phone-code`, data);
   return response;
 };
 
@@ -46,7 +46,7 @@ export const sendBindPhoneCode = async (data: { phone: string }) => {
  * 绑定/换绑邮箱
  */
 export const bindEmail = async (data: { email: string; code: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/bind-email`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/bind-email`, data);
   return response;
 };
 
@@ -54,7 +54,7 @@ export const bindEmail = async (data: { email: string; code: string }) => {
  * 绑定/换绑手机号
  */
 export const bindPhone = async (data: { phone: string; code: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/bind-phone`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/bind-phone`, data);
   return response;
 };
 
@@ -62,7 +62,7 @@ export const bindPhone = async (data: { phone: string; code: string }) => {
  * 解绑OAuth（微信/QQ）
  */
 export const unbindOAuth = async (data: { provider: 'wechat' | 'qq' }) => {
-  const response = await request.post(`${API_V2_PREFIX}/unbind-oauth`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/unbind-oauth`, data);
   return response;
 };
 
@@ -70,7 +70,7 @@ export const unbindOAuth = async (data: { provider: 'wechat' | 'qq' }) => {
  * OAuth换绑（需要重新授权）
  */
 export const rebindOAuth = async (data: { unionId: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/oauth/rebind`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/oauth/rebind`, data);
   return response;
 };
 
@@ -78,7 +78,7 @@ export const rebindOAuth = async (data: { unionId: string }) => {
  * 修改/设置密码
  */
 export const changePassword = async (data: { password: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/change-password`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/change-password`, data);
   return response;
 };
 
@@ -89,7 +89,7 @@ export const uploadAvatar = async (file: File) => {
   const formData = new FormData();
   formData.append('avatar', file);
   
-  const response = await request.post(`${API_V2_PREFIX}/upload-avatar`, formData, {
+  const response = await request.post(`${AUTH_API_PREFIX}/upload-avatar`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -101,6 +101,6 @@ export const uploadAvatar = async (file: File) => {
  * 删除用户头像
  */
 export const deleteAvatar = async () => {
-  const response = await request.delete(`${API_V2_PREFIX}/delete-avatar`);
+  const response = await request.delete(`${AUTH_API_PREFIX}/delete-avatar`);
   return response;
 };

@@ -454,7 +454,7 @@ import {
   uploadAvatar,
   deleteAvatar,
 } from '@/api/account'
-import { oauthLogin } from '@/api/authV2'
+import { oauthLogin } from '@/api/auth'
 import type { DarkModeOption } from '@/types/theme'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import BindingDialog from '@/components/BindingDialog.vue'

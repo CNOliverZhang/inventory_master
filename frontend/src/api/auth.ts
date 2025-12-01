@@ -1,12 +1,12 @@
 import request from "./axios";
 
-const API_V2_PREFIX = '/v2/auth';
+const AUTH_API_PREFIX = '/auth';
 
 /**
  * 获取图形验证码
  */
 export const getCaptcha = async () => {
-  const response = await request.get(`${API_V2_PREFIX}/captcha`);
+  const response = await request.get(`${AUTH_API_PREFIX}/captcha`);
   return response;
 };
 
@@ -18,7 +18,7 @@ export const sendEmailCode = async (data: {
   captchaToken: string;
   captchaCode: string;
 }) => {
-  const response = await request.post(`${API_V2_PREFIX}/send-email-code`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/send-email-code`, data);
   return response;
 };
 
@@ -30,7 +30,7 @@ export const sendPhoneCode = async (data: {
   captchaToken: string;
   captchaCode: string;
 }) => {
-  const response = await request.post(`${API_V2_PREFIX}/send-phone-code`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/send-phone-code`, data);
   return response;
 };
 
@@ -43,7 +43,7 @@ export const register = async (data: {
   password: string;
   code: string;
 }) => {
-  const response = await request.post(`${API_V2_PREFIX}/register`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/register`, data);
   return response;
 };
 
@@ -51,7 +51,7 @@ export const register = async (data: {
  * 用户登录
  */
 export const loginApi = async (data: { identifier: string; password: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/login`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/login`, data);
   return response;
 };
 
@@ -59,7 +59,7 @@ export const loginApi = async (data: { identifier: string; password: string }) =
  * 获取当前用户信息
  */
 export const getCurrentUser = async () => {
-  const response = await request.get(`${API_V2_PREFIX}/me`);
+  const response = await request.get(`${AUTH_API_PREFIX}/me`);
   return response;
 };
 
@@ -67,7 +67,7 @@ export const getCurrentUser = async () => {
  * OAuth登录（微信/QQ）
  */
 export const oauthLogin = async (data: { code: string; state: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/oauth/login`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/oauth/login`, data);
   return response;
 };
 
@@ -79,7 +79,7 @@ export const oauthBind = async (data: {
   identifier: string;
   password: string;
 }) => {
-  const response = await request.post(`${API_V2_PREFIX}/oauth/bind`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/oauth/bind`, data);
   return response;
 };
 
@@ -87,6 +87,6 @@ export const oauthBind = async (data: {
  * OAuth注册新账号
  */
 export const oauthRegister = async (data: { unionId: string }) => {
-  const response = await request.post(`${API_V2_PREFIX}/oauth/register`, data);
+  const response = await request.post(`${AUTH_API_PREFIX}/oauth/register`, data);
   return response;
 };
