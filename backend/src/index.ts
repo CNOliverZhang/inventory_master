@@ -3,9 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/database';
 import userSequelize from './config/userDatabase';
-import redis from './config/redis';
-import authRoutes from './routes/authRoutes';
-import authV2Routes from './routes/authV2Routes';
+import authRoutes from './routes/authV2Routes';
 import materialRoutes from './routes/materialRoutes';
 import categoryRoutes from './routes/categoryRoutes';
 import './models'; // 导入模型以建立关联
@@ -22,8 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 路由
-app.use('/api/auth', authRoutes); // 旧版认证路由（向后兼容）
-app.use('/api/v2/auth', authV2Routes); // 新版认证路由（使用user数据库）
+app.use('/api/auth', authRoutes); // 新版认证路由（使用user数据库）
 app.use('/api', materialRoutes);
 app.use('/api', categoryRoutes);
 

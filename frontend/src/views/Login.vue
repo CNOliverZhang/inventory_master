@@ -340,7 +340,7 @@
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import * as authV2API from '@/api/authV2'
+import * as authV2API from '@/api/auth'
 import { toast } from '@/utils/toast'
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import OAuthBindDialog from '@/components/OAuthBindDialog.vue'
@@ -461,7 +461,7 @@ const refreshCaptcha = async () => {
 const handleLogin = async () => {
   loading.value = true
   try {
-    const res = await authV2API.login(loginForm)
+    const res = await authV2API.loginApi(loginForm)
     // 保存token和用户信息到localStorage
     localStorage.setItem('token', res.data.token)
     localStorage.setItem('user', JSON.stringify(res.data.user))

@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getCaptcha } from '@/api/authV2';
+import { getCaptcha } from '@/api/auth';
 import { useToast } from 'primevue/usetoast';
 
 const { t } = useI18n();
