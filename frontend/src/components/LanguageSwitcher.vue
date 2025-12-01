@@ -11,18 +11,19 @@
     
     <div
       v-if="showDropdown"
-      class="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
+      class="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden z-50"
     >
       <button
         v-for="lang in languages"
         :key="lang.value"
         @click="changeLanguage(lang.value)"
         :class="[
-          'w-full px-4 py-2 text-sm text-left transition-colors',
+          'w-full px-4 py-2.5 text-sm text-left transition-colors flex items-center gap-2',
           currentLocale === lang.value ? 'lang-active font-medium' : 'text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700'
         ]"
       >
-        {{ lang.label }}
+        <span class="text-lg">{{ lang.flag }}</span>
+        <span>{{ lang.label }}</span>
       </button>
     </div>
   </div>
@@ -36,14 +37,15 @@ const localeStore = useLocaleStore()
 const showDropdown = ref(false)
 
 const languages = [
-  { value: 'zh-CN', label: '中文' },
-  { value: 'en-US', label: 'English' },
+  { value: 'zh-CN', label: '简体中文', flag: '🇨🇳' },
+  { value: 'zh-HK', label: '繁體中文', flag: '🇭🇰' },
+  { value: 'en-US', label: 'English', flag: '🇺🇸' },
 ]
 
 const currentLocale = computed(() => localeStore.locale)
 const currentLanguage = computed(() => {
   const lang = languages.find(l => l.value === currentLocale.value)
-  return lang?.label || '中文'
+  return lang?.label || '简体中文'
 })
 
 const changeLanguage = (locale: string) => {
