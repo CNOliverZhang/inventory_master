@@ -24,7 +24,10 @@
               class="flex items-center gap-2 sm:gap-3 px-2 sm:px-3 py-1.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
             >
               <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-full gradient-primary p-[2px] shadow-md group-hover:shadow-lg transition-all">
-                 <div class="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center font-bold text-sm avatar-text">
+                 <div v-if="avatarUrl" class="w-full h-full rounded-full overflow-hidden bg-white dark:bg-gray-800">
+                    <img :src="avatarUrl" :alt="getUserDisplayName()" class="w-full h-full object-cover" />
+                 </div>
+                 <div v-else class="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center font-bold text-sm avatar-text">
                     {{ getUserInitial() }}
                  </div>
               </div>
@@ -313,25 +316,7 @@ const { t } = useI18n()
 
 // 获取用户显示名称
 const getUserDisplayName = () => {
-  const user = userStore.user as any
-  if (!user) return 'User'
-  
-  // 优先使用 profile.nickname
-  if (user.profile?.nickname) {
-    return user.profile.nickname
-  }
-  
-  // 兼容旧版本的 username
-  if (user.username) {
-    return user.username
-  }
-  
-  // 使用 email 或 phone
-  if (user.email) {
-    return user.email.split('@')[0]
-  }
-  
-  return 'User'
+	return userStore.user?.profile?.nickname || 'User'
 }
 
 // 获取用户首字母
@@ -339,6 +324,11 @@ const getUserInitial = () => {
   const displayName = getUserDisplayName()
   return displayName.charAt(0).toUpperCase()
 }
+
+// 获取用户头像（处理相对路径）
+const avatarUrl = computed(() => {
+  return userStore.user?.profile?.avatar
+})
 
 // 菜单项配置
 const menuItems: Array<{ type: MaterialType | '', labelKey: string, icon: string }> = [

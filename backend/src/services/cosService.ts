@@ -21,11 +21,6 @@ const MaterialRegion = process.env.COS_MATERIAL_REGION || 'ap-guangzhou';
 const MaterialCdnBaseUrl = process.env.COS_MATERIAL_CDN_BASE_URL || 
   `https://${MaterialBucket}.cos.${MaterialRegion}.myqcloud.com/`;
 
-// 默认配置（向后兼容）
-const Bucket = process.env.COS_BUCKET || MaterialBucket;
-const Region = process.env.COS_REGION || MaterialRegion;
-const CdnBaseUrl = process.env.COS_CDN_BASE_URL || MaterialCdnBaseUrl;
-
 export interface UploadResult {
   url: string;
   key: string;
@@ -91,44 +86,6 @@ export const uploadToCos = async (options: UploadOptions): Promise<string> => {
 };
 
 /**
- * 上传文件到腾讯云 COS（兼容旧版本）
- * @param fileBuffer 文件缓冲区
- * @param filename 文件名（包含扩展名）
- * @param contentType 内容类型（可选）
- * @returns 上传结果，包含 URL 和 Key
- */
-export const uploadFile = async (
-  fileBuffer: Buffer,
-  filename: string,
-  contentType?: string
-): Promise<UploadResult> => {
-  return new Promise((resolve, reject) => {
-    const key = `materials/${filename}`;
-
-    const uploadOptions: any = {
-      Bucket,
-      Region,
-      Key: key,
-      Body: fileBuffer,
-    };
-
-    // 如果提供了 contentType，则设置
-    if (contentType) {
-      uploadOptions.ContentType = contentType;
-    }
-
-    cos.putObject(uploadOptions, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        const url = `${CdnBaseUrl}${key}`;
-        resolve({ url, key });
-      }
-    });
-  });
-};
-
-/**
  * 删除 COS 中的文件
  * @param options 删除选项，可以是 key 或 url
  */
@@ -175,13 +132,6 @@ export const deleteFromCos = async (options: DeleteOptions): Promise<void> => {
   });
 };
 
-/**
- * 删除 COS 中的文件（兼容旧版本）
- * @param key 文件的 Key
- */
-export const deleteFile = async (key: string): Promise<void> => {
-  return deleteFromCos({ key });
-};
 
 /**
  * 从 URL 中提取 COS Key
@@ -192,11 +142,11 @@ export const deleteFile = async (key: string): Promise<void> => {
 export const getKeyFromUrl = (url: string, bucket?: 'user' | 'material'): string => {
   try {
     // 根据 bucket 参数选择对应的 CDN 基础 URL
-    let cdnBaseUrl = CdnBaseUrl;
+    let cdnBaseUrl;
     
     if (bucket === 'user') {
       cdnBaseUrl = UserAvatarCdnBaseUrl;
-    } else if (bucket === 'material') {
+    } else {
       cdnBaseUrl = MaterialCdnBaseUrl;
     }
 
