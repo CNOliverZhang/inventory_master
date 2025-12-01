@@ -7,7 +7,7 @@ import {
   register,
   login,
   getCurrentUser,
-} from '../controllers/authV2Controller';
+} from '../controllers/authController';
 import {
   oauthLogin,
   oauthBind,

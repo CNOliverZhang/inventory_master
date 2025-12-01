@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import sequelize from './config/database';
 import userSequelize from './config/userDatabase';
-import authRoutes from './routes/authV2Routes';
+import authRoutes from './routes/authRoutes';
 import materialRoutes from './routes/materialRoutes';
 import categoryRoutes from './routes/categoryRoutes';
 import './models'; // 导入模型以建立关联
