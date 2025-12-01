@@ -50,7 +50,7 @@ export const register = async (data: {
 /**
  * 用户登录
  */
-export const login = async (data: { identifier: string; password: string }) => {
+export const loginApi = async (data: { identifier: string; password: string }) => {
   const response = await request.post(`${API_V2_PREFIX}/login`, data);
   return response;
 };

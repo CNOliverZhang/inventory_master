@@ -158,8 +158,8 @@
                 <!-- 头像显示 -->
                 <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
                   <img 
-                    v-if="bindings.avatar" 
-                    :src="bindings.avatar" 
+                    v-if="avatarUrl" 
+                    :src="avatarUrl" 
                     :alt="bindings.nickname || 'Avatar'"
                     class="w-full h-full object-cover"
                   />
@@ -187,10 +187,10 @@
                 @click="triggerAvatarUpload"
                 class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm gradient-primary text-white rounded-lg hover:shadow-lg transition-all flex-shrink-0"
               >
-                {{ bindings.avatar ? t('common.edit') : t('settings.account.upload') }}
+                {{ avatarUrl ? t('common.edit') : t('settings.account.upload') }}
               </button>
               <button
-                v-if="bindings.avatar"
+                v-if="avatarUrl"
                 @click="handleDeleteAvatar"
                 :disabled="avatarLoading"
                 class="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all flex-shrink-0 disabled:opacity-50"
@@ -461,13 +461,20 @@ import BindingDialog from '@/components/BindingDialog.vue'
 import OAuthRebindDialog from '@/components/OAuthRebindDialog.vue'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import { toast } from '@/utils/toast'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const { t } = useI18n()
 const themeStore = useThemeStore()
 const localeStore = useLocaleStore()
+const userStore = useUserStore()
 
 const locale = localeStore.locale
+
+// 获取头像完整 URL
+const avatarUrl = computed(() => {
+  return userStore.user?.profile?.avatar
+})
 
 // 绑定信息
 const bindings = reactive({
@@ -477,7 +484,6 @@ const bindings = reactive({
   wechat: null as string | null,
   qq: null as string | null,
   nickname: null as string | null,
-  avatar: null as string | null,
 })
 
 // 判断用户是否有密码（检查是否绑定了username/email/phone）
@@ -834,8 +840,8 @@ const handleAvatarChange = async (event: Event) => {
   
   try {
     avatarLoading.value = true
-    const res = await uploadAvatar(file)
-    bindings.avatar = res.data.avatar
+    await uploadAvatar(file)
+    await userStore.fetchCurrentUser();
     toast.success(t('settings.account.avatarUploadSuccess'))
   } catch (error: any) {
     console.error('Upload avatar error:', error)
@@ -858,7 +864,8 @@ const handleDeleteAvatar = async () => {
   try {
     avatarLoading.value = true
     await deleteAvatar()
-    bindings.avatar = null
+    // 刷新 userStore 中的用户信息
+    await userStore.fetchCurrentUser()
     toast.success(t('settings.account.avatarDeleteSuccess'))
   } catch (error: any) {
     console.error('Delete avatar error:', error)
