@@ -4,7 +4,7 @@ import * as tencentcloud from 'tencentcloud-sdk-nodejs';
 const SMS_SDK_APP_ID = process.env.SMS_SDK_APP_ID || '';
 const SMS_SECRET_ID = process.env.SMS_SECRET_ID || process.env.COS_SECRET_ID || '';
 const SMS_SECRET_KEY = process.env.SMS_SECRET_KEY || process.env.COS_SECRET_KEY || '';
-const SMS_SIGN_NAME = process.env.SMS_SIGN_NAME || '洋芋田';
+const SMS_SIGN_NAME = process.env.SMS_SIGN_NAME || '深圳市洋芋田信息技术';
 const SMS_TEMPLATE_ID = process.env.SMS_TEMPLATE_ID || '';
 
 /**
