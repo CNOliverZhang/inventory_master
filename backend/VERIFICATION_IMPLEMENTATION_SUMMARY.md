@@ -84,7 +84,7 @@ backend/
 # Redis 配置
 REDIS_HOST=potatofield.cn
 REDIS_PORT=6379
-REDIS_PASSWORD=***REMOVED***
+REDIS_PASSWORD=<你的 Redis 密码>
 
 # SMTP 邮箱配置
 SMTP_HOST=smtp.exmail.qq.com

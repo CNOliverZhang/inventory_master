@@ -15,7 +15,7 @@ npm install --save-dev @types/nodemailer
 # Redis 配置
 REDIS_HOST=potatofield.cn
 REDIS_PORT=6379
-REDIS_PASSWORD=***REMOVED***
+REDIS_PASSWORD=<你的 Redis 密码>
 
 # SMTP 邮箱配置
 SMTP_HOST=smtp.exmail.qq.com
@@ -123,7 +123,7 @@ curl -X POST http://localhost:9702/api/auth/resend-code \
 
 ```bash
 # 连接到 Redis
-redis-cli -h potatofield.cn -p 6379 -a ***REMOVED***
+redis-cli -h potatofield.cn -p 6379 -a '<你的 Redis 密码>'
 
 # 查看所有待验证用户
 KEYS pending_user:*

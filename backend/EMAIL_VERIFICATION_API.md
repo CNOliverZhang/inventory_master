@@ -253,7 +253,7 @@ const resendResponse = await fetch('/api/auth/resend-code', {
 ```env
 REDIS_HOST=potatofield.cn
 REDIS_PORT=6379
-REDIS_PASSWORD=***REMOVED***
+REDIS_PASSWORD=<你的 Redis 密码>
 ```
 
 ### SMTP 邮箱配置
