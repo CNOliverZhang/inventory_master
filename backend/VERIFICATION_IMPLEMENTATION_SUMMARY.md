@@ -326,7 +326,7 @@ npm run pm2:start
 
 ```bash
 # 查看 Redis 数据
-redis-cli -h potatofield.cn -p 6379 -a ***REMOVED***
+redis-cli -h potatofield.cn -p 6379 -a '<你的 Redis 密码>'
 KEYS *
 
 # 查看服务日志
